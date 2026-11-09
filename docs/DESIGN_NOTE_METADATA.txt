@@ -1,0 +1,311 @@
+================================================================================
+DESIGN NOTE: METADATA AS DOMAIN CONVENTION
+================================================================================
+
+Date: January 31, 2026
+Topic: Why ^metadata is not universal in Springwater schemas
+
+================================================================================
+PRINCIPLE
+================================================================================
+
+Metadata is not a universal container; it is a domain convention.
+
+Springwater Core defines syntax only.
+
+Schemas define which tags are valid, where they may appear, and what
+domain conventions they follow.
+
+A schema may use grouped metadata, flat header fields, title-page fields,
+or no metadata at all.
+
+There is no universal ^metadata requirement.
+
+================================================================================
+RATIONALE
+================================================================================
+
+DIFFERENT DOMAINS HAVE DIFFERENT CONVENTIONS:
+
+1. PUBLISHED ARTIFACTS (novels, books, articles)
+   Need: ISBN, publisher, edition, copyright, language, publication data
+   Solution: Grouped ^metadata container
+   
+   ^metadata
+     ^title/title/
+     ^author/author/
+     ^year/year/
+     ^publisher/publisher/
+     ^isbn/isbn/
+     ^edition/edition/
+   ^metadata/
+
+2. PRODUCTION DOCUMENTS (screenplays, scripts)
+   Need: Writer credits, revision dates, contact info, based-on credits
+   Solution: Flat title page fields
+   
+   ^screenplay
+     ^title/title/
+     ^written_by/written_by/
+     ^author/author/
+     ^revision/revision/
+     ^date/date/
+     ^contact/contact/
+
+3. TECHNICAL DOCUMENTATION (manuals, guides, API docs)
+   Need: Title, version number, author/company, date
+   Solution: Simple header fields
+   
+   ^manual
+     ^title/title/
+     ^author/author/
+     ^version/version/
+     ^date/date/
+
+4. SELF-DESCRIPTIVE DOCUMENTS (ROSETTA, standards, specs)
+   Need: Complete bibliographic and archival metadata
+   Solution: Grouped ^metadata container
+   
+   ^metadata
+     ^title/title/
+     ^version/version/
+     ^created/created/
+     ^purpose/purpose/
+   ^metadata/
+
+The domain determines the structure.
+Springwater does not impose conventions.
+
+================================================================================
+WHY NOVEL GETS ^METADATA
+================================================================================
+
+Novels are PUBLISHED ARTIFACTS that need rich bibliographic data:
+
+- ISBN (for cataloging and sales)
+- Publisher name (for attribution and rights)
+- Publication year (for citation and copyright)
+- Edition information (First Edition, Revised, etc.)
+- Copyright holder (legal requirement)
+- Language/translation info (for multilingual works)
+
+Grouping this into ^metadata:
+✓ Separates publication data from narrative structure
+✓ Matches library cataloging conventions (MARC records)
+✓ Supports rendering as proper title page
+✓ Aids long-term archival and citation
+
+Example:
+    ^novel
+      ^metadata
+        ^title
+        The Sun Also Rises
+        ^title/
+        ^author
+        Ernest Hemingway
+        ^author/
+        ^year
+        1926
+        ^year/
+        ^publisher
+        Charles Scribner's Sons
+        ^publisher/
+        ^isbn
+        978-0-684-80071-3
+        ^isbn/
+        ^edition
+        First Edition
+        ^edition/
+      ^metadata/
+      ^chapter...
+
+================================================================================
+WHY SCREENPLAY STAYS FLAT
+================================================================================
+
+Screenplays are PRODUCTION DOCUMENTS, not published artifacts:
+
+The title page is a domain object with specific industry conventions:
+- Writer credits (WGA rules for attribution)
+- Revision history (colored pages, draft dates)
+- Contact information (for production offices)
+- Based-on credits (source material attribution)
+- Draft status (First Draft, Shooting Draft, etc.)
+
+These are not "metadata" - they are part of the production workflow.
+
+Wrapping them in ^metadata would make a screenplay feel like a database
+export rather than a production document.
+
+Industry-standard format:
+    ^screenplay
+      ^title
+      THE LONG WAY DOWN
+      ^title/
+      ^written_by
+      Screenplay by A. Writer
+      ^written_by/
+      ^revision
+      Final Draft - June 1, 2026
+      ^revision/
+      ^contact
+      Example Productions
+      ^contact/
+      ^act1...
+
+This matches how screenplays have been formatted for 80+ years.
+
+A screenplay with ^metadata would violate domain conventions.
+
+================================================================================
+WHY TECHNICAL STAYS SIMPLE
+================================================================================
+
+Technical documentation needs VERSION CONTROL, not publication metadata:
+
+The header needs:
+- Document title
+- Version number (semantic versioning)
+- Last updated date
+- Author/organization
+
+This is simple, flat, and version-control friendly.
+
+Example:
+    ^manual
+      ^title
+      Springwater Validator API Reference
+      ^title/
+      ^version
+      2.1.3
+      ^version/
+      ^author
+      Anthropic Engineering
+      ^author/
+      ^date
+      2026-01-31
+      ^date/
+      ^chapter...
+
+If technical documents need richer publishing metadata (ISBN, publisher,
+print edition), a future profile could add ^metadata. But for now, simple
+headers match the domain convention.
+
+================================================================================
+SCHEMA ^METADATA VS DOCUMENT ^METADATA
+================================================================================
+
+IMPORTANT DISTINCTION:
+
+1. SCHEMA METADATA (required in all schemas)
+   Describes the schema itself
+   
+   ^schema
+     ^metadata
+       ^name
+       Screenplay
+       ^name/
+       ^version
+       1.0
+       ^version/
+     ^metadata/
+
+2. DOCUMENT METADATA (optional, domain-specific)
+   Describes the document
+   Only used if domain conventions require it
+   
+   ^novel
+     ^metadata
+       ^title/title/
+       ^author/author/
+     ^metadata/
+
+Schema metadata is universal (every schema has it).
+Document metadata is domain-specific (only some schemas use it).
+
+================================================================================
+IMPLICATIONS FOR SCHEMA DESIGNERS
+================================================================================
+
+When designing a custom schema, ask:
+
+1. Is this a published artifact?
+   → Consider ^metadata for bibliographic data
+
+2. Is this a production/workflow document?
+   → Consider flat header fields
+
+3. Is this technical documentation?
+   → Consider simple version-control headers
+
+4. Is this self-descriptive or archival?
+   → Consider ^metadata for complete provenance
+
+5. Does the domain have existing conventions?
+   → Match those conventions, don't invent new ones
+
+DO NOT automatically add ^metadata to every schema.
+DO match the conventions of the domain you're modeling.
+
+================================================================================
+EXAMPLES BY DOMAIN
+================================================================================
+
+USES ^METADATA:
+- ^novel (published books)
+- ^article (journal articles)
+- ^thesis (academic theses)
+- ^standard (technical standards)
+- ^specification (format specifications)
+- ^archive (archival documents)
+
+USES FLAT FIELDS:
+- ^screenplay (production scripts)
+- ^recipe (cooking recipes)
+- ^letter (correspondence)
+- ^email (email messages)
+
+USES SIMPLE HEADERS:
+- ^manual (technical documentation)
+- ^guide (how-to guides)
+- ^readme (project documentation)
+- ^changelog (version history)
+
+USES NO HEADER AT ALL:
+- ^log (system logs)
+- ^transcript (conversation transcripts)
+- ^data (structured data files)
+
+The domain determines the structure.
+
+================================================================================
+SUMMARY
+================================================================================
+
+Springwater Core: Syntax only, no semantic requirements
+
+Schemas: Define domain-specific conventions
+
+^metadata: A domain convention, not a universal law
+
+Novel uses ^metadata: Published artifacts need bibliographic data
+Screenplay uses flat fields: Production documents follow industry format
+Technical uses simple headers: Documentation needs version control
+
+Future schemas should match their domain, not blindly copy ^metadata.
+
+This prevents ^metadata from becoming an accidental requirement and
+preserves Springwater's structural neutrality.
+
+================================================================================
+FROZEN DECISION
+================================================================================
+
+This design decision is part of the Springwater v1.0 philosophy:
+
+"Springwater provides structure. Schemas provide conventions.
+ Domains determine organization."
+
+Metadata is a tool, not a law.
+
+================================================================================

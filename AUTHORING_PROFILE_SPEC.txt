@@ -1,0 +1,536 @@
+================================================================================
+SPRINGWATER AUTHORING PROFILE
+Specification v1.0
+================================================================================
+
+This document defines the structure and conformance rules for Springwater
+authoring profiles.
+
+================================================================================
+AUTHORITY
+================================================================================
+
+This document contains normative and informative content.
+
+NORMATIVE sections define the authoring profile format. If two normative
+statements conflict, the one appearing earlier in this document governs.
+
+The normative sections are:
+- PURPOSE AND SCOPE
+- FILE FORMAT
+- ROOT STRUCTURE
+- METADATA
+- PREFERENCES
+- EXTENSIONS
+- SNIPPETS
+- COMPLETIONS
+- CONFORMANCE
+
+All other sections are informative.
+
+================================================================================
+PURPOSE AND SCOPE
+================================================================================
+
+Normative.
+
+An authoring profile describes how a writer conveniently produces valid
+documents for a specific Springwater schema. It defines triggers, templates,
+completion suggestions, and editor preferences.
+
+An authoring profile does not define document validity. The schema defines
+validity. An authoring profile cannot relax, override, or extend schema rules.
+
+An authoring profile is a portable description of authoring practice. It is
+not platform-specific configuration. It is not editor-specific scripting.
+
+================================================================================
+FILE FORMAT
+================================================================================
+
+Normative.
+
+An authoring profile is a Springwater document.
+
+It must validate against:
+- The Springwater canonical syntax (SYNTAX.txt).
+- The authoring profile meta-schema (authoring.schema.springwater).
+
+The recommended file extension is .springwater.
+A profile that fails canonical validation is not a Springwater file
+regardless of extension.
+
+================================================================================
+ROOT STRUCTURE
+================================================================================
+
+Normative.
+
+The root tag inside ^Springwater must be ^authoring_profile.
+
+^Springwater
+^authoring_profile
+...
+^authoring_profile/
+^Springwater/
+
+An ^authoring_profile must contain ^metadata.
+It may contain ^preferences, ^extensions, ^snippets, and ^completions in any
+order. It may contain no other top-level children.
+
+================================================================================
+METADATA
+================================================================================
+
+Normative.
+
+^metadata is required.
+
+It must contain:
+- ^name (string)
+- ^version (string)
+- ^target_schema (string)
+- ^target_schema_version (string)
+
+It may contain:
+- ^description (string)
+- ^author (string)
+
+Example:
+
+^metadata
+^name
+screenplay
+^name/
+^version
+1.0
+^version/
+^target_schema
+screenplay
+^target_schema/
+^target_schema_version
+1.0
+^target_schema_version/
+^metadata/
+
+PROFILE VERSION:
+The version of the authoring profile itself. Independent of schema version.
+A profile may revise its snippets, completions, and preferences without
+changing the schema it targets.
+
+TARGET SCHEMA IDENTITY:
+A profile targets exactly one schema at exactly one version. Version ranges
+are not supported in v1.0. If a profile is updated to support a new schema
+version, it must be reissued with new target_schema_version metadata.
+
+================================================================================
+PREFERENCES
+================================================================================
+
+Normative.
+
+^preferences is optional.
+
+Preferences declare authoring intent. They are advisory.
+
+A conforming editor may support, partially support, or ignore any declared
+preference. Preferences do not affect document validity. An editor that
+cannot honor a preference is still conforming.
+
+Recognized preferences in v1.0:
+
+^indent_size
+Integer. Recommended indentation per nesting level.
+Default: 2.
+
+^auto_pair_tags
+enabled | disabled. Suggests that the editor should insert a matching
+closing tag when an opening tag is created.
+Default: enabled.
+
+^paired_tag_rename
+enabled | disabled. Suggests that renaming an opening tag should
+rename its matching closing tag.
+Default: enabled.
+
+^preferences contains only the recognized preferences listed above. A
+preference name not listed here is not permitted inside ^preferences. Vendor,
+experimental, or future settings do not go in ^preferences; they go in the
+^extensions container (see EXTENSIONS), which is open and preserved. This
+keeps ^preferences strict and validatable while still allowing a profile to
+carry data this version does not define.
+
+Example:
+
+^preferences
+^indent_size
+2
+^indent_size/
+^auto_pair_tags
+enabled
+^auto_pair_tags/
+^paired_tag_rename
+enabled
+^paired_tag_rename/
+^preferences/
+
+================================================================================
+EXTENSIONS
+================================================================================
+
+Normative.
+
+^extensions is optional.
+
+It is the single open container in an authoring profile. It exists so that a
+profile may carry vendor, experimental, or future data that this version of
+the specification does not define, without weakening the strict validation of
+the rest of the profile.
+
+Inside ^extensions, any tag names are permitted. The meta-schema marks
+^extensions with allows_unknown_children, so its children and their subtrees
+are valid Springwater of any shape and are not otherwise constrained by the
+meta-schema.
+
+A conforming consumer:
+- Must preserve the entire ^extensions container, with all of its content and
+child elements, exactly, when it re-emits a profile.
+- Must not treat any data inside ^extensions as affecting document validity.
+- May read and act on an extension it recognizes.
+- Must ignore an extension it does not recognize, rather than reject the
+profile.
+
+Everything outside ^extensions remains strict. ^preferences, ^snippets, and
+^completions admit only the names this specification defines. Extensibility
+lives in exactly one place, by design, so that the boundary between defined
+behavior and vendor data is always visible.
+
+Example:
+
+^extensions
+^acme_theme
+dark
+^acme_theme/
+^acme_panel_layout
+^side
+right
+^side/
+^acme_panel_layout/
+^extensions/
+
+The names acme_theme and acme_panel_layout are not defined by this
+specification. They are valid because they appear inside ^extensions, and a
+consumer that does not recognize them preserves them and otherwise ignores
+them.
+
+================================================================================
+SNIPPETS
+================================================================================
+
+Normative.
+
+^snippets is optional.
+
+It contains zero or more ^snippet elements.
+
+SNIPPET STRUCTURE:
+
+Each ^snippet must contain:
+- ^trigger (string)
+- ^template (structural)
+
+Each ^snippet may contain:
+- ^description (string)
+
+TRIGGER:
+The character sequence the writer types to invoke the snippet.
+Triggers should be short and mnemonic. Triggers should not begin with ^.
+Trigger uniqueness within a profile is the profile author's responsibility.
+
+TEMPLATE:
+The structural Springwater subtree to insert at the cursor position.
+
+The template's children are the actual Springwater elements to insert.
+The template is not stored as escaped text. It is a real Springwater
+subtree validated by the canonical parser.
+
+PLACEHOLDER NOTATION:
+Content lines inside a template may contain placeholder markers using
+the following notation:
+
+${0:default}        Final cursor position with optional default text.
+${1:default}        First tab stop with optional default text.
+${2:default}        Second tab stop, and so on.
+${1|a,b,c|}         First tab stop with choice list.
+
+Placeholder notation is part of this specification, not part of Springwater
+syntax. Editors that do not support placeholders may insert the content
+lines unchanged. The writer can then manually replace placeholder markers.
+
+TEMPLATE COMPILATION:
+
+When a snippet is invoked:
+1. The compiler locates the ^template element.
+2. The compiler takes the template's ordered children (elements and
+content lines).
+3. The compiler serializes those children using the profile's indent
+preference, anchored at the cursor's current indentation level.
+4. Placeholder markers in content lines are preserved during serialization.
+5. The serialized text is inserted at the cursor position.
+
+The result must be a structurally valid addition to the surrounding
+document, ignoring placeholder markers.
+
+Example:
+
+^snippets
+^snippet
+^trigger
+sc
+^trigger/
+^description
+Scene with slugline and opening action
+^description/
+^template
+^scene
+^slugline
+${1:INT. LOCATION - DAY}
+^slugline/
+
+^action
+${0:Description.}
+^action/
+^scene/
+^template/
+^snippet/
+^snippets/
+
+================================================================================
+COMPLETIONS
+================================================================================
+
+Normative.
+
+^completions is optional.
+
+It contains zero or more ^completion elements.
+
+COMPLETION STRUCTURE:
+
+Each ^completion must contain:
+- ^context
+- ^suggestions
+
+CONTEXT:
+
+^context describes when the completion applies.
+
+It must contain:
+- ^parent (string) - the immediate parent tag name.
+
+It may contain:
+- ^after (string) - the preceding sibling tag name, if any.
+
+The completion applies when the cursor is positioned to insert a new
+child of an element whose tag matches ^parent, and (if ^after is present)
+the preceding sibling element has the matching tag.
+
+SUGGESTIONS:
+
+^suggestions contains one or more ^suggestion elements.
+
+Each ^suggestion contains a single string: the tag name to suggest.
+
+Suggestion order in the file is the suggestion ranking. Earlier
+suggestions are presented first.
+
+COMPLETION SEMANTICS:
+
+When the writer requests completion, the editor:
+1. Determines the cursor's structural position (parent and last sibling).
+2. Finds completion rules matching that context.
+3. Presents the matched profile suggestions first, in profile order.
+4. Presents remaining schema-valid children as additional suggestions.
+5. Never presents schema-invalid children.
+
+The profile provides ranking and emphasis. The schema provides authority.
+
+Example:
+
+^completions
+^completion
+^context
+^parent
+dialogue
+^parent/
+^after
+character
+^after/
+^context/
+^suggestions
+^suggestion
+parenthetical
+^suggestion/
+^suggestion
+lines
+^suggestion/
+^suggestions/
+^completion/
+^completions/
+
+================================================================================
+CONFORMANCE
+================================================================================
+
+Normative.
+
+A CONFORMING PROFILE:
+- Validates against the Springwater canonical syntax.
+- Validates against the authoring profile meta-schema.
+- Declares its target schema and target schema version.
+- Contains no structural templates that fail canonical validation.
+
+A CONFORMING CONSUMER (compiler, editor, or tool):
+- Reads profiles using a strict Springwater parser.
+- Treats schema rules as authoritative.
+- Treats profile preferences as advisory.
+- Falls back to schema-supplied valid children when no profile completion
+applies.
+- Preserves the ^extensions container and all of its contents exactly when
+re-emitting profiles, and ignores any extension it does not recognize.
+- May ignore any preference it cannot honor.
+- Must not present schema-invalid completions.
+
+================================================================================
+EXAMPLE: COMPLETE SCREENPLAY PROFILE
+================================================================================
+
+Informative.
+
+^Springwater
+^authoring_profile
+^metadata
+^name
+screenplay
+^name/
+^version
+1.0
+^version/
+^target_schema
+screenplay
+^target_schema/
+^target_schema_version
+1.0
+^target_schema_version/
+^description
+Default authoring profile for industry-standard screenplays.
+^description/
+^metadata/
+
+^preferences
+^indent_size
+2
+^indent_size/
+^auto_pair_tags
+enabled
+^auto_pair_tags/
+^paired_tag_rename
+enabled
+^paired_tag_rename/
+^preferences/
+
+^snippets
+^snippet
+^trigger
+sc
+^trigger/
+^description
+Scene with slugline and opening action
+^description/
+^template
+^scene
+^slugline
+${1:INT. LOCATION - DAY}
+^slugline/
+
+^action
+${0:Description.}
+^action/
+^scene/
+^template/
+^snippet/
+
+^snippet
+^trigger
+dlg
+^trigger/
+^description
+Character dialogue
+^description/
+^template
+^dialogue
+^character
+${1:CHARACTER}
+^character/
+^lines
+${0:Line.}
+^lines/
+^dialogue/
+^template/
+^snippet/
+^snippets/
+
+^completions
+^completion
+^context
+^parent
+act1
+^parent/
+^context/
+^suggestions
+^suggestion
+scene
+^suggestion/
+^suggestion
+montage
+^suggestion/
+^suggestion
+transition
+^suggestion/
+^suggestions/
+^completion/
+
+^completion
+^context
+^parent
+dialogue
+^parent/
+^after
+character
+^after/
+^context/
+^suggestions
+^suggestion
+parenthetical
+^suggestion/
+^suggestion
+lines
+^suggestion/
+^suggestions/
+^completion/
+^completions/
+^authoring_profile/
+^Springwater/
+
+================================================================================
+VERSION INFORMATION
+================================================================================
+
+Authoring Profile Specification v1.0
+Frozen: January 31, 2026
+
+This specification is immutable. Future revisions will be new versions.
+
+================================================================================
+END
+================================================================================

@@ -1,0 +1,1072 @@
+================================================================================
+THE SPRINGWATER SYNTAX
+Canonical Reference v1.0
+================================================================================
+
+This document defines the complete syntax of Springwater v1.0.
+
+================================================================================
+AUTHORITY
+================================================================================
+
+This document contains normative and informative content.
+
+NORMATIVE sections define the language. If two normative statements conflict,
+the one appearing earlier in this document governs.
+
+The normative sections are:
+- TERMS
+- THE SEVEN RULES
+- COMPLETE SYNTAX GRAMMAR
+- LINE CLASSIFICATION
+- PARSED REPRESENTATION
+- PARSING ALGORITHM
+- DOCUMENT IDENTITY
+- ENCODING
+
+All other sections are informative. They illustrate, explain, and teach,
+but do not override normative text.
+
+================================================================================
+WHAT IS SPRINGWATER?
+================================================================================
+
+Informative.
+
+Springwater is a line-oriented, plain-text format for hierarchical documents.
+
+It uses seven rules to represent structure explicitly while preserving
+content exactly once classified.
+
+Structure is explicit.
+Once classified as content, a line is preserved exactly.
+
+================================================================================
+TERMS
+================================================================================
+
+Normative.
+
+BYTE STREAM:
+The raw input to a Springwater parser.
+
+UTF-8 BOM:
+The three-byte sequence EF BB BF appearing at the start of the byte stream.
+
+A conforming parser must reject a byte stream that begins with the UTF-8 BOM
+byte sequence. The codepoint U+FEFF appearing elsewhere in decoded content
+is an ordinary content character.
+
+UTF-8 VALIDATION:
+A conforming parser must verify that the byte stream is valid UTF-8.
+If the byte stream is not valid UTF-8 or begins with the UTF-8 BOM byte
+sequence, the document is invalid.
+
+LINE BREAK:
+One of:
+- LF (U+000A)
+- CRLF (U+000D U+000A)
+- CR (U+000D)
+
+Only these three sequences divide lines. Unicode line separator (U+2028)
+and paragraph separator (U+2029) are ordinary content characters.
+
+PHYSICAL LINE:
+A unit produced by dividing the decoded character stream at line breaks.
+
+A physical line has two parts:
+- LINE TEXT: the characters preceding the terminating line break.
+- LINE-ENDING SEQUENCE: the LF, CRLF, or CR that terminates the line,
+  or absent if the line is the final line of a file with no trailing
+  line break.
+
+Physical lines are numbered starting at 1.
+
+Classification operates only on line text.
+Preservation depends on the line's class. For a content line, both its line
+text and its line-ending sequence are preserved (see CONTENT PRESERVATION).
+For a tag line, neither its surrounding whitespace nor its line-ending
+sequence is preserved (see TAG-LINE WHITESPACE).
+
+WHITESPACE:
+For this specification, whitespace means only:
+- Space (U+0020)
+- Tab (U+0009)
+
+No other characters are whitespace for classification purposes.
+In particular, nonbreaking space (U+00A0), em space (U+2003), and all
+other Unicode whitespace categories are ordinary content characters.
+
+TRIM:
+To remove leading and trailing whitespace (U+0020 and U+0009 only) from
+a line text for classification. Trimming never changes preserved content.
+Implementations must not use Unicode-aware or locale-aware trimming functions.
+
+TAG LINE:
+A physical line whose line text, after trimming, is a valid opening tag
+line or valid closing tag line.
+
+CONTENT LINE:
+A physical line whose line text, after trimming, is empty or does not
+begin with ^.
+
+INVALID ^ LINE:
+A physical line whose line text, after trimming, is non-empty and begins
+with ^, but is not a valid tag line.
+
+RESERVED LINE CLASS:
+Springwater reserves every physical line whose line text, after trimming,
+is non-empty and begins with ^. Such a line must be a valid tag line.
+Otherwise the document is invalid. This is the format's representational
+limit.
+
+CONTENT PRESERVATION:
+Once a physical line has been classified as a content line, both its line
+text and its line-ending sequence are preserved exactly: all original
+characters, all original leading and trailing whitespace in the line text,
+all original internal spacing, and the original line-ending form.
+
+Springwater does not preserve arbitrary input. Lines in the reserved line
+class cannot be represented as content. The format accepts this limit.
+
+LINE-ENDING PRESERVATION:
+Each content line retains its original line-ending sequence: LF, CRLF, or CR.
+A content line always has one of these three, never an absent ending, because
+a content line is never the final physical line of a valid document (the final
+physical line is always the root closing tag). A document mixing line-ending
+forms retains the original delimiter for each content line.
+
+Writers may use any accepted line-ending form. Parsers must accept all three.
+
+TAG-LINE WHITESPACE:
+Leading and trailing whitespace on a tag line, and the tag line's own
+line-ending sequence, are not preserved. A tag line carries no content;
+only its tag name and its role (opening or closing) survive parsing.
+Consequently ^chapter and "   ^chapter   " denote the same opening tag,
+and a tag line's surrounding whitespace has no representation in the
+parsed tree. This is the deliberate counterpart to content preservation:
+content whitespace is sacred, tag-line whitespace is cosmetic.
+
+================================================================================
+THE SEVEN RULES
+================================================================================
+
+Normative.
+
+RULE 1: DOCUMENT CONTAINER
+---------------------------
+The first physical line of the document must be a tag line whose line text,
+after trimming, is exactly ^Springwater. The last physical line of the
+document must be a tag line whose line text, after trimming, is exactly
+^Springwater/.
+
+No physical line may exist before the opening root tag. No physical line
+may exist after the closing root tag.
+
+Example:
+    ^Springwater
+    content here
+    ^Springwater/
+
+
+RULE 2: STRUCTURAL TAG LINES
+-----------------------------
+A structural tag line is a physical line whose line text, after trimming,
+is a valid opening tag line or valid closing tag line.
+
+Opening tag: ^name
+Closing tag: ^name/
+
+Each tag occupies its own physical line. There are no inline tags.
+
+Example:
+    ^chapter
+    Chapter content
+    ^chapter/
+
+
+RULE 3: MANDATORY CLOSURE
+--------------------------
+Every opening tag must have a matching closing tag with the same name.
+A closing tag closes the nearest unclosed opening tag (see Rule 4); that
+opening tag must have the same name, compared case-sensitively (see Rule 6).
+
+Example (VALID):
+    ^section
+    ^paragraph
+    Text
+    ^paragraph/
+    ^section/
+
+Example (INVALID):
+    ^section
+    ^paragraph
+    Text
+    ^section/
+    (^paragraph never closed)
+
+
+RULE 4: PROPER NESTING
+-----------------------
+Children must close before parents. Overlapping tags are invalid.
+
+Example (VALID):
+    ^outer
+      ^inner
+      Content
+      ^inner/
+    ^outer/
+
+Example (INVALID):
+    ^first
+      ^second
+    ^first/
+      ^second/
+
+
+RULE 5: TAG NAMES
+------------------
+Tag names must start with a letter (a-z, A-Z) and may contain only
+letters, digits (0-9), and underscores (_).
+
+The tag name Springwater is reserved for the single document root.
+It may not appear as a tag name anywhere else in the document.
+
+A conforming document contains exactly one ^Springwater opening tag
+and exactly one ^Springwater/ closing tag.
+
+Valid names: ^chapter, ^Chapter, ^chapter_1, ^scene_2a
+Invalid names: ^_private, ^123start, ^my-tag, ^my.tag
+Reserved: ^Springwater (root only)
+
+
+RULE 6: CASE SENSITIVITY
+-------------------------
+All tag names are case-sensitive.
+
+^chapter closes with ^chapter/, not ^Chapter/.
+^Chapter closes with ^Chapter/, not ^chapter/.
+
+The root tag name is exactly Springwater: capital S, lowercase remainder.
+
+
+RULE 7: CONTENT PRESERVATION
+-----------------------------
+A physical line is content if its line text, after trimming, is empty or
+does not begin with ^.
+
+Once classified as content, the line's line text and line-ending sequence
+are preserved exactly.
+
+Example:
+    ^paragraph
+    Text with    multiple spaces
+    and
+
+    blank lines above
+    ^paragraph/
+
+All spacing and blank lines are preserved.
+
+================================================================================
+COMPLETE SYNTAX GRAMMAR
+================================================================================
+
+Normative.
+
+This grammar generates only the valid lexical forms of a Springwater
+document. Lines whose trimmed line text begins with ^ but do not match
+<opening_tag_line> or <closing_tag_line> are not generated by the
+grammar and constitute the rejected class defined under LINE CLASSIFICATION.
+
+<document>           ::= <springwater_open> <inner_line>* <springwater_close>
+
+<springwater_open>    ::= physical line whose trimmed line text is exactly
+                          "^Springwater"
+                          This must be the first physical line.
+
+<springwater_close>   ::= physical line whose trimmed line text is exactly
+                          "^Springwater/"
+                          This must be the last physical line.
+
+<inner_line>          ::= <empty_line>
+                        | <content_line>
+                        | <opening_tag_line>
+                        | <closing_tag_line>
+
+<empty_line>          ::= physical line whose trimmed line text is empty
+
+<content_line>        ::= physical line whose trimmed line text is non-empty
+                          and does not begin with "^"
+
+<opening_tag_line>    ::= line text matching whitespace* "^" <tag_name>
+                          whitespace*
+
+<closing_tag_line>    ::= line text matching whitespace* "^" <tag_name> "/"
+                          whitespace*
+
+<tag_name>            ::= <letter> (<letter> | <digit> | "_")*
+                          The name "Springwater" is reserved for the root.
+
+<letter>              ::= "a".."z" | "A".."Z"
+<digit>               ::= "0".."9"
+<whitespace>          ::= U+0020 | U+0009
+
+Constraints not expressible in this context-free grammar:
+- The document root is exactly one ^Springwater / ^Springwater/ pair.
+- The root opening and root closing are distinct physical lines; every
+  document therefore has at least two physical lines.
+- The name Springwater may not appear in any other tag.
+- Opening and closing tags must match names exactly (case-sensitive).
+- Tags must nest properly (stack discipline).
+- The first physical line must be the root opening.
+- The last physical line must be the root closing.
+
+================================================================================
+LINE CLASSIFICATION
+================================================================================
+
+Normative.
+
+Each physical line is classified by inspecting its line text only.
+The line-ending sequence does not participate in classification.
+
+Algorithm:
+
+1. Take the line text (the characters preceding the line break).
+2. Remove leading and trailing U+0020 and U+0009 characters only.
+   Do not use Unicode-aware trimming.
+3. If the trimmed result is empty:
+   - The line is a content line.
+4. Else if the trimmed result does not begin with ^:
+   - The line is a content line.
+5. Else (trimmed result begins with ^):
+   - Let the candidate be the trimmed result with its leading ^ removed,
+     and with a single trailing / removed if one is present. The candidate
+     is a valid tag name when it is non-empty, its first character is an
+     ASCII letter (a-z, A-Z), and every remaining character is an ASCII
+     letter, an ASCII digit (0-9), or an underscore (_). This is the
+     <tag_name> production of COMPLETE SYNTAX GRAMMAR.
+   - If the trimmed result is ^ followed by a valid tag name and nothing
+     else:
+       * The line is an opening tag line.
+   - Else if the trimmed result is ^ followed by a valid tag name followed
+     by exactly one trailing /:
+       * The line is a closing tag line.
+   - Else:
+       * The line is an invalid ^ line. The document is invalid.
+
+Classification produces three resolved classes:
+1. Structural tag line (opening or closing)
+2. Content line (including empty lines)
+3. Invalid ^ line (document rejected)
+
+================================================================================
+PARSED REPRESENTATION
+================================================================================
+
+Normative.
+
+The result of parsing a valid Springwater document is an ordered tree.
+
+Each element contains:
+- A tag name (string).
+- An ordered sequence of children.
+- Each child is either a content line or a child element.
+
+    Element {
+        name: String
+        children: [ContentLine | Element]
+    }
+
+    ContentLine {
+        text: String         (the original line text, preserved exactly)
+        lineEnding: ContentLineEnding
+    }
+
+    PhysicalLineEnding ::= LF | CRLF | CR | None
+    ContentLineEnding  ::= LF | CRLF | CR
+
+A physical line, produced by line division, carries a PhysicalLineEnding;
+its None case arises only for a final physical line that lacks a trailing
+line break. A ContentLine carries a ContentLineEnding, which has no None
+case. These are different types by design: None is structurally
+unrepresentable on a content line.
+
+This is sound because the final physical line of a valid document is always
+the root closing tag, never a content line, and the root opening and closing
+tag lines are not stored as content or as children. None therefore never
+appears anywhere in the parsed representation. The parsed result is the root
+element itself, named Springwater, whose children are the document's
+top-level content lines and elements.
+
+The ordering of content lines and child elements reflects the order of
+physical lines in the source document.
+
+An element's children may include content lines in any position: before
+the first child element, between child elements, after the last child
+element, or with no child elements at all. This applies to every element,
+including the root element. Content lines that appear directly within the
+root, before its first child element or after its last, are valid and are
+preserved like any other content.
+
+Example:
+
+    ^paragraph
+    The word
+    ^emphasis
+    important
+    ^emphasis/
+    appears in this sentence.
+    ^paragraph/
+
+Parses as:
+
+    Element("paragraph", [
+        ContentLine(text: "The word", lineEnding: LF),
+        Element("emphasis", [
+            ContentLine(text: "important", lineEnding: LF)
+        ]),
+        ContentLine(text: "appears in this sentence.", lineEnding: LF)
+    ])
+
+A parser that loses the original ordering of mixed content does not conform.
+A parser that discards original line-ending sequences for content lines does
+not conform.
+
+================================================================================
+PARSING ALGORITHM
+================================================================================
+
+Normative.
+
+1. Read the byte stream.
+2. If the byte stream begins with the UTF-8 BOM byte sequence (EF BB BF),
+   reject.
+3. Verify that the byte stream is valid UTF-8. Reject if not.
+4. Divide the decoded character stream into physical lines at LF, CRLF,
+   or CR. For each physical line, separate its line text from its
+   line-ending sequence. Preserve both.
+5. If the document has zero physical lines, reject.
+6. Classify the first physical line per LINE CLASSIFICATION.
+   It must be a tag line whose trimmed line text is exactly "^Springwater".
+   If not, reject.
+7. Initialize a stack containing one frame: name "Springwater", children [].
+8. For each subsequent physical line:
+   a. Classify the line per LINE CLASSIFICATION.
+   b. If content line:
+      - Append ContentLine(text, lineEnding) to the current frame's children.
+   c. If opening tag line with name N:
+      - If N is "Springwater", reject (reserved for root).
+      - Push a new frame: name N, children [].
+   d. If closing tag line with name N:
+      - If the stack contains only the root frame and N is "Springwater":
+          * This is the root closing tag.
+          * Verify this is the last physical line. If not, reject.
+          * Pop the root frame. Parsing is complete.
+      - Else if the top frame's name matches N exactly:
+          * Pop the frame.
+          * Wrap it as an Element.
+          * Append it to the new top frame's children.
+      - Else: reject (name mismatch or stack underflow).
+   e. If invalid ^ line: reject.
+9. After all physical lines are processed:
+   - If the root closing tag was never encountered, reject.
+   - If the stack contains more than the root frame, reject (unclosed tags).
+
+================================================================================
+DOCUMENT IDENTITY
+================================================================================
+
+Normative.
+
+Springwater preserves content exactly but normalizes structure. A
+preservation format must state when two documents are the same. Springwater
+defines two distinct relations.
+
+BYTE EQUALITY:
+Two documents are byte-equal when their byte streams are identical. Byte
+equality is the strongest relation and is the one that matters for storage,
+hashing, and verbatim archival.
+
+TREE EQUALITY:
+Two documents are tree-equal when they parse to identical parsed
+representations, as defined in PARSED REPRESENTATION. Tree equality compares
+tag names, the ordered sequence of children, and for each content line both
+its text and its line-ending sequence.
+
+RELATIONSHIP:
+Byte equality implies tree equality. The converse does not hold. Two
+tree-equal documents may differ in the byte stream in exactly the following
+ways, all of which are discarded during parsing and therefore invisible to
+the parsed representation:
+- Leading and trailing whitespace on tag lines.
+- The line-ending sequence of any tag line, including whether the final
+  physical line (always the root closing tag) ends with a line break at all.
+
+No other byte-level difference is permitted between tree-equal documents.
+In particular, content line text, content line endings, and the order of
+lines are all preserved and therefore all significant to tree equality.
+The presence or absence of a trailing line break at the end of the file is
+not significant, because that break belongs to the root closing tag line,
+and tag-line endings are not preserved. A content line is never the final
+physical line of a valid document, so every content line's ending is one of
+LF, CRLF, or CR and is significant.
+
+CANONICAL FORM:
+A document is in canonical form when every tag line has no leading or
+trailing whitespace and ends with a single LF, and every content line is
+emitted with its stored text and its stored line-ending sequence exactly.
+Canonical form normalizes only what is not preserved (tag-line whitespace
+and tag-line endings); it never alters a content line, because content
+line text and content line endings are significant to tree equality.
+
+Given a tree, canonical form is uniquely determined: each tag line is
+emitted without leading or trailing whitespace and with an LF line ending,
+and each content line is reproduced verbatim from the tree. Two documents
+that are tree-equal therefore have identical canonical forms, and a
+document's canonical form is byte-equal to the original exactly when the
+original already had unindented, LF-terminated tag lines. Canonical form is
+one representative of a tree-equality class.
+
+A writer that emits canonical form is conforming. A writer that preserves
+the original byte stream is also conforming. The choice between them is a
+writer policy, not a validity question: both produce, for a given tree, a
+document that parses back to that tree.
+
+CONFORMANCE CONSEQUENCE:
+An implementation that rewrites a document by canonicalizing tag-line
+whitespace and tag-line endings, while preserving every content line
+exactly, produces a tree-equal document and conforms. An implementation
+that alters any content line, reorders children, or changes a content
+line ending does not conform.
+
+================================================================================
+ENCODING
+================================================================================
+
+Normative.
+
+CHARACTER ENCODING:
+- The byte stream must be valid UTF-8.
+- A leading UTF-8 BOM byte sequence (EF BB BF) is rejected.
+- All Unicode characters are allowed in content lines, including U+FEFF
+  when it appears as decoded content rather than as a leading byte order
+  marker.
+- Tag names use ASCII only: letters (a-z, A-Z), digits (0-9), underscore (_).
+
+LINE ENDINGS:
+- LF (U+000A), CRLF (U+000D U+000A), CR (U+000D).
+- U+2028 and U+2029 are not line breaks. They are content characters.
+- Parsers must accept all three line-ending forms.
+- Content lines retain their original line-ending sequence.
+
+WHITESPACE:
+- Only U+0020 (space) and U+0009 (tab) participate in trimming.
+- All other Unicode whitespace characters are content characters.
+
+FILE EXTENSION:
+- .springwater recommended.
+- .txt acceptable.
+
+================================================================================
+WHY ^
+================================================================================
+
+Informative.
+
+Springwater uses the caret (^, U+005E, Shift+6) as its tag character.
+
+The caret minimizes collisions with common line-leading syntax. It does
+not conflict with code annotations (@State, @Override, @property), email
+addresses, social handles, comments (#, //), shell variables ($), or
+markup headers.
+
+Springwater reserves every physical line whose trimmed line text is
+non-empty and begins with ^. Such a line must be a valid tag line.
+Otherwise the document is invalid. This is the format's representational
+limit, accepted by design.
+
+================================================================================
+VALID DOCUMENT EXAMPLES
+================================================================================
+
+Informative.
+
+EXAMPLE 1: MINIMAL DOCUMENT
+----------------------------
+^Springwater
+^Springwater/
+
+
+EXAMPLE 2: SINGLE CONTAINER
+----------------------------
+^Springwater
+^document
+Hello, world!
+^document/
+^Springwater/
+
+
+EXAMPLE 3: NESTED STRUCTURE
+----------------------------
+^Springwater
+^book
+^chapter
+^title
+Chapter One
+^title/
+^paragraph
+It was a dark and stormy night.
+^paragraph/
+^chapter/
+^book/
+^Springwater/
+
+
+EXAMPLE 4: MULTIPLE SIBLINGS
+-----------------------------
+^Springwater
+^document
+^section
+First section
+^section/
+^section
+Second section
+^section/
+^document/
+^Springwater/
+
+
+EXAMPLE 5: MIXED CONTENT AND TAGS
+----------------------------------
+^Springwater
+^paragraph
+The word
+^emphasis
+important
+^emphasis/
+appears in this sentence.
+^paragraph/
+^Springwater/
+
+
+EXAMPLE 6: CONTENT WITH CODE ANNOTATIONS
+------------------------------------------
+^Springwater
+^code
+@State var count = 0
+@Observable class Model {}
+@MainActor func update() {}
+@Override public void run() {}
+#include <stdio.h>
+$PATH
+john@example.com
+^code/
+^Springwater/
+
+All lines are content. No collisions with structure.
+
+
+EXAMPLE 7: CONTENT WITH BLANK LINES
+------------------------------------
+^Springwater
+^poem
+First stanza
+
+Second stanza
+
+Third stanza
+^poem/
+^Springwater/
+
+
+EXAMPLE 8: CONTENT WITH INDENTATION
+------------------------------------
+^Springwater
+^code
+    function hello() {
+        return "world";
+    }
+^code/
+^Springwater/
+
+Leading spaces are preserved exactly.
+
+
+EXAMPLE 9: COMPLEX DOCUMENT
+----------------------------
+^Springwater
+^screenplay
+^title_page
+^title
+The Great Adventure
+^title/
+^author
+Jane Smith
+^author/
+^title_page/
+
+^act
+^scene
+^slugline
+INT. OFFICE - DAY
+^slugline/
+^action
+JOHN enters the room.
+^action/
+^dialogue
+^character
+JOHN
+^character/
+^speech
+Hello, everyone!
+^speech/
+^dialogue/
+^scene/
+^act/
+^screenplay/
+^Springwater/
+
+Structure is carried entirely by the tags. No content line has leading
+whitespace, so every value (the title, the slugline, the dialogue) is exactly
+what it appears to be, with nothing injected.
+
+================================================================================
+INVALID DOCUMENT EXAMPLES
+================================================================================
+
+Informative.
+
+INVALID 1: WRONG CASE FOR ROOT
+-------------------------------
+^springwater
+^document
+^document/
+^springwater/
+
+Rejected: root must be exactly ^Springwater.
+
+
+INVALID 2: CONTENT BEFORE ROOT
+-------------------------------
+Preamble
+^Springwater
+^Springwater/
+
+Rejected: first physical line is not ^Springwater.
+
+
+INVALID 3: CONTENT AFTER ROOT
+------------------------------
+^Springwater
+^Springwater/
+Trailing content
+
+Rejected: last physical line is not ^Springwater/.
+
+
+INVALID 4: NESTED ROOT
+-----------------------
+^Springwater
+^Springwater
+^Springwater/
+^Springwater/
+
+Rejected: Springwater is reserved for the single document root.
+
+
+INVALID 5: MISSING CLOSING TAG
+-------------------------------
+^Springwater
+^paragraph
+Content
+^Springwater/
+
+Rejected: ^paragraph never closed.
+
+
+INVALID 6: CASE MISMATCH
+-------------------------
+^Springwater
+^Chapter
+Content
+^chapter/
+^Springwater/
+
+Rejected: ^Chapter does not match ^chapter/.
+
+
+INVALID 7: IMPROPER NESTING
+----------------------------
+^Springwater
+^outer
+^inner
+^outer/
+^inner/
+^Springwater/
+
+Rejected: ^inner must close before ^outer.
+
+
+INVALID 8: INVALID TAG NAME
+----------------------------
+^Springwater
+^my-tag
+Content
+^my-tag/
+^Springwater/
+
+Rejected: hyphens not allowed in tag names.
+
+
+INVALID 9: INLINE TAGS
+-----------------------
+^Springwater
+^paragraph This is text. ^paragraph/
+^Springwater/
+
+Rejected: not a valid tag line.
+
+
+INVALID 10: STRUCTURAL-LOOKING CONTENT
+---------------------------------------
+^Springwater
+^paragraph
+^john said hello
+^paragraph/
+^Springwater/
+
+Rejected: "^john said hello" trimmed begins with ^ but is not a valid
+tag line.
+
+
+INVALID 11: ^ FOLLOWED BY INVALID CHARACTER
+--------------------------------------------
+^Springwater
+^paragraph
+^123
+^paragraph/
+^Springwater/
+
+Rejected: "^123" trimmed begins with ^ but is not a valid tag line
+(tag names must start with a letter).
+
+================================================================================
+CANONICAL FORMATTING STYLE
+================================================================================
+
+Informative.
+
+THE ONE RULE THAT MATTERS MOST WHEN AUTHORING BY HAND:
+
+Indenting a tag line does nothing. Indenting a content line changes the
+content.
+
+Leading whitespace on a tag line is discarded. Leading whitespace on a
+content line is part of the content and is preserved exactly. A content
+line written as "    My Document" has a title of "    My Document", with
+four leading spaces, not "My Document". This is the single most common
+authoring mistake, and the format cannot warn you about it: indented
+content is valid, it just is not the content you probably meant.
+
+RECOMMENDED STYLE:
+Because tag indentation is cosmetic and content indentation is significant,
+the safest hand-authored style is flat: write every tag line and every
+content line starting at column zero. The structure is already explicit in
+the tags, so visual indentation buys nothing in the stored document and
+risks contaminating content. Let tools display indentation derived from the
+tree; do not bake it into the file.
+
+- Use lowercase tag names.
+- Write tags and content flush to the left margin.
+- Put content on its own lines, separate from tags.
+- Use blank lines between major sections for readability (a blank line is
+  an empty content line and is preserved, so use them only where a
+  preserved blank line is acceptable).
+
+EXAMPLE (flat, no injected whitespace):
+
+^Springwater
+^document
+^metadata
+^title
+My Document
+^title/
+^author
+John Doe
+^author/
+^metadata/
+^body
+^section
+^heading
+Introduction
+^heading/
+^paragraph
+This is the introduction.
+^paragraph/
+^section/
+^body/
+^document/
+^Springwater/
+
+If you prefer to indent tag lines for readability while editing, you may:
+their indentation is discarded. But never indent a content line unless you
+intend those leading spaces to be part of the content.
+
+EXAMPLE (indented tags, content still flush — tag indentation is cosmetic,
+content is not):
+
+^Springwater
+^document
+  ^metadata
+    ^title
+My Document
+    ^title/
+  ^metadata/
+^document/
+^Springwater/
+
+In the second example the tag indentation is purely visual and vanishes on
+parsing; the title is still exactly "My Document". The result is visually
+uneven, which is precisely why the flat style is recommended for authoring
+and a tool-rendered tree is recommended for display.
+
+================================================================================
+DESIGN PHILOSOPHY
+================================================================================
+
+Informative.
+
+Springwater reserves every line whose trimmed line text is non-empty and
+begins with ^. In exchange, the format offers an exceptionally small and
+durable grammar.
+
+That is the format's bargain.
+
+SIMPLICITY:
+Seven rules. No hidden machinery.
+
+PERMANENCE:
+The syntax does not evolve. Which documents are valid, and how valid
+documents parse, are fixed. Clarifying revisions may sharpen the wording
+but never change either.
+
+EXPLICITNESS:
+Structure is visible, not implied.
+
+DETERMINISM:
+One input produces one parse tree.
+
+PRESERVATION:
+Once classified as content, a line is preserved exactly, including its
+line-ending sequence.
+
+================================================================================
+QUICK REFERENCE
+================================================================================
+
+Informative.
+
+TAG CHARACTER:       ^ (caret, U+005E)
+OPENING TAG:         ^name
+CLOSING TAG:         ^name/
+ROOT OPEN:           ^Springwater (first physical line)
+ROOT CLOSE:          ^Springwater/ (last physical line)
+TAG NAMES:           Start a-z A-Z. Contain a-z A-Z 0-9 _. Case-sensitive.
+RESERVED NAME:       Springwater (root only)
+CONTENT:             Any line whose trimmed line text is empty or does
+                     not begin with ^
+RESERVED CLASS:      Any non-empty line whose trimmed line text begins
+                     with ^ must be a valid tag line
+WHITESPACE:          U+0020 and U+0009 only for trimming
+ENCODING:            UTF-8, no leading BOM byte sequence
+LINE ENDINGS:        LF, CRLF, CR (all accepted, preserved for content)
+NESTING:             Unbounded by format
+ESCAPING:            None
+INLINE TAGS:         None
+
+MINIMAL DOCUMENT:
+^Springwater
+^Springwater/
+
+================================================================================
+FREQUENTLY ASKED QUESTIONS
+================================================================================
+
+Informative.
+
+Q: Can I put tags on the same line as content?
+A: No. One tag per physical line.
+
+Q: Are tag names case-sensitive?
+A: Yes. ^chapter and ^Chapter are different tags.
+
+Q: Can content contain ^?
+A: Yes, as long as the trimmed line text does not begin with ^.
+
+Q: Can content contain @, #, $, or other symbols?
+A: Yes. Only ^ at the start of trimmed line text is reserved.
+
+Q: What if a line's trimmed line text begins with ^ but is not a valid tag?
+A: The document is invalid. This includes ^123, ^/, ^^tag, ^ hello, and
+any other malformed ^ line.
+
+Q: Can I nest ^Springwater inside a document?
+A: No. The name Springwater is reserved for the single document root.
+
+Q: Does indentation make a tag line into content?
+A: No. Only U+0020 and U+0009 are trimmed, and trimming is for
+classification only.
+
+Q: Are line endings preserved?
+A: Yes. Each content line retains its original line-ending sequence: LF,
+CRLF, or CR. A content line never has an absent ending, because content is
+never the final physical line of a document. The trailing line break at the
+very end of the file belongs to the root closing tag, and tag-line endings
+are not preserved, so whether the file ends with a final newline does not
+affect the parsed tree.
+
+Q: What about Unicode whitespace like nonbreaking space?
+A: Only U+0020 and U+0009 participate in trimming. All other Unicode
+whitespace characters are ordinary content characters.
+
+Q: What about a U+FEFF character inside content?
+A: Allowed. Only the leading UTF-8 BOM byte sequence (EF BB BF) at the
+start of the byte stream is rejected.
+
+Q: Will the v1.0 syntax change?
+A: No. Clarifying revisions may explain the syntax more precisely, but must
+not change which documents are valid or how valid documents parse. The set
+of valid documents and their parsed results are fixed.
+
+Q: Are two documents the same if their tags are indented differently?
+A: They are tree-equal but not byte-equal. Tag-line indentation and
+tag-line endings are not preserved; content is preserved exactly. See
+DOCUMENT IDENTITY.
+
+Q: May a tool reformat a document's tag indentation?
+A: Yes, provided every content line is preserved exactly. The result is
+tree-equal to the original and is conforming. See DOCUMENT IDENTITY.
+
+================================================================================
+GOVERNING PRINCIPLE
+================================================================================
+
+Structure is explicit.
+Once classified as content, a line is preserved exactly.
+
+================================================================================
+END
+================================================================================
+
+Springwater v1.0
+Frozen: January 31, 2026
+Revised: clarifying revision adding DOCUMENT IDENTITY, tag-line whitespace
+non-preservation, explicit root-content permission, a self-contained line
+classification, the distinct-root-lines constraint, and Rule 3/Rule 4
+cross-reference. No change alters the parsed result of any document that was
+valid or invalid before this revision; every correction makes explicit a
+property the parsing algorithm already had.
+
+================================================================================

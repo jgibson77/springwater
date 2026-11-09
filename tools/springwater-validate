@@ -1,0 +1,192 @@
+#!/usr/bin/env python3
+"""springwater-validate - Strict reference validator for Springwater v1.0.
+
+Implements the canonical parsing algorithm exactly: UTF-8 validation,
+BOM rejection, physical line division at LF/CRLF/CR, space-and-tab-only
+trimming, the reserved root name, and the first/last physical line rules.
+
+Usage:
+    springwater-validate <file> [<file> ...]
+
+Exit codes:
+    0 - All documents are valid
+    1 - At least one document is invalid
+    2 - File error (not found, cannot read)
+
+The Swift package SpringwaterSyntax is the reference implementation.
+This tool mirrors its algorithm for environments without a Swift toolchain.
+"""
+
+import sys
+from pathlib import Path
+
+VERSION = "2.0.0"
+
+
+class ValidationError(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(message)
+
+
+def physical_lines(s):
+    lines = []
+    start = 0
+    i = 0
+    n = len(s)
+    while i < n:
+        c = s[i]
+        if c == "\n":
+            lines.append(s[start:i])
+            i += 1
+            start = i
+        elif c == "\r":
+            if i + 1 < n and s[i + 1] == "\n":
+                lines.append(s[start:i])
+                i += 2
+            else:
+                lines.append(s[start:i])
+                i += 1
+            start = i
+        else:
+            i += 1
+    if start < n:
+        lines.append(s[start:])
+    return lines
+
+
+def trimmed(text):
+    start = 0
+    end = len(text)
+    while start < end and text[start] in (" ", "\t"):
+        start += 1
+    while end > start and text[end - 1] in (" ", "\t"):
+        end -= 1
+    return text[start:end]
+
+
+def is_ascii_letter(ch):
+    return ("a" <= ch <= "z") or ("A" <= ch <= "Z")
+
+
+def is_valid_tag_name(name):
+    if not name or not is_ascii_letter(name[0]):
+        return False
+    return all(is_ascii_letter(c) or ("0" <= c <= "9") or c == "_" for c in name[1:])
+
+
+def classify(t):
+    """Returns ('content', None) | ('open', name) | ('close', name) | ('invalid', None)."""
+    if not t or t[0] != "^":
+        return ("content", None)
+    body = t[1:]
+    closing = False
+    if body.endswith("/"):
+        closing = True
+        body = body[:-1]
+    if not is_valid_tag_name(body):
+        return ("invalid", None)
+    return ("close" if closing else "open", body)
+
+
+def validate(data: bytes):
+    """Raises ValidationError if the byte stream is not a valid document."""
+    if data.startswith(b"\xef\xbb\xbf"):
+        raise ValidationError("Byte stream begins with a UTF-8 BOM, which is rejected")
+    try:
+        s = data.decode("utf-8", errors="strict")
+    except UnicodeDecodeError:
+        raise ValidationError("Byte stream is not valid UTF-8")
+
+    lines = physical_lines(s)
+    if not lines:
+        raise ValidationError("Document is empty")
+
+    if trimmed(lines[0]) != "^Springwater":
+        raise ValidationError(
+            f"Line 1: Document must begin with ^Springwater, found: {trimmed(lines[0])}"
+        )
+
+    stack = [("Springwater", 1)]
+    root_closed = False
+
+    for index in range(1, len(lines)):
+        line_number = index + 1
+        kind, name = classify(trimmed(lines[index]))
+
+        if kind == "content":
+            continue
+
+        if kind == "open":
+            if name == "Springwater":
+                raise ValidationError(
+                    f"Line {line_number}: The tag name Springwater is reserved for the document root"
+                )
+            stack.append((name, line_number))
+            continue
+
+        if kind == "close":
+            if len(stack) == 1:
+                if name != "Springwater":
+                    raise ValidationError(
+                        f"Line {line_number}: Tag mismatch: ^Springwater opened on line 1, "
+                        f"but ^{name}/ closes here"
+                    )
+                if index != len(lines) - 1:
+                    raise ValidationError(
+                        f"Line {line_number}: ^Springwater/ must be the last physical line"
+                    )
+                stack.pop()
+                root_closed = True
+            else:
+                top_name, top_line = stack[-1]
+                if top_name != name:
+                    raise ValidationError(
+                        f"Line {line_number}: Tag mismatch: ^{top_name} opened on line {top_line}, "
+                        f"but ^{name}/ closes here"
+                    )
+                stack.pop()
+            continue
+
+        raise ValidationError(f"Line {line_number}: Invalid ^ line: {trimmed(lines[index])}")
+
+    if not root_closed:
+        if len(stack) > 1:
+            top_name, top_line = stack[-1]
+            raise ValidationError(f"Line {top_line}: Unclosed tag ^{top_name}")
+        raise ValidationError("Document must end with ^Springwater/")
+
+
+def main():
+    args = sys.argv[1:]
+    if not args:
+        print("Usage: springwater-validate <file> [<file> ...]", file=sys.stderr)
+        sys.exit(2)
+    if args[0] in ("--help", "-h"):
+        print(__doc__)
+        sys.exit(0)
+    if args[0] in ("--version", "-v"):
+        print(f"springwater-validate v{VERSION} (strict, spec-faithful)")
+        sys.exit(0)
+
+    any_invalid = False
+    for arg in args:
+        path = Path(arg)
+        try:
+            data = path.read_bytes()
+        except OSError as error:
+            print(f"Error reading {path}: {error}", file=sys.stderr)
+            sys.exit(2)
+        try:
+            validate(data)
+            print(f"  Valid: {path}")
+        except ValidationError as error:
+            any_invalid = True
+            print(f"  Invalid: {path}", file=sys.stderr)
+            print(f"  {error.message}", file=sys.stderr)
+
+    sys.exit(1 if any_invalid else 0)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,73 @@
+^Springwater
+^manual
+^title
+SwiftUI Quick Reference
+^title/
+^author
+Developer Documentation
+^author/
+^version
+1.0
+^version/
+
+^chapter
+^title
+State Management
+^title/
+
+^section
+^title
+Property Wrappers
+^title/
+
+^paragraph
+SwiftUI uses property wrappers to manage state. The most common are listed below.
+^paragraph/
+
+^code_block
+@State var count = 0
+@Binding var isPresented: Bool
+@Observable class UserModel {
+    var name: String = ""
+}
+@Environment(\.dismiss) var dismiss
+@MainActor func updateUI() {
+    // runs on main thread
+}
+^code_block/
+
+^paragraph
+All property wrappers beginning with @ are Swift language features. They are not Springwater tags because they do not appear as the only content on a trimmed line matching the ^name pattern.
+^paragraph/
+^section/
+
+^section
+^title
+Observable Pattern
+^title/
+
+^paragraph
+The modern approach uses @Observable instead of ObservableObject.
+^paragraph/
+
+^code_block
+@Observable
+class ViewModel {
+    var items: [Item] = []
+    var isLoading = false
+
+    func fetch() async {
+        isLoading = true
+        items = await service.load()
+        isLoading = false
+    }
+}
+^code_block/
+
+^note
+Notice that @Observable, @State, and all other Swift annotations appear safely as content. The ^ tag character has no collision with any programming language's annotation syntax.
+^note/
+^section/
+^chapter/
+^manual/
+^Springwater/

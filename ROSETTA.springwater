@@ -1,0 +1,826 @@
+^Springwater
+^rosetta_stone
+^validated_by
+rosetta.schema v1.0
+^validated_by/
+
+^introduction
+^purpose
+This document explains the Springwater format completely, from nothing. A reader who has never seen Springwater, and who has only this file and the ability to read it as text, can reconstruct the entire format: its rules, its grammar, its parsing, and its guarantees. It is written to survive.
+^purpose/
+^date
+2026-01-31
+^date/
+^creators
+Springwater and this explanation were created by John Gibson.
+^creators/
+^for_whom
+For anyone who finds this file and wants to understand it: an archivist, an implementer, a student, or a reader in a distant future for whom today's software no longer runs. No tool is required. The format can be understood by reading, and re-implemented from this description alone.
+^for_whom/
+^how_to_use
+Read from top to bottom. The seven rules are the whole format; everything after them explains, proves, and demonstrates. Throughout this document, embedded Springwater is shown behind a leading "| " gutter, because a line whose trimmed text begins with the caret is structure, not content, and Springwater has no escaping. The gutter makes each example a content line. Mentally remove the "| " to read the real markup.
+^how_to_use/
+^fundamental_principle
+Structure is explicit. Once a line is classified as content, it is preserved exactly. These two sentences are the heart of Springwater; the rest is their precise statement.
+^fundamental_principle/
+^introduction/
+
+^what_springwater_is
+^definition
+Springwater is a line-oriented, plain-text format for hierarchical documents. Each line is either a tag that names structure or content that is preserved verbatim. There is nothing else: no attributes, no escaping, no inline markup.
+^definition/
+^tree_definition
+A valid Springwater document denotes exactly one ordered tree. Each node is an element with a name and an ordered list of children; each child is either a content line or another element. The root element is always named Springwater. One document, one tree, deterministically.
+^tree_definition/
+^encoding
+A document is a UTF-8 byte stream that does not begin with the UTF-8 byte order mark (the three bytes EF BB BF). Lines divide at LF, CRLF, or CR. Tag names use ASCII letters, digits, and underscores only; content may use any Unicode character.
+^encoding/
+^why_trees
+Trees are the smallest structure that expresses nesting, which is what documents are: chapters hold paragraphs, scenes hold dialogue, sections hold sections. A tree needs only two ideas, naming and containment, so it can be written by hand, parsed with a stack, and understood without a manual. Simplicity is what makes it durable.
+^why_trees/
+^what_springwater_is/
+
+^the_seven_rules
+^preamble
+Springwater is defined by seven rules. They are complete: a document that obeys all seven is valid, and its parse is fully determined. They are fixed: the set of valid documents, and the tree each one produces, will never change.
+^preamble/
+^rule_1
+^statement
+The first physical line of the document, after trimming spaces and tabs, must be exactly the root opening tag. The last physical line, after trimming, must be exactly the root closing tag. Nothing may precede the first or follow the last.
+^statement/
+^why_this_rule
+A document needs an unambiguous beginning and end so that a reader or parser knows it is whole and nothing is missing before or after.
+^why_this_rule/
+^valid_example
+| ^Springwater
+| content here
+| ^Springwater/
+^valid_example/
+^explanation
+The root is a single element named Springwater that contains the entire document. Its opening is the first line and its closing is the last line.
+^explanation/
+^invalid_example
+| preamble text
+| ^Springwater
+| ^Springwater/
+^invalid_example/
+^visual
+Springwater = [ first line ] ... everything ... [ last line ]
+^visual/
+^why_springwater_is_fixed
+The format is frozen as of version 1.0. Clarifying words may be sharpened, but which documents are valid, and the tree each produces, can never change. A document written today will parse identically forever. Permanence is a promise, not a hope.
+^why_springwater_is_fixed/
+^rule_1/
+^rule_2
+^statement
+A structural tag line is a physical line whose trimmed text is a valid opening tag or a valid closing tag. An opening tag is a caret followed by a name. A closing tag is a caret, a name, and a single trailing slash. Each tag is alone on its own line; there are no inline tags.
+^statement/
+^why_this_rule
+One tag per line keeps classification trivial and keeps structure visible. A reader can scan the left edge and see the shape of the document.
+^why_this_rule/
+^valid_example
+| ^chapter
+| Chapter content
+| ^chapter/
+^valid_example/
+^explanation
+The caret marks structure. A line that is just a caret and a name opens an element; the same with a trailing slash closes it.
+^explanation/
+^invalid_example
+| ^paragraph This is text. ^paragraph/
+^invalid_example/
+^visual
+opening = caret name ; closing = caret name slash
+^visual/
+^rule_2/
+^rule_3
+^statement
+Every opening tag must have a matching closing tag with the same name. A closing tag closes the nearest unclosed opening tag, which must have the same name.
+^statement/
+^why_this_rule
+Mandatory closure means no element is left ambiguous. Every container has a definite end, so the boundaries of structure are never guessed.
+^why_this_rule/
+^valid_example
+| ^section
+| ^paragraph
+| Text
+| ^paragraph/
+| ^section/
+^valid_example/
+^explanation
+Here paragraph opens and closes inside section, and section opens and closes. Every opening is answered.
+^explanation/
+^invalid_example
+| ^section
+| ^paragraph
+| Text
+| ^section/
+^invalid_example/
+^visual
+open A ... must later ... close A
+^visual/
+^rule_3/
+^rule_4
+^statement
+Children must close before their parents. Tags may not overlap.
+^statement/
+^why_this_rule
+Proper nesting is what makes the document a tree rather than a tangle. A stack of open tags is always closed from the top.
+^why_this_rule/
+^valid_example
+| ^outer
+| ^inner
+| Content
+| ^inner/
+| ^outer/
+^valid_example/
+^explanation
+Inner is fully contained in outer: it opens after outer opens and closes before outer closes.
+^explanation/
+^invalid_example
+| ^first
+| ^second
+| ^first/
+| ^second/
+^invalid_example/
+^visual
+outer [ inner [ ] ] is valid ; outer [ inner [ ] overlapped is not
+^visual/
+^rule_4/
+^rule_5
+^statement
+A tag name must start with an ASCII letter and may contain only ASCII letters, digits, and underscores. The name Springwater is reserved for the single document root and may appear nowhere else.
+^statement/
+^why_this_rule
+A small, fixed alphabet for names means tags can never be confused with content, and names are portable across every system that handles ASCII.
+^why_this_rule/
+^valid_example
+| ^chapter
+| ^scene_2a
+| ^Chapter
+^valid_example/
+^explanation
+Letters, digits after the first character, and underscores are allowed. Hyphens, dots, leading digits, and leading underscores are not.
+^explanation/
+^invalid_example
+| ^my-tag
+| ^123start
+| ^_private
+^invalid_example/
+^visual
+name = letter then ( letter | digit | underscore )*
+^visual/
+^rule_5/
+^rule_6
+^statement
+Tag names are case-sensitive. An opening tag closes only with a closing tag of exactly the same case. The root name is exactly Springwater: capital S, the rest lowercase.
+^statement/
+^why_this_rule
+Case sensitivity removes a whole class of ambiguity. There is one spelling of each name, compared byte for byte, with no locale or language rules to apply.
+^why_this_rule/
+^valid_example
+| ^Chapter
+| Content
+| ^Chapter/
+^valid_example/
+^explanation
+Chapter with a capital C must close with Chapter, not chapter. They are different names.
+^explanation/
+^invalid_example
+| ^Chapter
+| Content
+| ^chapter/
+^invalid_example/
+^visual
+Chapter is not chapter
+^visual/
+^rule_6/
+^rule_7
+^statement
+A physical line is content if its trimmed text is empty or does not begin with a caret. Once a line is classified as content, its text and its line ending are preserved exactly.
+^statement/
+^why_this_rule
+Preservation is the point of the format. Spacing, blank lines, and the exact characters of content survive unchanged, so Springwater can carry code, prose, or data without distortion.
+^why_this_rule/
+^valid_example
+| ^paragraph
+| Text with    multiple spaces
+| and a blank line follow.
+|
+| Still the same paragraph.
+| ^paragraph/
+^valid_example/
+^explanation
+Every space and blank line between the paragraph tags is kept. Trimming is used only to classify a line, never to alter preserved content.
+^explanation/
+^invalid_example
+| ^paragraph
+| ^john said hello
+| ^paragraph/
+^invalid_example/
+^visual
+trimmed begins with caret -> structure ; otherwise -> preserved content
+^visual/
+^rule_7/
+^rules_are_absolute
+The seven rules admit no exceptions. There are no optional features, no dialects, and no escapes. A line whose trimmed text begins with a caret must be a valid tag line; if it is not, the document is invalid. This is the format's one limit, accepted deliberately in exchange for a grammar small enough to never rot.
+^rules_are_absolute/
+^the_seven_rules/
+
+^progressive_examples
+^example_0
+^complexity_level
+0 - the minimal document
+^complexity_level/
+^description
+The smallest valid Springwater document: the root, opened and closed, containing nothing.
+^description/
+^example
+| ^Springwater
+| ^Springwater/
+^example/
+^tree
+Springwater [ ]
+^tree/
+^analysis
+Two physical lines, the first the root opening and the last the root closing. The tree is the root element with no children. Every valid document has at least these two lines.
+^analysis/
+^example_0/
+^example_1
+^complexity_level
+1 - one element with content
+^complexity_level/
+^description
+A single named element holding one content line.
+^description/
+^example
+| ^Springwater
+| ^document
+| Hello, world!
+| ^document/
+| ^Springwater/
+^example/
+^tree
+Springwater [ document [ "Hello, world!" ] ]
+^tree/
+^analysis
+The root contains one child element named document, which contains one content line. The content is preserved exactly, including its single space.
+^analysis/
+^example_1/
+^example_2
+^complexity_level
+2 - nested elements
+^complexity_level/
+^description
+An element inside an element, showing containment.
+^description/
+^example
+| ^Springwater
+| ^book
+| ^chapter
+| Chapter One
+| ^chapter/
+| ^book/
+| ^Springwater/
+^example/
+^tree
+Springwater [ book [ chapter [ "Chapter One" ] ] ]
+^tree/
+^analysis
+Depth grows by nesting. Book contains chapter; chapter contains a content line. Each opening is matched and each child closes before its parent.
+^analysis/
+^example_2/
+^example_3
+^complexity_level
+3 - siblings
+^complexity_level/
+^description
+Two elements at the same level inside a parent.
+^description/
+^example
+| ^Springwater
+| ^document
+| ^section
+| First
+| ^section/
+| ^section
+| Second
+| ^section/
+| ^document/
+| ^Springwater/
+^example/
+^tree
+Springwater [ document [ section [ "First" ] section [ "Second" ] ] ]
+^tree/
+^analysis
+Document has two children, both named section, in order. Repeated names are ordinary; order is preserved.
+^analysis/
+^example_3/
+^example_4
+^complexity_level
+4 - mixed content and elements
+^complexity_level/
+^description
+Content lines and child elements interleaved within one element.
+^description/
+^example
+| ^Springwater
+| ^paragraph
+| The word
+| ^emphasis
+| important
+| ^emphasis/
+| appears here.
+| ^paragraph/
+| ^Springwater/
+^example/
+^tree
+Springwater [ paragraph [ "The word" emphasis [ "important" ] "appears here." ] ]
+^tree/
+^analysis
+An element's children may be content and elements in any order. The sequence of children follows the order of the physical lines.
+^analysis/
+^example_4/
+^example_5
+^complexity_level
+5 - preserved whitespace and blank lines
+^complexity_level/
+^description
+Content whose spacing and blank lines are significant.
+^description/
+^example
+| ^Springwater
+| ^code
+|     function hello() {
+|         return "world";
+|     }
+| ^code/
+| ^Springwater/
+^example/
+^tree
+Springwater [ code [ "    function hello() {" "        return \"world\";" "    }" ] ]
+^tree/
+^analysis
+The leading spaces inside code are content and are kept exactly. Note that in the real file these lines are not guttered; the "| " shown here is only this document's display convention.
+^analysis/
+^example_5/
+^example_6
+^complexity_level
+6 - a realistic document
+^complexity_level/
+^description
+A small structured document combining metadata and body.
+^description/
+^example
+| ^Springwater
+| ^article
+| ^title
+| On Durable Formats
+| ^title/
+| ^body
+| ^paragraph
+| Plain text outlives its tools.
+| ^paragraph/
+| ^body/
+| ^article/
+| ^Springwater/
+^example/
+^tree
+Springwater [ article [ title [ "On Durable Formats" ] body [ paragraph [ "Plain text outlives its tools." ] ] ] ]
+^tree/
+^analysis
+Structure is carried entirely by tags. Because no content line is indented, each value is exactly what it appears to be, with nothing injected.
+^analysis/
+^example_6/
+^progressive_examples/
+
+^formal_specification
+^grammar_notation
+The grammar below uses angle brackets for nonterminals, the vertical bar for alternation, the asterisk for zero-or-more repetition, and quotation marks for literal text. It generates the valid lexical forms of a document; constraints a context-free grammar cannot express are listed with the grammar.
+^grammar_notation/
+^context_free_grammar
+document  = root_open inner_line* root_close
+root_open  = a physical line whose trimmed text is exactly the caret followed by "Springwater", and it is the first line
+root_close = a physical line whose trimmed text is exactly the caret, "Springwater", and a slash, and it is the last line
+inner_line = empty_line | content_line | opening_tag | closing_tag
+empty_line = a physical line whose trimmed text is empty
+content_line = a physical line whose trimmed text is non-empty and does not begin with the caret
+opening_tag = optional_whitespace caret name optional_whitespace
+closing_tag = optional_whitespace caret name slash optional_whitespace
+name = letter ( letter | digit | underscore )*
+letter = "a".."z" | "A".."Z" ; digit = "0".."9"
+Constraints beyond the grammar: exactly one root pair; the name Springwater appears nowhere but the root; openings and closings match by name, case-sensitively; tags nest on a stack; the root opening is first and the root closing is last.
+^context_free_grammar/
+^properties
+The grammar is regular at the line level (each line's class is decided by its trimmed text alone) and the document level adds one stack for nesting. Validation is therefore linear in the number of characters and uses memory proportional to nesting depth.
+^properties/
+^parsing_algorithm
+Reject a leading byte order mark. Decode as UTF-8 or reject. Divide into physical lines at LF, CRLF, or CR, keeping each line's ending. Require the first line to be the root opening. Push the root onto a stack. For each later line: if content, append it to the top element; if an opening tag, push a new element (rejecting the reserved root name); if a closing tag, it must match the top element by name and pop it, unless the stack holds only the root and the name is the root name, in which case it must be the last line and parsing ends. At the end, reject if the root never closed or any element is still open.
+^parsing_algorithm/
+^formal_specification/
+
+^schema_system
+^what_are_schemas
+The seven rules define syntax: which documents are well-formed and what tree each produces. They say nothing about which tags are meaningful for a novel, a screenplay, or a manual. A schema supplies that layer. A schema is itself an ordinary Springwater document that lists rules: which tag may be the root, which tags may contain which, which must appear, and which must be non-empty.
+^what_are_schemas/
+^separation_of_concerns
+Syntax is universal and frozen; conventions are per-domain and may grow. Keeping them apart means the core never has to change to support a new kind of document. A new domain is a new schema, not a new version of Springwater.
+^separation_of_concerns/
+^meta_circular_property
+Because a schema is a Springwater document, there is a schema that describes the shape of schemas, and it validates itself. The system explains itself in its own terms: the thing that defines document shapes is a document of the very format it constrains.
+^meta_circular_property/
+^schema_system/
+
+^tree_visualization
+^components
+A tree has one root, interior elements that contain other elements or content, and leaves that are content lines. An element is drawn as its name followed by its children in order; a content line is drawn as its text in quotation marks.
+^components/
+^examples
+Springwater [ chapter [ title [ "One" ] paragraph [ "Text." ] ] ] shows a root containing a chapter, which contains a title and a paragraph, each holding one content line.
+^examples/
+^traversal
+To read a tree, visit the root, then each child in order, descending into each element before moving to its next sibling. This pre-order walk reproduces the document's lines from top to bottom, which is why order is preserved and never inferred.
+^traversal/
+^tree_visualization/
+
+^semantic_concepts
+^document_type_patterns
+Different domains organize their heads differently, and Springwater imposes none of it. A published work may group bibliographic fields under a metadata element; a screenplay may keep flat title-page fields to match industry practice; a manual may use a simple header; a log may have no head at all. The schema for each domain chooses the pattern. Springwater provides structure; schemas provide convention; the domain determines organization.
+^document_type_patterns/
+^semantic_concepts/
+
+^common_errors
+^error_1
+^error_type
+Content placed before the root or after it
+^error_type/
+^invalid_example
+| preamble
+| ^Springwater
+| ^Springwater/
+^invalid_example/
+^why_invalid
+The first physical line must be the root opening and the last must be the root closing. Any line outside that pair is forbidden.
+^why_invalid/
+^correct_version
+| ^Springwater
+| preamble
+| ^Springwater/
+^correct_version/
+^error_1/
+^error_2
+^error_type
+An unclosed element
+^error_type/
+^invalid_example
+| ^Springwater
+| ^paragraph
+| Content
+| ^Springwater/
+^invalid_example/
+^why_invalid
+Paragraph opens but never closes. Every opening tag requires a matching closing tag.
+^why_invalid/
+^correct_version
+| ^Springwater
+| ^paragraph
+| Content
+| ^paragraph/
+| ^Springwater/
+^correct_version/
+^error_2/
+^error_3
+^error_type
+Overlapping tags
+^error_type/
+^invalid_example
+| ^Springwater
+| ^outer
+| ^inner
+| ^outer/
+| ^inner/
+| ^Springwater/
+^invalid_example/
+^why_invalid
+Inner must close before outer. Children close before parents; tags may not cross.
+^why_invalid/
+^correct_version
+| ^Springwater
+| ^outer
+| ^inner
+| ^inner/
+| ^outer/
+| ^Springwater/
+^correct_version/
+^error_3/
+^error_4
+^error_type
+Case mismatch between opening and closing
+^error_type/
+^invalid_example
+| ^Springwater
+| ^Chapter
+| ^chapter/
+| ^Springwater/
+^invalid_example/
+^why_invalid
+Names are compared case-sensitively. Chapter and chapter are different names, so the closing does not match.
+^why_invalid/
+^correct_version
+| ^Springwater
+| ^Chapter
+| ^Chapter/
+| ^Springwater/
+^correct_version/
+^error_4/
+^error_5
+^error_type
+An invalid tag name
+^error_type/
+^invalid_example
+| ^Springwater
+| ^my-tag
+| ^my-tag/
+| ^Springwater/
+^invalid_example/
+^why_invalid
+A hyphen is not allowed in a name. Names start with a letter and contain only letters, digits, and underscores.
+^why_invalid/
+^correct_version
+| ^Springwater
+| ^my_tag
+| ^my_tag/
+| ^Springwater/
+^correct_version/
+^error_5/
+^error_6
+^error_type
+Content that accidentally begins with a caret
+^error_type/
+^invalid_example
+| ^Springwater
+| ^paragraph
+| ^not a tag
+| ^paragraph/
+| ^Springwater/
+^invalid_example/
+^why_invalid
+A line whose trimmed text begins with a caret must be a valid tag line. "^not a tag" is neither valid structure nor allowed as content, so the document is rejected. Springwater has no escape to make such a line into content.
+^why_invalid/
+^correct_version
+Rephrase so the content does not begin with a caret, for example "the caret is not a tag here", or wrap the literal text in its own element whose content is written without a leading caret.
+^correct_version/
+^error_6/
+^common_errors/
+
+^mathematical_properties
+^property_1
+^statement
+Determinism: every valid document parses to exactly one tree.
+^statement/
+^proof
+Each physical line is classified by its trimmed text alone into exactly one class, and the parsing algorithm takes exactly one action per class with no choices. A deterministic procedure over a fixed input yields a single result; therefore the tree is unique.
+^proof/
+^significance
+Readers and machines, now and later, agree on what a document means. There is no implementation-defined behavior to drift.
+^significance/
+^property_1/
+^property_2
+^statement
+Decidability: validity is decidable in a single linear pass.
+^statement/
+^proof
+Classification is a constant-time test per line, and nesting is checked with a stack that pushes on openings and pops on closings. One pass with a stack decides acceptance; it always terminates after the lines are consumed.
+^proof/
+^significance
+Anyone can write a validator, and it is cheap to run on documents of any size.
+^significance/
+^property_2/
+^property_3
+^statement
+Content fidelity: parsing preserves every content line's text and line ending.
+^statement/
+^proof
+The algorithm appends content lines verbatim and never rewrites them; trimming is applied only to a copy used for classification. Thus the stored content equals the input content.
+^proof/
+^significance
+The format can carry source code, data, and prose without corruption, which is what makes it trustworthy for archival.
+^significance/
+^property_3/
+^property_4
+^statement
+Structural normalization: tree equality ignores tag-line whitespace and tag-line endings.
+^statement/
+^proof
+Classification trims spaces and tabs and discards tag-line endings before producing the tree, so two documents differing only in those respects classify their lines identically and build the same tree.
+^proof/
+^significance
+A document may be reindented or have its tag-line endings changed by a tool without changing its meaning, so long as content lines are untouched.
+^significance/
+^property_4/
+^property_5
+^statement
+Canonical form: each tree has exactly one canonical serialization.
+^statement/
+^proof
+Canonical form emits every tag line without surrounding whitespace and with a single LF, and every content line exactly as stored. Given a tree these choices are forced, so the canonical serialization is unique, and two tree-equal documents share it.
+^proof/
+^significance
+There is a stable representative for comparison, hashing, and storage, independent of how a document was originally spaced.
+^significance/
+^property_5/
+^property_6
+^statement
+Content universality: any UTF-8 text can be carried, except a line whose trimmed text begins with a caret.
+^statement/
+^proof
+Only the caret at the start of trimmed text is reserved; every other line is content and is preserved. Thus the sole excluded lines are those in the reserved class, and all other UTF-8 text is representable.
+^proof/
+^significance
+The one limit is small and explicit, and it is the price paid for a grammar with no escaping to misread.
+^significance/
+^property_6/
+^mathematical_properties/
+
+^multilingual_demonstrations
+^language_1
+^language_name
+English
+^language_name/
+^document
+| ^Springwater
+| ^note
+| Plain text outlives its tools.
+| ^note/
+| ^Springwater/
+^document/
+^tree
+Springwater [ note [ "Plain text outlives its tools." ] ]
+^tree/
+^notes
+Tag names are ASCII; content is English. The structure is independent of the content's language.
+^notes/
+^language_1/
+^language_2
+^language_name
+Spanish
+^language_name/
+^document
+| ^Springwater
+| ^note
+| El texto plano sobrevive a sus herramientas.
+| ^note/
+| ^Springwater/
+^document/
+^tree
+Springwater [ note [ "El texto plano sobrevive a sus herramientas." ] ]
+^tree/
+^notes
+Accented letters are ordinary content characters in UTF-8; only the ASCII tag name is constrained.
+^notes/
+^language_2/
+^language_3
+^language_name
+French
+^language_name/
+^document
+| ^Springwater
+| ^note
+| Le texte brut survit a ses outils.
+| ^note/
+| ^Springwater/
+^document/
+^tree
+Springwater [ note [ "Le texte brut survit a ses outils." ] ]
+^tree/
+^notes
+The content carries the message; the tag name remains a plain ASCII identifier.
+^notes/
+^language_3/
+^language_4
+^language_name
+German
+^language_name/
+^document
+| ^Springwater
+| ^notiz
+| Klartext ueberdauert seine Werkzeuge.
+| ^notiz/
+| ^Springwater/
+^document/
+^tree
+Springwater [ notiz [ "Klartext ueberdauert seine Werkzeuge." ] ]
+^tree/
+^notes
+Tag names may be chosen in any language as long as they use ASCII letters, as "notiz" does here.
+^notes/
+^language_4/
+^language_5
+^language_name
+Japanese
+^language_name/
+^document
+| ^Springwater
+| ^note
+| 平文は道具より長く生き残る。
+| ^note/
+| ^Springwater/
+^document/
+^tree
+Springwater [ note [ "平文は道具より長く生き残る。" ] ]
+^tree/
+^notes
+Non-Latin scripts are carried as content without any special handling; the parser treats the characters as ordinary UTF-8.
+^notes/
+^language_5/
+^language_6
+^language_name
+Arabic
+^language_name/
+^document
+| ^Springwater
+| ^note
+| النص العادي يدوم أطول من أدواته.
+| ^note/
+| ^Springwater/
+^document/
+^tree
+Springwater [ note [ "النص العادي يدوم أطول من أدواته." ] ]
+^tree/
+^notes
+Right-to-left content is preserved exactly as written; direction is a display concern, not a parsing one.
+^notes/
+^language_6/
+^language_7
+^language_name
+Russian
+^language_name/
+^document
+| ^Springwater
+| ^note
+| Простой текст переживает свои инструменты.
+| ^note/
+| ^Springwater/
+^document/
+^tree
+Springwater [ note [ "Простой текст переживает свои инструменты." ] ]
+^tree/
+^notes
+Cyrillic, like every other script, is ordinary content. The format is script-agnostic by construction.
+^notes/
+^language_7/
+^multilingual_demonstrations/
+
+^physical_encoding
+^utf8_requirement
+The byte stream must be valid UTF-8. A parser verifies this before anything else and rejects a stream that is not valid UTF-8.
+^utf8_requirement/
+^critical_characters
+The caret (U+005E) marks structure at the start of trimmed text. The slash (U+002F) marks a closing tag. Letters, digits, and the underscore form tag names. Every other character is content.
+^critical_characters/
+^whitespace_handling
+Only the space (U+0020) and the tab (U+0009) are trimmed, and only to classify a line. All other Unicode whitespace, including the nonbreaking space (U+00A0), is ordinary content. Trimming never alters preserved content.
+^whitespace_handling/
+^byte_order_mark
+A leading UTF-8 byte order mark, the three bytes EF BB BF, is rejected. The same codepoint (U+FEFF) appearing later in decoded text is ordinary content, not a marker.
+^byte_order_mark/
+^line_endings
+Lines divide at LF, CRLF, or CR, and only these three. A content line keeps its original ending. The Unicode line and paragraph separators (U+2028 and U+2029) are content, not line breaks.
+^line_endings/
+^physical_encoding/
+
+^preservation_principles
+^why_survives
+Springwater survives because it depends on almost nothing: a byte stream, UTF-8, and seven rules a person can hold in mind. There is no schema server, no binary format, no library version to match. The description you are reading is itself a valid document, so the format and its explanation travel together.
+^why_survives/
+^what_survives_language_death
+If every tool that ever processed Springwater were lost, a reader who can read this text could re-implement a parser from the rules and grammar above in an afternoon. The knowledge needed is self-contained here; nothing external must still exist.
+^what_survives_language_death/
+^discovery_scenario
+Imagine this file found far in the future, its original software long gone. The finder opens it as plain text, reads the seven rules, follows the parsing algorithm by hand on the examples, and confirms their trees. From that alone the finder can read every other Springwater document ever written. That is the purpose of this stone.
+^discovery_scenario/
+^preservation_principles/
+
+^self_validation
+This document is a valid Springwater document and conforms to the Rosetta schema it names. It therefore demonstrates the format it describes: the rules stated here are the rules that make this file itself parse. If you can read and validate this document using only its own instructions, the format has proven itself.
+^self_validation/
+
+^conclusion
+^message_to_future
+If you are reading this and you did not grow up with our tools, welcome. What you hold is a small, fixed way of writing down structure in plain text, made so it could reach you unchanged. Read the seven rules; they are the whole of it. Everything else here only explains them.
+^message_to_future/
+^date
+2026-01-31
+^date/
+^species
+Human
+^species/
+^planet
+Earth
+^planet/
+^hope
+That something written clearly enough, in a format simple enough, can cross whatever distance separates us, and still mean exactly what it meant on the day it was written.
+^hope/
+^conclusion/
+^rosetta_stone/
+^Springwater/
