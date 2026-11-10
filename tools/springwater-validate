@@ -166,7 +166,7 @@ def main():
         print(__doc__)
         sys.exit(0)
     if args[0] in ("--version", "-v"):
-        print(f"springwater-validate v{VERSION} (strict, spec-faithful)")
+        print(f"springwater-validate {VERSION} (tool version; implements Springwater v1.0 syntax)")
         sys.exit(0)
 
     any_invalid = False

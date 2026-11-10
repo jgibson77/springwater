@@ -18,17 +18,23 @@ Structure is explicit. Content is preserved exactly.
 
 ## What is Springwater?
 
-Springwater is a format for writing screenplays, novels, technical documentation, and other hierarchical documents in plain text.
+Springwater is a plain-text container for hierarchical documents: screenplays, novels, technical documentation, anything with nested structure. It is meant to be written and read by tools, kept for decades, and still be legible in any text editor.
 
-Seven rules. No exceptions. No edge cases.
+Seven rules. They are frozen.
 
 ### Why Springwater?
 
-- **Simple** — Seven rules, learn in five minutes
-- **Durable** — Plain text, UTF-8, line-oriented
-- **Universal** — Content from any domain is safe (code, prose, data)
-- **Permanent** — which documents are valid, and how they parse, are fixed
-- **Git-friendly** — Line-based diffs, perfect for version control
+- **One specification** — seven rules and one parse; there are no dialects
+- **Durable** — plain text, UTF-8, line-oriented
+- **Content-preserving** — every non-tag line is kept exactly, with no escaping
+- **Checkable** — a schema, itself a Springwater document, defines a document type and validates against it
+- **Git-friendly** — line-based diffs
+
+### What it costs
+
+- **It is verbose.** Every element takes an opening line, its content, and a closing line. The one-page scene in `examples/the_first_swim.springwater` is 144 lines. That suits tools; it is heavy to type by hand.
+- **There are no inline tags.** A tag occupies its own line. Emphasis inside a sentence has to be a child element on its own lines, and only where the document's schema allows one. The bundled novel schema keeps paragraphs text-only.
+- **One position is reserved.** A line whose first non-space character is `^` is never content: it is a tag, or it is an error. [CONVENTIONS.md](CONVENTIONS.md) shows how to carry such lines.
 
 ---
 
@@ -69,6 +75,14 @@ python3 tools/springwater-validate hello.springwater
 
 ---
 
+## Two kinds of validity
+
+**Springwater validity** is the seven rules. It is immutable: a document that is valid Springwater today is valid, and parses the same way, forever.
+
+**Schema validity** is relative to a schema. A schema is an ordinary Springwater document written by whoever designs a document type. Schemas can say whatever their designer decides, can change, and can multiply, without touching the core. A document can be valid Springwater and fail a given schema; no schema can make an invalid document valid.
+
+---
+
 ## Content Safety
 
 Springwater uses `^` (caret) as its tag character. This means content from any domain is safe:
@@ -86,13 +100,15 @@ $PATH
 ^Springwater/
 ```
 
-No collisions with code annotations, email addresses, comments, variables, or markup.
+No collisions with code annotations, email addresses, comments, variables, or other markup, with the one reserved position named above: a line may not begin with `^` unless it is a tag. [CONVENTIONS.md](CONVENTIONS.md) covers that case.
 
 ---
 
 ## Documentation
 
 - **[SYNTAX.txt](SYNTAX.txt)** — Complete canonical syntax (frozen, immutable)
+- **[CONVENTIONS.md](CONVENTIONS.md)** — Non-normative authoring conventions, including how to quote Springwater inside Springwater
+- **[tools/conformance_vectors.json](tools/conformance_vectors.json)** — Language-neutral test vectors for anyone writing a parser
 - **[ROSETTA.springwater](ROSETTA.springwater)** — A self-describing document that explains Springwater completely, in Springwater itself: the seven rules, grammar, parsing, proofs, and worked examples, written so the format can be reconstructed from that file alone.
 
 ---
@@ -107,6 +123,8 @@ No collisions with code annotations, email addresses, comments, variables, or ma
 | **rosetta.schema** | Self-descriptive archival docs |
 
 All validate against `schema.schema.springwater` (meta-schema).
+
+These are example schemas, not part of the core. Anyone can write a schema for their own document type.
 
 ---
 
@@ -222,7 +240,7 @@ Annotations that begin with @ are ordinary content, not tags.
 
 **Springwater Core v1.0 is frozen as of January 31, 2026.**
 
-The seven rules will never change. Documents written today remain valid forever.
+The seven rules will never change. A document that is valid Springwater today parses the same way forever. Schemas are separate and may evolve; see [Two kinds of validity](#two-kinds-of-validity).
 
 ---
 

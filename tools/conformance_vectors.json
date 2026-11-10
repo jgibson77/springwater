@@ -1,0 +1,520 @@
+{
+ "springwater": "1.0",
+ "note": "Language-neutral conformance vectors for the Springwater v1.0 parsing algorithm, generated from tools/algorithm_verification.py. 'ending' is lf, crlf, cr, or none. An implementation conforms on a vector when it reports the same error kind or builds the same tree.",
+ "parse_vectors": [
+  {
+   "name": "minimal",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlci8K",
+   "input_text": "^Springwater\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": []
+    }
+   }
+  },
+  {
+   "name": "minimal without trailing newline",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlci8=",
+   "input_text": "^Springwater\n^Springwater/",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": []
+    }
+   }
+  },
+  {
+   "name": "single container",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5kb2N1bWVudApIZWxsbywgd29ybGQhCl5kb2N1bWVudC8KXlNwcmluZ3dhdGVyLwo=",
+   "input_text": "^Springwater\n^document\nHello, world!\n^document/\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": [
+      {
+       "element": "document",
+       "children": [
+        {
+         "content": "Hello, world!",
+         "ending": "lf"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "mixed content ordering",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5wYXJhZ3JhcGgKVGhlIHdvcmQKXmVtcGhhc2lzCmltcG9ydGFudApeZW1waGFzaXMvCmFwcGVhcnMgaW4gdGhpcyBzZW50ZW5jZS4KXnBhcmFncmFwaC8KXlNwcmluZ3dhdGVyLwo=",
+   "input_text": "^Springwater\n^paragraph\nThe word\n^emphasis\nimportant\n^emphasis/\nappears in this sentence.\n^paragraph/\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": [
+      {
+       "element": "paragraph",
+       "children": [
+        {
+         "content": "The word",
+         "ending": "lf"
+        },
+        {
+         "element": "emphasis",
+         "children": [
+          {
+           "content": "important",
+           "ending": "lf"
+          }
+         ]
+        },
+        {
+         "content": "appears in this sentence.",
+         "ending": "lf"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "code annotations are content",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5jb2RlCkBTdGF0ZSB2YXIgY291bnQgPSAwCkBPYnNlcnZhYmxlIGNsYXNzIE1vZGVsIHt9CiNpbmNsdWRlIDxzdGRpby5oPgokUEFUSApqb2huQGV4YW1wbGUuY29tCl5jb2RlLwpeU3ByaW5nd2F0ZXIvCg==",
+   "input_text": "^Springwater\n^code\n@State var count = 0\n@Observable class Model {}\n#include <stdio.h>\n$PATH\njohn@example.com\n^code/\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": [
+      {
+       "element": "code",
+       "children": [
+        {
+         "content": "@State var count = 0",
+         "ending": "lf"
+        },
+        {
+         "content": "@Observable class Model {}",
+         "ending": "lf"
+        },
+        {
+         "content": "#include <stdio.h>",
+         "ending": "lf"
+        },
+        {
+         "content": "$PATH",
+         "ending": "lf"
+        },
+        {
+         "content": "john@example.com",
+         "ending": "lf"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "content indentation preserved",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5jb2RlCiAgICBpbmRlbnRlZCBsaW5lCl5jb2RlLwpeU3ByaW5nd2F0ZXIvCg==",
+   "input_text": "^Springwater\n^code\n    indented line\n^code/\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": [
+      {
+       "element": "code",
+       "children": [
+        {
+         "content": "    indented line",
+         "ending": "lf"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "blank lines preserved",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5wb2VtCkZpcnN0CgpUaGlyZApecG9lbS8KXlNwcmluZ3dhdGVyLwo=",
+   "input_text": "^Springwater\n^poem\nFirst\n\nThird\n^poem/\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": [
+      {
+       "element": "poem",
+       "children": [
+        {
+         "content": "First",
+         "ending": "lf"
+        },
+        {
+         "content": "",
+         "ending": "lf"
+        },
+        {
+         "content": "Third",
+         "ending": "lf"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "indented tags are structural",
+   "input_base64": "XlNwcmluZ3dhdGVyCiAgXnNlY3Rpb24KICBjb250ZW50CiAgXnNlY3Rpb24vCl5TcHJpbmd3YXRlci8K",
+   "input_text": "^Springwater\n  ^section\n  content\n  ^section/\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": [
+      {
+       "element": "section",
+       "children": [
+        {
+         "content": "  content",
+         "ending": "lf"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "NBSP line is content",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5wCsKgXmNoYXB0ZXIKXnAvCl5TcHJpbmd3YXRlci8K",
+   "input_text": "^Springwater\n^p\n ^chapter\n^p/\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": [
+      {
+       "element": "p",
+       "children": [
+        {
+         "content": " ^chapter",
+         "ending": "lf"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "U+2028 is content",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5wCmZpcnN04oCoc2Vjb25kCl5wLwpeU3ByaW5nd2F0ZXIvCg==",
+   "input_text": "^Springwater\n^p\nfirst second\n^p/\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": [
+      {
+       "element": "p",
+       "children": [
+        {
+         "content": "first second",
+         "ending": "lf"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "mixed line endings preserved",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5wDQphbHBoYQ0KYmV0YQpnYW1tYQ1ecC8KXlNwcmluZ3dhdGVyLwo=",
+   "input_text": "^Springwater\n^p\r\nalpha\r\nbeta\ngamma\r^p/\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": [
+      {
+       "element": "p",
+       "children": [
+        {
+         "content": "alpha",
+         "ending": "crlf"
+        },
+        {
+         "content": "beta",
+         "ending": "lf"
+        },
+        {
+         "content": "gamma",
+         "ending": "cr"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "interior U+FEFF is content",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5wCmJlZm9yZe+7v2FmdGVyCl5wLwpeU3ByaW5nd2F0ZXIvCg==",
+   "input_text": "^Springwater\n^p\nbefore﻿after\n^p/\n^Springwater/\n",
+   "expect": {
+    "tree": {
+     "element": "Springwater",
+     "children": [
+      {
+       "element": "p",
+       "children": [
+        {
+         "content": "before﻿after",
+         "ending": "lf"
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "leading BOM",
+   "input_base64": "77u/XlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlci8K",
+   "input_text": "﻿^Springwater\n^Springwater/\n",
+   "expect": {
+    "error": "leadingBOM"
+   }
+  },
+  {
+   "name": "invalid UTF-8",
+   "input_base64": "XlNwcmluZ3dhdGVyCv/+gApeU3ByaW5nd2F0ZXIvCg==",
+   "expect": {
+    "error": "invalidUTF8"
+   }
+  },
+  {
+   "name": "empty document",
+   "input_base64": "",
+   "input_text": "",
+   "expect": {
+    "error": "emptyDocument"
+   }
+  },
+  {
+   "name": "wrong case root",
+   "input_base64": "XnNwcmluZ3dhdGVyCl5zcHJpbmd3YXRlci8K",
+   "input_text": "^springwater\n^springwater/\n",
+   "expect": {
+    "error": "missingRootOpen"
+   }
+  },
+  {
+   "name": "content before root",
+   "input_base64": "UHJlYW1ibGUKXlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlci8K",
+   "input_text": "Preamble\n^Springwater\n^Springwater/\n",
+   "expect": {
+    "error": "missingRootOpen"
+   }
+  },
+  {
+   "name": "content after root close",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlci8KVHJhaWxpbmcK",
+   "input_text": "^Springwater\n^Springwater/\nTrailing\n",
+   "expect": {
+    "error": "trailingLinesAfterRootClose"
+   }
+  },
+  {
+   "name": "nested root",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlcgpeU3ByaW5nd2F0ZXIvCl5TcHJpbmd3YXRlci8K",
+   "input_text": "^Springwater\n^Springwater\n^Springwater/\n^Springwater/\n",
+   "expect": {
+    "error": "reservedRootName"
+   }
+  },
+  {
+   "name": "unclosed tag",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5wYXJhZ3JhcGgKQ29udGVudAo=",
+   "input_text": "^Springwater\n^paragraph\nContent\n",
+   "expect": {
+    "error": "unclosedTag"
+   }
+  },
+  {
+   "name": "missing root close",
+   "input_base64": "XlNwcmluZ3dhdGVyCmNvbnRlbnQK",
+   "input_text": "^Springwater\ncontent\n",
+   "expect": {
+    "error": "missingRootClose"
+   }
+  },
+  {
+   "name": "case mismatch",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5DaGFwdGVyCkNvbnRlbnQKXmNoYXB0ZXIvCl5TcHJpbmd3YXRlci8K",
+   "input_text": "^Springwater\n^Chapter\nContent\n^chapter/\n^Springwater/\n",
+   "expect": {
+    "error": "mismatchedClosingTag"
+   }
+  },
+  {
+   "name": "improper nesting",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5vdXRlcgpeaW5uZXIKXm91dGVyLwpeaW5uZXIvCl5TcHJpbmd3YXRlci8K",
+   "input_text": "^Springwater\n^outer\n^inner\n^outer/\n^inner/\n^Springwater/\n",
+   "expect": {
+    "error": "mismatchedClosingTag"
+   }
+  },
+  {
+   "name": "root close mid-document then paragraph close",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5wYXJhZ3JhcGgKVGV4dApeU3ByaW5nd2F0ZXIvCl5wYXJhZ3JhcGgvCg==",
+   "input_text": "^Springwater\n^paragraph\nText\n^Springwater/\n^paragraph/\n",
+   "expect": {
+    "error": "mismatchedClosingTag"
+   }
+  },
+  {
+   "name": "invalid caret line: '^my-tag'",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5teS10YWcKXlNwcmluZ3dhdGVyLwo=",
+   "input_text": "^Springwater\n^my-tag\n^Springwater/\n",
+   "expect": {
+    "error": "invalidCaretLine"
+   }
+  },
+  {
+   "name": "invalid caret line: '^123'",
+   "input_base64": "XlNwcmluZ3dhdGVyCl4xMjMKXlNwcmluZ3dhdGVyLwo=",
+   "input_text": "^Springwater\n^123\n^Springwater/\n",
+   "expect": {
+    "error": "invalidCaretLine"
+   }
+  },
+  {
+   "name": "invalid caret line: '^_name'",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5fbmFtZQpeU3ByaW5nd2F0ZXIvCg==",
+   "input_text": "^Springwater\n^_name\n^Springwater/\n",
+   "expect": {
+    "error": "invalidCaretLine"
+   }
+  },
+  {
+   "name": "invalid caret line: '^'",
+   "input_base64": "XlNwcmluZ3dhdGVyCl4KXlNwcmluZ3dhdGVyLwo=",
+   "input_text": "^Springwater\n^\n^Springwater/\n",
+   "expect": {
+    "error": "invalidCaretLine"
+   }
+  },
+  {
+   "name": "invalid caret line: '^/'",
+   "input_base64": "XlNwcmluZ3dhdGVyCl4vCl5TcHJpbmd3YXRlci8K",
+   "input_text": "^Springwater\n^/\n^Springwater/\n",
+   "expect": {
+    "error": "invalidCaretLine"
+   }
+  },
+  {
+   "name": "invalid caret line: '^^tag'",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5edGFnCl5TcHJpbmd3YXRlci8K",
+   "input_text": "^Springwater\n^^tag\n^Springwater/\n",
+   "expect": {
+    "error": "invalidCaretLine"
+   }
+  },
+  {
+   "name": "invalid caret line: '^tag  /'",
+   "input_base64": "XlNwcmluZ3dhdGVyCl50YWcgIC8KXlNwcmluZ3dhdGVyLwo=",
+   "input_text": "^Springwater\n^tag  /\n^Springwater/\n",
+   "expect": {
+    "error": "invalidCaretLine"
+   }
+  },
+  {
+   "name": "invalid caret line: '^tag /more'",
+   "input_base64": "XlNwcmluZ3dhdGVyCl50YWcgL21vcmUKXlNwcmluZ3dhdGVyLwo=",
+   "input_text": "^Springwater\n^tag /more\n^Springwater/\n",
+   "expect": {
+    "error": "invalidCaretLine"
+   }
+  },
+  {
+   "name": "invalid caret line: '^paragraph This is text. ^paragraph/'",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5wYXJhZ3JhcGggVGhpcyBpcyB0ZXh0LiBecGFyYWdyYXBoLwpeU3ByaW5nd2F0ZXIvCg==",
+   "input_text": "^Springwater\n^paragraph This is text. ^paragraph/\n^Springwater/\n",
+   "expect": {
+    "error": "invalidCaretLine"
+   }
+  },
+  {
+   "name": "invalid caret line: '^john said hello'",
+   "input_base64": "XlNwcmluZ3dhdGVyCl5qb2huIHNhaWQgaGVsbG8KXlNwcmluZ3dhdGVyLwo=",
+   "input_text": "^Springwater\n^john said hello\n^Springwater/\n",
+   "expect": {
+    "error": "invalidCaretLine"
+   }
+  }
+ ],
+ "classify_vectors": [
+  {
+   "line": "^chapter",
+   "kind": "open",
+   "name": "chapter"
+  },
+  {
+   "line": "  ^chapter  ",
+   "kind": "open",
+   "name": "chapter"
+  },
+  {
+   "line": "^chapter/",
+   "kind": "close",
+   "name": "chapter"
+  },
+  {
+   "line": "  ^chapter/  ",
+   "kind": "close",
+   "name": "chapter"
+  },
+  {
+   "line": "chapter",
+   "kind": "content",
+   "name": null
+  },
+  {
+   "line": "text ^chapter",
+   "kind": "content",
+   "name": null
+  },
+  {
+   "line": "Email: a@b.com",
+   "kind": "content",
+   "name": null
+  },
+  {
+   "line": "",
+   "kind": "content",
+   "name": null
+  },
+  {
+   "line": "   ",
+   "kind": "content",
+   "name": null
+  },
+  {
+   "line": "^chapter text",
+   "kind": "invalid",
+   "name": null
+  },
+  {
+   "line": "^my-tag",
+   "kind": "invalid",
+   "name": null
+  },
+  {
+   "line": " ^chapter",
+   "kind": "content",
+   "name": null
+  }
+ ]
+}
