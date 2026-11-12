@@ -5,7 +5,7 @@ import SpringwaterSyntax
 
 // Validates the repository's own canon as an integration test:
 //   1. every schema in schemas/ conforms to the meta-schema, and
-//   2. every document in examples/ and profiles/ validates against the schema
+//   2. every document in examples/, profiles/, and presentations/ validates against the schema
 //      whose required_root it uses.
 //
 // It reads the real repository files rather than copied fixtures, so there is a
@@ -24,6 +24,7 @@ private let repoRoot: URL = URL(fileURLWithPath: #filePath)
 private let schemasDir = repoRoot.appendingPathComponent("schemas")
 private let examplesDir = repoRoot.appendingPathComponent("examples")
 private let profilesDir = repoRoot.appendingPathComponent("profiles")
+private let presentationsDir = repoRoot.appendingPathComponent("presentations")
 
 private let repositoryAvailable: Bool =
     FileManager.default.fileExists(atPath: schemasDir.path)
@@ -47,7 +48,7 @@ private func rootChildName(_ document: SpringwaterDocument) -> String? {
 @Suite(.enabled(if: repositoryAvailable))
 struct RepositoryConformance {
 
-    /// The meta-schema plus all five document schemas must each conform to the
+    /// The meta-schema and every other schema must each conform to the
     /// meta-schema. (The meta-schema is self-validating — it is just another
     /// schema, checked against itself.)
     @Test func everySchemaConformsToTheMetaSchema() throws {
@@ -63,7 +64,7 @@ struct RepositoryConformance {
         }
     }
 
-    /// Every example document and authoring profile must validate against the
+    /// Every example document, authoring profile, and presentation must validate against the
     /// schema whose `required_root` matches the document's root element.
     @Test func everyDocumentValidatesAgainstItsSchema() throws {
         // Map required_root -> schema for every non-meta schema.
@@ -76,7 +77,8 @@ struct RepositoryConformance {
         #expect(!byRoot.isEmpty, "no document schemas found")
 
         let documents = try springwaterFiles(in: examplesDir) + springwaterFiles(in: profilesDir)
-        #expect(!documents.isEmpty, "no example/profile documents found")
+            + springwaterFiles(in: presentationsDir)
+        #expect(!documents.isEmpty, "no example, profile, or presentation documents found")
 
         for file in documents {
             let document = try parseFile(file)

@@ -121,10 +121,14 @@ No collisions with code annotations, email addresses, comments, variables, or ot
 | **novel.schema** | Novels with metadata |
 | **technical.schema** | Technical documentation |
 | **rosetta.schema** | Self-descriptive archival docs |
+| **authoring.schema** | Authoring profiles |
+| **presentation.schema** | Presentations: how a document type looks |
 
 All validate against `schema.schema.springwater` (meta-schema).
 
 These are example schemas, not part of the core. Anyone can write a schema for their own document type.
+
+A schema says what a document is: its elements and how they nest. It says nothing about how the document looks. Fonts, margins, page size, and per-element styling live in a separate **presentation** document under `presentations/`, validated by `presentation.schema` and naming the schema it dresses. A document is read and validated without any presentation; one schema can have many. Pages exist only when a presentation is applied at render or export time, so no Springwater document stores a page break.
 
 ---
 

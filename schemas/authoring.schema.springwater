@@ -351,64 +351,6 @@ suggestions
 
 ^structure_rules/
 
-^rendering_rules
-
-^render
-^tag
-metadata
-^tag/
-^spacing_after
-2 lines
-^spacing_after/
-^render/
-
-^render
-^tag
-preferences
-^tag/
-^spacing_before
-2 lines
-^spacing_before/
-^spacing_after
-2 lines
-^spacing_after/
-^render/
-
-^render
-^tag
-snippets
-^tag/
-^spacing_before
-2 lines
-^spacing_before/
-^spacing_after
-2 lines
-^spacing_after/
-^render/
-
-^render
-^tag
-completions
-^tag/
-^spacing_before
-2 lines
-^spacing_before/
-^spacing_after
-2 lines
-^spacing_after/
-^render/
-
-^render
-^tag
-extensions
-^tag/
-^spacing_before
-2 lines
-^spacing_before/
-^render/
-
-^rendering_rules/
-
 ^validation
 ^empty_tags
 error

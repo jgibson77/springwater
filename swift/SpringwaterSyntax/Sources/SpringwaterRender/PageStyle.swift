@@ -1,6 +1,6 @@
 import SpringwaterSyntax
 
-/// Physical page geometry from the schema's `page` block. Missing properties
+/// Physical page geometry from the presentation's `page` block. Missing properties
 /// retain the renderer's original Letter defaults; all values are CSS lengths.
 public struct PageStyle: Sendable, Equatable {
     public var width = "8.5in"
@@ -12,10 +12,10 @@ public struct PageStyle: Sendable, Equatable {
 
     public init() {}
 
-    public init(parsing schemaDocument: SpringwaterDocument) {
+    public init(parsing presentationDocument: SpringwaterDocument) {
         self.init()
-        let schema = schemaDocument.root.renderChildElements.first { $0.name == "schema" }
-        let page = schema?.renderChildElements.first { $0.name == "page" }
+        let presentation = presentationDocument.root.renderChildElements.first { $0.name == "presentation" }
+        let page = presentation?.renderChildElements.first { $0.name == "page" }
         for property in page?.renderChildElements ?? [] {
             let value = property.scalarValue
             guard !value.isEmpty else { continue }

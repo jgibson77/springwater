@@ -6,7 +6,7 @@ import SpringwaterSyntax
 // (the Python mirror) so the Swift renderer is checked against the exact output
 // it must reproduce.
 
-private let tinySchema = "^Springwater\n^schema\n^rendering_rules\n^render\n^tag\nslugline\n^tag/\n^transform\nuppercase\n^transform/\n^indent\n0in\n^indent/\n^spacing_after\n1 line\n^spacing_after/\n^render/\n^render\n^tag\ncharacter\n^tag/\n^transform\nuppercase\n^transform/\n^indent\n3.7in\n^indent/\n^render/\n^rendering_rules/\n^schema/\n^Springwater/\n"
+private let tinySchema = "^Springwater\n^presentation\n^rendering_rules\n^render\n^tag\nslugline\n^tag/\n^transform\nuppercase\n^transform/\n^indent\n0in\n^indent/\n^spacing_after\n1 line\n^spacing_after/\n^render/\n^render\n^tag\ncharacter\n^tag/\n^transform\nuppercase\n^transform/\n^indent\n3.7in\n^indent/\n^render/\n^rendering_rules/\n^presentation/\n^Springwater/\n"
 
 private let tinyDoc = "^Springwater\n^screenplay\n^scene\n^slugline\nint. room - day\n^slugline/\n^dialogue\n^character\nada\n^character/\n^lines\nHello.\n^lines/\n^dialogue/\n^scene/\n^screenplay/\n^Springwater/\n"
 
@@ -80,7 +80,7 @@ private func styles(_ text: String) throws -> RenderStyles {
 @Test func fullPageWrapsBodyAndCSS() throws {
     let page = HTMLRenderer.render(
         try SpringwaterParser.parse(tinyDoc),
-        schema: try SpringwaterParser.parse(tinySchema),
+        presentation: try SpringwaterParser.parse(tinySchema),
         title: "My Script"
     )
     #expect(page.hasPrefix("<!doctype html>"))
@@ -93,7 +93,7 @@ private func styles(_ text: String) throws -> RenderStyles {
     // A render rule with `hidden true` means the element stays in the document
     // (round-trips) but is not rendered — the "structure in the document,
     // invisible on the page" mechanism (scene numbers, sequence labels).
-    let schema = "^Springwater\n^schema\n^rendering_rules\n^render\n^tag\nnote\n^tag/\n^hidden\ntrue\n^hidden/\n^render/\n^rendering_rules/\n^schema/\n^Springwater/\n"
+    let schema = "^Springwater\n^presentation\n^rendering_rules\n^render\n^tag\nnote\n^tag/\n^hidden\ntrue\n^hidden/\n^render/\n^rendering_rules/\n^presentation/\n^Springwater/\n"
     let s = try styles(schema)
     #expect(s["note"]?.hidden == true)
     let doc = "^Springwater\n^screenplay\n^scene\n^note\nsecret\n^note/\n^slugline\nX\n^slugline/\n^scene/\n^screenplay/\n^Springwater/\n"
@@ -137,7 +137,7 @@ private func styles(_ text: String) throws -> RenderStyles {
 }
 
 @Test func paragraphStylesDistinguishFirstLineFromBlockIndent() throws {
-    let schema = "^Springwater\n^schema\n^rendering_rules\n^render\n^tag\nparagraph\n^tag/\n^text_indent\n0.5in\n^text_indent/\n^line_height\n1.5\n^line_height/\n^spacing_after\n0 lines\n^spacing_after/\n^render/\n^rendering_rules/\n^schema/\n^Springwater/\n"
+    let schema = "^Springwater\n^presentation\n^rendering_rules\n^render\n^tag\nparagraph\n^tag/\n^text_indent\n0.5in\n^text_indent/\n^line_height\n1.5\n^line_height/\n^spacing_after\n0 lines\n^spacing_after/\n^render/\n^rendering_rules/\n^presentation/\n^Springwater/\n"
     let parsed = try styles(schema)
     let paragraph = try #require(parsed["paragraph"])
     #expect(paragraph.textIndent == "0.5in")
@@ -152,11 +152,11 @@ private func styles(_ text: String) throws -> RenderStyles {
 
 @Test func pageBreakRulesApplyToContainersAndLeavesWithoutDroppingContent() throws {
     let doc = "^Springwater\n^novel\n^metadata\n^title\nTitle\n^title/\n^metadata/\n^chapter\n^paragraph\nFirst paragraph\n^paragraph/\n^paragraph\nSecond paragraph\n^paragraph/\n^chapter/\n^novel/\n^Springwater/\n"
-    let schema = "^Springwater\n^schema\n^rendering_rules\n^render\n^tag\nmetadata\n^tag/\n^page_break_after\ntrue\n^page_break_after/\n^render/\n^render\n^tag\nchapter\n^tag/\n^page_break_before\ntrue\n^page_break_before/\n^render/\n^render\n^tag\nparagraph\n^tag/\n^page_break_after\ntrue\n^page_break_after/\n^render/\n^rendering_rules/\n^schema/\n^Springwater/\n"
+    let schema = "^Springwater\n^presentation\n^rendering_rules\n^render\n^tag\nmetadata\n^tag/\n^page_break_after\ntrue\n^page_break_after/\n^render/\n^render\n^tag\nchapter\n^tag/\n^page_break_before\ntrue\n^page_break_before/\n^render/\n^render\n^tag\nparagraph\n^tag/\n^page_break_after\ntrue\n^page_break_after/\n^render/\n^rendering_rules/\n^presentation/\n^Springwater/\n"
     let parsed = try styles(schema)
     #expect(parsed["metadata"]?.pageBreakAfter == true)
     #expect(parsed["chapter"]?.pageBreakBefore == true)
-    let page = HTMLRenderer.render(try SpringwaterParser.parse(doc), schema: try SpringwaterParser.parse(schema))
+    let page = HTMLRenderer.render(try SpringwaterParser.parse(doc), presentation: try SpringwaterParser.parse(schema))
     #expect(page.contains(".sw-metadata { break-after:page; page-break-after:always }"))
     #expect(page.contains(".sw-chapter { break-before:page; page-break-before:always }"))
     #expect(page.contains(".sw-metadata + .sw-chapter { break-before:auto; page-break-before:auto }"))
@@ -170,7 +170,7 @@ private func styles(_ text: String) throws -> RenderStyles {
 
 @Test func schemaPageGeometryDrivesScreenAndPrint() throws {
     // Asymmetric margins catch top/right/bottom/left ordering mistakes.
-    let schema = try SpringwaterParser.parse("^Springwater\n^schema\n^page\n^width\n6in\n^width/\n^height\n9in\n^height/\n^margin_top\n0.6in\n^margin_top/\n^margin_right\n0.7in\n^margin_right/\n^margin_bottom\n0.8in\n^margin_bottom/\n^margin_left\n0.9in\n^margin_left/\n^page/\n^schema/\n^Springwater/\n")
+    let schema = try SpringwaterParser.parse("^Springwater\n^presentation\n^page\n^width\n6in\n^width/\n^height\n9in\n^height/\n^margin_top\n0.6in\n^margin_top/\n^margin_right\n0.7in\n^margin_right/\n^margin_bottom\n0.8in\n^margin_bottom/\n^margin_left\n0.9in\n^margin_left/\n^page/\n^presentation/\n^Springwater/\n")
     let geometry = PageStyle(parsing: schema)
     #expect(geometry.width == "6in")
     #expect(geometry.height == "9in")
@@ -178,7 +178,7 @@ private func styles(_ text: String) throws -> RenderStyles {
     #expect(geometry.marginRight == "0.7in")
     #expect(geometry.marginBottom == "0.8in")
     #expect(geometry.marginLeft == "0.9in")
-    let html = HTMLRenderer.render(try SpringwaterParser.parse(tinyDoc), schema: schema)
+    let html = HTMLRenderer.render(try SpringwaterParser.parse(tinyDoc), presentation: schema)
     #expect(html.contains("width: 6in; min-height: 9in;"))
     #expect(html.contains("padding: 0.6in 0.7in 0.8in 0.9in;"))
     #expect(html.contains("@page { size: 6in 9in; margin: 0.6in 0.7in 0.8in 0.9in; }"))
@@ -190,7 +190,7 @@ private func styles(_ text: String) throws -> RenderStyles {
 @Test func absentAndPartialPageGeometryRetainDefaults() throws {
     let absent = PageStyle(parsing: try SpringwaterParser.parse(tinySchema))
     #expect(absent == PageStyle())
-    let partial = try SpringwaterParser.parse("^Springwater\n^schema\n^page\n^width\n6in\n^width/\n^margin_left\n0.75in\n^margin_left/\n^margin_top\n\n^margin_top/\n^page/\n^schema/\n^Springwater/\n")
+    let partial = try SpringwaterParser.parse("^Springwater\n^presentation\n^page\n^width\n6in\n^width/\n^margin_left\n0.75in\n^margin_left/\n^margin_top\n\n^margin_top/\n^page/\n^presentation/\n^Springwater/\n")
     let geometry = PageStyle(parsing: partial)
     #expect(geometry.width == "6in")
     #expect(geometry.height == "11in")

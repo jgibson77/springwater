@@ -1,9 +1,9 @@
 import SpringwaterSyntax
 
 /// Renders a Springwater document to a styled HTML page, driven entirely by a
-/// schema's `^rendering_rules`. No document-type logic is hardcoded: the same
+/// presentation's `^rendering_rules`. No document-type logic is hardcoded: the same
 /// renderer produces a screenplay, a novel, or a manual purely from the render
-/// styles its schema defines.
+/// styles its presentation defines.
 public enum HTMLRenderer {
 
     // MARK: - CSS
@@ -115,7 +115,7 @@ public enum HTMLRenderer {
             for k in kids { renderElement(k, styles, into: &out) }
             out.append("</div>")
             // the title page is semantically its own page (renderer convention,
-            // not schema-driven; a title_page render rule with page_break_after
+            // not presentation-driven; a title_page render rule with page_break_after
             // would move this into canon).
             if name == "title_page" {
                 out.append(#"<div class="sw-pagebreak"></div>"#)
@@ -132,15 +132,15 @@ public enum HTMLRenderer {
     // MARK: - Full page
 
     /// A complete standalone HTML page: boilerplate + the CSS generated from the
-    /// schema's render styles + the rendered body.
+    /// presentation's render styles + the rendered body.
     public static func render(
         _ document: SpringwaterDocument,
-        schema schemaDocument: SpringwaterDocument,
+        presentation presentationDocument: SpringwaterDocument,
         title: String = "Springwater"
     ) -> String {
-        let styles = RenderStyles(parsing: schemaDocument)
+        let styles = RenderStyles(parsing: presentationDocument)
         let rulesCSS = css(styles)
-        let geometry = PageStyle(parsing: schemaDocument)
+        let geometry = PageStyle(parsing: presentationDocument)
         let body = #"<div class="sw-page">"# + bodyHTML(document, styles: styles) + "</div>"
         return """
         <!doctype html>
@@ -148,7 +148,7 @@ public enum HTMLRenderer {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>\(esc(title))</title>
         <style>\(pageCSS(geometry))
-        /* ---- generated from the schema's rendering_rules ---- */
+        /* ---- generated from the presentation's rendering_rules ---- */
         \(rulesCSS)
         </style></head>
         <body><div class="sw-doc">\(body)</div></body></html>

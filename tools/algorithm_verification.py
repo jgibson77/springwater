@@ -260,7 +260,7 @@ for line, expected in table:
 print()
 print("REAL DOCUMENTS")
 repo = Path(__file__).resolve().parent.parent
-roots = [repo / "schemas", repo / "examples", repo / "profiles"]
+roots = [repo / "schemas", repo / "examples", repo / "profiles", repo / "presentations"]
 for root in roots:
     for path in sorted(root.glob("*.springwater")):
         check(str(path.relative_to(repo)), path.read_bytes())

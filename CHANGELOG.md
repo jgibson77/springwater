@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+Springwater Core is unchanged: the seven rules and `SYNTAX.txt` are as frozen.
+
+- Schemas now describe only what a document is. The `font`, `page`, and
+  `rendering_rules` blocks moved, unchanged, out of every schema into separate
+  presentation documents under `presentations/`, validated by the new
+  `presentation.schema`. The meta-schema no longer requires rendering rules.
+- The renderer reads a presentation instead of a schema:
+  `HTMLRenderer.render(_:presentation:title:)`.
+- Added `CONVENTIONS.md` (non-normative) and `tools/conformance_vectors.json`.
+- The README states the format's costs and the two kinds of validity.
+
 ## v1.0 - Initial public release
 
 Springwater is a line-oriented, plain-text format for hierarchical documents,

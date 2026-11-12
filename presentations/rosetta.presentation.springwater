@@ -1,0 +1,33 @@
+^Springwater
+^presentation
+^validated_by
+presentation.schema v1.0
+^validated_by/
+
+^metadata
+^name
+Rosetta Stone
+^name/
+^version
+1.0
+^version/
+^target_schema
+rosetta_stone
+^target_schema/
+^metadata/
+
+^rendering_rules
+
+^render
+^tag
+rosetta_stone
+^tag/
+^spacing_after
+2 lines
+^spacing_after/
+^render/
+
+^rendering_rules/
+
+^presentation/
+^Springwater/

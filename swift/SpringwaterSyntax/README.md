@@ -20,11 +20,13 @@ The package ships four libraries, matching the Springwater architecture:
   (itself a Springwater document) into a rule model and checks a
   document against it. Depends only on `SpringwaterSyntax`; the
   dependency runs one way, never back.
-- **`SpringwaterRender`** — rendering. Reads a schema's
+- **`SpringwaterRender`** — rendering. Reads a presentation's
   `^rendering_rules` into a per-tag style map and renders a document to
-  a styled HTML page. Entirely schema-driven — no document-type logic is
-  hardcoded, so the same renderer formats a screenplay, a novel, or a
-  manual purely from its schema. Depends only on `SpringwaterSyntax`.
+  a styled HTML page. A presentation is a separate Springwater document
+  that says how a document type looks; a schema says only what it is. No
+  document-type logic is hardcoded, so the same renderer formats a
+  screenplay, a novel, or a manual purely from its presentation. Depends
+  only on `SpringwaterSyntax`.
 - **`SpringwaterExport`** — export to Fountain. Walks a document and
   emits Fountain, inserting the forced markers (`!`, `@`, `.`, `>`) and
   escaping emphasis so a Fountain importer re-reads it into the same
@@ -110,22 +112,22 @@ import SpringwaterSyntax
 import SpringwaterRender
 
 let document = try SpringwaterParser.parse(screenplaySource)
-let schema   = try SpringwaterParser.parse(schemaSource)
+let presentation = try SpringwaterParser.parse(presentationSource)
 
-// A complete styled HTML page, formatted per the schema's rendering rules.
-let html = HTMLRenderer.render(document, schema: schema, title: "LOW WATER")
+// A complete styled HTML page, formatted per the presentation's rendering rules.
+let html = HTMLRenderer.render(document, presentation: presentation, title: "LOW WATER")
 
 // Or build the pieces: the CSS generated from the rules, and the body.
-let styles = RenderStyles(parsing: schema)
+let styles = RenderStyles(parsing: presentation)
 let css    = HTMLRenderer.css(styles)                       // one rule per tag
 let body   = HTMLRenderer.bodyHTML(document, styles: styles)
 ```
 
-The CSS is generated from the schema's `^rendering_rules` — `indent` →
+The CSS is generated from the presentation's `^rendering_rules` — `indent` →
 `margin-left`, `align` → `text-align`, `transform` → `text-transform`,
 `spacing_after` → `margin-bottom`, and so on. The renderer adds no
-screenplay knowledge of its own; point it at a different schema and it
-renders that document type instead.
+screenplay knowledge of its own; point it at a different presentation and
+it renders that document type instead.
 
 ### Export to Fountain
 
@@ -177,7 +179,7 @@ do {
 `SpringwaterRender`:
 
 - `RenderStyle` (per-tag style) / `RenderStyles.init(parsing: SpringwaterDocument)`
-- `HTMLRenderer.render(_: SpringwaterDocument, schema: SpringwaterDocument, title:) -> String`
+- `HTMLRenderer.render(_: SpringwaterDocument, presentation: SpringwaterDocument, title:) -> String`
 - `HTMLRenderer.css(_: RenderStyles) -> String` / `HTMLRenderer.bodyHTML(_:styles:) -> String`
 
 `SpringwaterExport`:
@@ -223,7 +225,7 @@ swift test
   `must_equal`, `must_be_boolean`, `allows_unknown_children`) against
   crafted schemas with known-good and known-bad documents. It also includes a
   `RepositoryConformance` integration suite that reads the repository's own
-  `schemas/`, `examples/`, and `profiles/` files and asserts that every schema
+  `schemas/`, `examples/`, `profiles/`, and `presentations/` files and asserts that every schema
   conforms to the meta-schema and every document validates against the schema
   for its `required_root`. That suite is skipped automatically when the package
   is built outside the repository.

@@ -1,8 +1,8 @@
 import SpringwaterSyntax
 
-/// The rendering style for one tag, read from a schema's `^rendering_rules`.
+/// The rendering style for one tag, read from a presentation's `^rendering_rules`.
 ///
-/// A schema is a Springwater document; its `^rendering_rules` block maps each
+/// A presentation is a Springwater document; its `^rendering_rules` block maps each
 /// tag to presentation properties (indent, spacing, alignment, transform,
 /// …). `SpringwaterRender` reads those properties and nothing about validity,
 /// so it depends only on `SpringwaterSyntax`.
@@ -47,18 +47,18 @@ public struct RenderStyle: Sendable, Equatable {
 }
 
 /// The render styles for a document type: tag → `RenderStyle`, built from a
-/// parsed schema document's `^rendering_rules`.
+/// parsed presentation document's `^rendering_rules`.
 public struct RenderStyles: Sendable, Equatable {
     public let styles: [String: RenderStyle]
 
     public init(styles: [String: RenderStyle]) { self.styles = styles }
 
-    /// Reads `^schema` → `^rendering_rules` → `^render` blocks from a schema
+    /// Reads `^presentation` → `^rendering_rules` → `^render` blocks from a presentation
     /// document. Lenient: it takes the rules that are present.
-    public init(parsing schemaDocument: SpringwaterDocument) {
+    public init(parsing presentationDocument: SpringwaterDocument) {
         var out: [String: RenderStyle] = [:]
-        let schemaEl = schemaDocument.root.renderChildElements.first { $0.name == "schema" }
-        let rr = schemaEl?.renderChildElements.first { $0.name == "rendering_rules" }
+        let presentationEl = presentationDocument.root.renderChildElements.first { $0.name == "presentation" }
+        let rr = presentationEl?.renderChildElements.first { $0.name == "rendering_rules" }
         for render in rr?.renderChildElements ?? [] where render.name == "render" {
             var tag: String?
             var style = RenderStyle()
@@ -108,7 +108,7 @@ extension SpringwaterDocument.Element {
         return trimNewlinesOnly(text)
     }
 
-    /// A single scalar value: content joined and fully trimmed — for schema
+    /// A single scalar value: content joined and fully trimmed — for presentation
     /// property values such as "3.7in" or "uppercase".
     var scalarValue: String {
         let text = children.compactMap { child -> String? in

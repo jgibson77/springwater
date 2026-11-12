@@ -1,0 +1,66 @@
+^Springwater
+^presentation
+^validated_by
+presentation.schema v1.0
+^validated_by/
+
+^metadata
+^name
+Schema Definition
+^name/
+^version
+1.0
+^version/
+^target_schema
+schema
+^target_schema/
+^metadata/
+
+^rendering_rules
+
+^render
+^tag
+metadata
+^tag/
+^spacing_after
+2 lines
+^spacing_after/
+^render/
+
+^render
+^tag
+structure_rules
+^tag/
+^spacing_before
+2 lines
+^spacing_before/
+^spacing_after
+2 lines
+^spacing_after/
+^render/
+
+^render
+^tag
+rendering_rules
+^tag/
+^spacing_before
+2 lines
+^spacing_before/
+^spacing_after
+2 lines
+^spacing_after/
+^render/
+
+^render
+^tag
+validation
+^tag/
+^spacing_before
+2 lines
+^spacing_before/
+^render/
+
+^rendering_rules/
+
+^presentation/
+^Springwater/

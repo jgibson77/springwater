@@ -1479,19 +1479,6 @@ conclusion
 
 ^structure_rules/
 
-^rendering_rules
-
-^render
-^tag
-rosetta_stone
-^tag/
-^spacing_after
-2 lines
-^spacing_after/
-^render/
-
-^rendering_rules/
-
 ^validation
 ^empty_tags
 error
