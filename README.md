@@ -113,6 +113,19 @@ No collisions with code annotations, email addresses, comments, variables, or ot
 
 ---
 
+## Implementations
+
+| Language | Where | Status |
+|----------|-------|--------|
+| Swift | `swift/SpringwaterSyntax` | Reference: parser, serializer, schema validator, renderer, Fountain export, with tests |
+| JavaScript | `javascript/springwater.js` | Parser, serializer, schema validator. `node javascript/test.js` runs the conformance vectors and checks every document in this repository |
+| Kotlin | `kotlin/Springwater.kt` | Parser, serializer, schema validator for Android and the JVM. Not yet compiled or run |
+| Python | `tools/springwater-validate` | Syntax validator only |
+
+Anyone writing another implementation can check it against `tools/conformance_vectors.json`.
+
+---
+
 ## Schemas
 
 | Schema | Purpose |

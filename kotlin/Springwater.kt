@@ -1,0 +1,280 @@
+// Springwater v1.0 for Kotlin (Android and JVM): parser, canonical serializer,
+// schema validator. Follows the parsing algorithm in SYNTAX.txt.
+// Uses only the Kotlin and Java standard libraries.
+
+package springwater
+
+import java.nio.ByteBuffer
+import java.nio.charset.CharacterCodingException
+import java.nio.charset.CodingErrorAction
+
+enum class LineEnding(val text: String) { LF("\n"), CRLF("\r\n"), CR("\r") }
+
+sealed interface Node
+data class Content(val text: String, val ending: LineEnding) : Node
+data class Element(val name: String, val children: List<Node>) : Node {
+    val childElements: List<Element> get() = children.filterIsInstance<Element>()
+    val contentLines: List<String> get() = children.filterIsInstance<Content>().map { it.text }
+    /** Content lines joined and trimmed: the value of a schema property. */
+    val scalar: String get() = contentLines.joinToString("\n").trim()
+}
+
+/** [kind] is one of the error names used by the conformance vectors. */
+class SpringwaterException(val kind: String, val line: Int? = null, detail: String? = null) :
+    Exception(listOfNotNull(kind, line?.let { "line $it" }, detail).joinToString(": "))
+
+enum class LineKind { CONTENT, OPEN, CLOSE, INVALID }
+data class Classified(val kind: LineKind, val name: String?)
+
+object Springwater {
+
+    private class PhysicalLine(val text: String, val ending: LineEnding?)
+
+    /** Divide at LF, CRLF, CR. U+2028 and U+2029 are content. */
+    private fun physicalLines(s: String): List<PhysicalLine> {
+        val lines = ArrayList<PhysicalLine>()
+        var start = 0
+        var i = 0
+        while (i < s.length) {
+            val c = s[i]
+            if (c == '\n') {
+                lines.add(PhysicalLine(s.substring(start, i), LineEnding.LF)); i += 1; start = i
+            } else if (c == '\r') {
+                if (i + 1 < s.length && s[i + 1] == '\n') {
+                    lines.add(PhysicalLine(s.substring(start, i), LineEnding.CRLF)); i += 2
+                } else {
+                    lines.add(PhysicalLine(s.substring(start, i), LineEnding.CR)); i += 1
+                }
+                start = i
+            } else {
+                i += 1
+            }
+        }
+        if (start < s.length) lines.add(PhysicalLine(s.substring(start), null))
+        return lines
+    }
+
+    /** Remove leading and trailing U+0020 and U+0009 only. */
+    fun trimmed(text: String): String {
+        var a = 0
+        var b = text.length
+        while (a < b && (text[a] == ' ' || text[a] == '\t')) a += 1
+        while (b > a && (text[b - 1] == ' ' || text[b - 1] == '\t')) b -= 1
+        return text.substring(a, b)
+    }
+
+    private fun isAsciiLetter(c: Char) = c in 'a'..'z' || c in 'A'..'Z'
+
+    private fun isValidTagName(name: String): Boolean {
+        if (name.isEmpty() || !isAsciiLetter(name[0])) return false
+        return name.drop(1).all { isAsciiLetter(it) || it in '0'..'9' || it == '_' }
+    }
+
+    /** Classify one trimmed line. */
+    fun classify(t: String): Classified {
+        if (t.isEmpty() || t[0] != '^') return Classified(LineKind.CONTENT, null)
+        var body = t.substring(1)
+        var closing = false
+        if (body.endsWith("/")) { closing = true; body = body.dropLast(1) }
+        if (!isValidTagName(body)) return Classified(LineKind.INVALID, null)
+        return Classified(if (closing) LineKind.CLOSE else LineKind.OPEN, body)
+    }
+
+    private class Frame(val name: String, val openedAt: Int) {
+        val children = ArrayList<Node>()
+    }
+
+    /** Parse a byte stream into the root element. */
+    fun parse(bytes: ByteArray): Element {
+        if (bytes.size >= 3 && bytes[0] == 0xEF.toByte() && bytes[1] == 0xBB.toByte() && bytes[2] == 0xBF.toByte()) {
+            throw SpringwaterException("leadingBOM")
+        }
+        val s = try {
+            Charsets.UTF_8.newDecoder()
+                .onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT)
+                .decode(ByteBuffer.wrap(bytes)).toString()
+        } catch (e: CharacterCodingException) {
+            throw SpringwaterException("invalidUTF8")
+        }
+
+        val lines = physicalLines(s)
+        if (lines.isEmpty()) throw SpringwaterException("emptyDocument")
+        if (trimmed(lines[0].text) != "^Springwater") {
+            throw SpringwaterException("missingRootOpen", 1, trimmed(lines[0].text))
+        }
+
+        val stack = ArrayList<Frame>()
+        stack.add(Frame("Springwater", 1))
+        var root: Element? = null
+        for (index in 1 until lines.size) {
+            val lineNumber = index + 1
+            val line = lines[index]
+            val c = classify(trimmed(line.text))
+            val top = stack.last()
+            when (c.kind) {
+                LineKind.CONTENT -> {
+                    // Only the final physical line can lack an ending. If that line
+                    // is content, the root was never closed: stop and report below.
+                    val ending = line.ending ?: break
+                    top.children.add(Content(line.text, ending))
+                }
+                LineKind.OPEN -> {
+                    if (c.name == "Springwater") throw SpringwaterException("reservedRootName", lineNumber)
+                    stack.add(Frame(c.name!!, lineNumber))
+                }
+                LineKind.CLOSE -> {
+                    if (top.name != c.name) {
+                        throw SpringwaterException(
+                            "mismatchedClosingTag", lineNumber,
+                            "^${top.name} opened on line ${top.openedAt}, but ^${c.name}/ closes here"
+                        )
+                    }
+                    if (stack.size == 1) {
+                        if (index != lines.size - 1) {
+                            throw SpringwaterException("trailingLinesAfterRootClose", lineNumber)
+                        }
+                        stack.removeAt(stack.size - 1)
+                        root = Element(top.name, top.children)
+                    } else {
+                        stack.removeAt(stack.size - 1)
+                        stack.last().children.add(Element(top.name, top.children))
+                    }
+                }
+                LineKind.INVALID -> throw SpringwaterException("invalidCaretLine", lineNumber, trimmed(line.text))
+            }
+        }
+        if (root == null) {
+            if (stack.size > 1) {
+                val top = stack.last()
+                throw SpringwaterException("unclosedTag", top.openedAt, "^${top.name}")
+            }
+            throw SpringwaterException("missingRootClose")
+        }
+        return root
+    }
+
+    /** Canonical form: tag lines flush left and LF-terminated, content verbatim. */
+    fun serialize(root: Element): String {
+        val out = StringBuilder()
+        fun write(el: Element) {
+            out.append('^').append(el.name).append('\n')
+            for (child in el.children) {
+                when (child) {
+                    is Element -> write(child)
+                    is Content -> out.append(child.text).append(child.ending.text)
+                }
+            }
+            out.append('^').append(el.name).append("/\n")
+        }
+        write(root)
+        return out.toString()
+    }
+}
+
+// ---------------------------------------------------------------- schemas
+
+data class Rule(
+    val tag: String,
+    val mustContain: List<String> = emptyList(),
+    val mayContain: List<String> = emptyList(),
+    val cannotContain: List<String> = emptyList(),
+    val mustContainOneOf: List<String> = emptyList(),
+    val mustContainCount: Pair<String, Int>? = null,
+    val parentMustBe: List<String> = emptyList(),
+    val cannotBeEmpty: Boolean = false,
+    val textOnly: Boolean = false,
+    val mustEqual: String? = null,
+    val mustBeBoolean: Boolean = false,
+    val allowsUnknownChildren: Boolean = false,
+)
+
+class Schema(val requiredRoot: String, val rules: Map<String, Rule>) {
+
+    /** Returns a list of messages; an empty list means the document is valid. */
+    fun validate(root: Element): List<String> {
+        val issues = ArrayList<String>()
+        val top = root.childElements
+        val required = top.filter { it.name == requiredRoot }
+        if (required.isEmpty()) issues.add("missing required root <$requiredRoot>")
+        for (e in top) if (e.name != requiredRoot) issues.add("unexpected top-level element <${e.name}>")
+        for (e in required) check(e, "Springwater", issues)
+        return issues
+    }
+
+    private fun check(el: Element, parent: String, issues: MutableList<String>) {
+        val rule = rules[el.name]
+        if (rule == null) { issues.add("unknown tag <${el.name}> under <$parent>"); return }
+        if (rule.parentMustBe.isNotEmpty() && parent !in rule.parentMustBe) {
+            issues.add("<${el.name}> under <$parent>: parent must be one of ${rule.parentMustBe.joinToString(", ")}")
+        }
+        val kids = el.childElements
+        val names = kids.map { it.name }
+        val hasText = el.contentLines.any { Springwater.trimmed(it).isNotEmpty() }
+        if (rule.textOnly && kids.isNotEmpty()) issues.add("<${el.name}> is text only but contains ${names.joinToString(", ")}")
+        if (rule.cannotBeEmpty && !hasText && kids.isEmpty()) issues.add("<${el.name}> cannot be empty")
+        if (rule.mustEqual != null && el.scalar != rule.mustEqual) issues.add("<${el.name}> must equal '${rule.mustEqual}'")
+        if (rule.mustBeBoolean && el.scalar != "true" && el.scalar != "false") issues.add("<${el.name}> must be true or false")
+
+        val allowed = HashSet<String>()
+        allowed.addAll(rule.mustContain); allowed.addAll(rule.mayContain); allowed.addAll(rule.mustContainOneOf)
+        rule.mustContainCount?.let { allowed.add(it.first) }
+        for (k in kids) {
+            if (k.name in rule.cannotContain) issues.add("<${el.name}> cannot contain <${k.name}>")
+            else if (!rule.allowsUnknownChildren && k.name !in allowed) issues.add("<${k.name}> is not allowed in <${el.name}>")
+        }
+        for (t in rule.mustContain) if (t !in names) issues.add("<${el.name}> is missing required <$t>")
+        if (rule.mustContainOneOf.isNotEmpty() && names.none { it in rule.mustContainOneOf }) {
+            issues.add("<${el.name}> must contain one of ${rule.mustContainOneOf.joinToString(", ")}")
+        }
+        rule.mustContainCount?.let { (tag, count) ->
+            val found = names.count { it == tag }
+            if (found != count) issues.add("<${el.name}> must contain exactly $count <$tag>, found $found")
+        }
+        if (!rule.allowsUnknownChildren) for (k in kids) check(k, el.name, issues)
+    }
+
+    companion object {
+        private fun list(text: String) = text.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+
+        /** Build a schema model from a parsed schema document. */
+        fun from(schemaRoot: Element): Schema {
+            val schemaEl = schemaRoot.childElements.firstOrNull { it.name == "schema" }
+                ?: throw IllegalArgumentException("no schema element")
+            var requiredRoot = ""
+            val rules = LinkedHashMap<String, Rule>()
+            for (e in schemaEl.childElements) {
+                if (e.name == "required_root") requiredRoot = e.scalar
+                if (e.name != "structure_rules") continue
+                for (r in e.childElements) {
+                    if (r.name != "rule") continue
+                    var rule = Rule(tag = "")
+                    for (p in r.childElements) {
+                        val v = p.scalar
+                        rule = when (p.name) {
+                            "tag" -> rule.copy(tag = v)
+                            "must_contain" -> rule.copy(mustContain = list(v))
+                            "may_contain" -> rule.copy(mayContain = list(v))
+                            "cannot_contain" -> rule.copy(cannotContain = list(v))
+                            "must_contain_one_of" -> rule.copy(mustContainOneOf = list(v))
+                            "must_contain_count" -> {
+                                val parts = list(v)
+                                val n = parts.getOrNull(1)?.takeIf { d -> d.isNotEmpty() && d.all { it in '0'..'9' } }?.toIntOrNull()
+                                if (parts.size == 2 && n != null) rule.copy(mustContainCount = parts[0] to n) else rule
+                            }
+                            "parent_must_be" -> rule.copy(parentMustBe = list(v))
+                            "cannot_be_empty" -> rule.copy(cannotBeEmpty = v == "true")
+                            "text_only" -> rule.copy(textOnly = v == "true")
+                            "must_equal" -> rule.copy(mustEqual = v)
+                            "must_be_boolean" -> rule.copy(mustBeBoolean = v == "true")
+                            "allows_unknown_children" -> rule.copy(allowsUnknownChildren = v == "true")
+                            else -> rule
+                        }
+                    }
+                    if (rule.tag.isNotEmpty()) rules[rule.tag] = rule
+                }
+            }
+            return Schema(requiredRoot, rules)
+        }
+    }
+}
