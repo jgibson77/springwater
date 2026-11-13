@@ -2,7 +2,7 @@
 // document in the repository.
 //
 //   kotlinc kotlin/Springwater.kt kotlin/Test.kt -include-runtime -d /tmp/springwater-test.jar
-//   java -jar /tmp/springwater-test.jar .
+//   kotlin -cp /tmp/springwater-test.jar springwater.TestKt .
 //
 // The argument is the repository root. kotlin/vectors.tsv is generated from
 // tools/conformance_vectors.json by kotlin/make_vectors.js.

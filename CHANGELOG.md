@@ -17,9 +17,9 @@ Springwater Core is unchanged: the seven rules and `SYNTAX.txt` are as frozen.
   presentation, as it already was for novels.
 - The renderer reads a presentation instead of a schema:
   `HTMLRenderer.render(_:presentation:title:)`.
-- Added a JavaScript implementation (`javascript/`), which passes the
-  conformance vectors, and a Kotlin implementation (`kotlin/`), which has not
-  yet been compiled.
+- Added JavaScript (`javascript/`) and Kotlin (`kotlin/`) implementations.
+  Each passes the conformance vectors and checks every document in the
+  repository.
 - Added `CONVENTIONS.md` (non-normative) and `tools/conformance_vectors.json`.
 - The README states the format's costs and the two kinds of validity.
 
