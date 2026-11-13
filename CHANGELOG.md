@@ -22,6 +22,10 @@ Springwater Core is unchanged: the seven rules and `SYNTAX.txt` are as frozen.
   repository.
 - Added `CONVENTIONS.md` (non-normative) and `tools/conformance_vectors.json`.
 - The README states the format's costs and the two kinds of validity.
+- Added `parallel.schema` and `examples/genesis_1_3.springwater`: Genesis 1 to 3
+  in English, Spanish, Mandarin, and Hebrew, aligned verse by verse.
+- `CONVENTIONS.md` now covers marks inside a line: they are content, and the
+  document says what they mean.
 
 ## v1.0 - Initial public release
 

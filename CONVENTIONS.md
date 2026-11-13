@@ -59,6 +59,29 @@ a schema decision, not a core one.
 If the embedded document is a real artifact and must stay directly parseable,
 do not gutter it. Keep it as its own `.springwater` file and refer to it.
 
+## Marks inside a line
+
+Springwater has no inline markup. A line is a tag or it is content, and content
+is never read for structure. Nothing in the core says that part of a line is
+emphasized, added, or quoted.
+
+How a word looks (italic, bold, a typeface) is presentation and does not belong
+in a document. But some marks carry meaning. In the King James Bible, italics
+mark words the translators added that have no counterpart in the Hebrew. That is
+a fact about the text, and it should survive.
+
+Write such a mark as ordinary characters in the content, and say what it means
+in the document itself, in whatever element its schema provides for that.
+`examples/genesis_1_3.springwater` puts the added words in square brackets and
+explains the brackets in its `source` element:
+
+~~~
+And God saw the light, that [it was] good: and God divided the light from the darkness.
+~~~
+
+Springwater preserves the characters exactly and interprets none of them. The
+meaning of a mark belongs to the document and its schema, not to the core.
+
 ## Non-goals
 
 These were considered and rejected, because each costs more than the problem
@@ -71,5 +94,7 @@ it solves:
   first character.
 - **A length-prefixed binary block.** Lossless, but no longer line-oriented or
   readable.
+- **Inline markup** (delimiters the parser reads inside a content line). It
+  would need escaping, and content would no longer be preserved exactly.
 
-The gutter meets the need and leaves the seven rules exactly as frozen.
+The conventions above meet these needs and leave the seven rules exactly as frozen.

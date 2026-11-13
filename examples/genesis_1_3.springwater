@@ -1,0 +1,1526 @@
+^Springwater
+^parallel_text
+^validated_by
+parallel.schema v1.0
+^validated_by/
+^languages
+English (King James Version), Spanish (Reina-Valera 1909), Mandarin Chinese (Chinese Union Version, simplified characters), Hebrew (Westminster Leningrad Codex)
+^languages/
+^source
+Genesis, chapters 1 to 3, one passage per verse: 80 verses in each of four languages. Chosen because it is among the most widely translated and most widely known texts there is, because these editions are in the public domain, and because the verse numbering aligns every language to every other.
+English: King James Version, public domain outside the United Kingdom. Spanish: Reina-Valera 1909, public domain. Mandarin: Chinese Union Version (1919), public domain. All three taken from the open-bibles collection (github.com/seven1m/open-bibles).
+Hebrew: Westminster Leningrad Codex, public domain, as published by the Open Scriptures Hebrew Bible project (github.com/openscriptures/morphhb), with vowel points and cantillation marks.
+Every version is complete and unabridged. The Hebrew is the original; the other three translate it. Markup and editorial footnotes were removed; no word of any verse was changed. In the English, square brackets mark words the King James translators added that have no counterpart in the Hebrew; the 1611 printing set them in different type. The Hebrew keeps its paragraph markers (the letters pe and samekh standing alone at the end of a verse). The chapter headings were supplied for this example.
+^source/
+
+^title
+^english
+Genesis
+^english/
+^spanish
+Génesis
+^spanish/
+^mandarin
+创世记
+^mandarin/
+^hebrew
+בראשית
+^hebrew/
+^title/
+
+^part
+^title
+^english
+Chapter 1
+^english/
+^spanish
+Capítulo 1
+^spanish/
+^mandarin
+第一章
+^mandarin/
+^hebrew
+פרק א
+^hebrew/
+^title/
+
+^passage
+^reference
+1:1
+^reference/
+^english
+In the beginning God created the heaven and the earth.
+^english/
+^spanish
+EN el principio crió Dios los cielos y la tierra.
+^spanish/
+^mandarin
+起初神创造天地。
+^mandarin/
+^hebrew
+בְּרֵאשִׁ֖ית בָּרָ֣א אֱלֹהִ֑ים אֵ֥ת הַשָּׁמַ֖יִם וְאֵ֥ת הָאָֽרֶץ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:2
+^reference/
+^english
+And the earth was without form, and void; and darkness [was] upon the face of the deep. And the Spirit of God moved upon the face of the waters.
+^english/
+^spanish
+Y la tierra estaba desordenada y vacía, y las tinieblas estaban sobre la haz del abismo, y el Espíritu de Dios se movía sobre la haz de las aguas.
+^spanish/
+^mandarin
+地是空虚混沌，渊面黑暗；神的灵运行在水面上。
+^mandarin/
+^hebrew
+וְהָאָ֗רֶץ הָיְתָ֥ה תֹ֨הוּ֙ וָבֹ֔הוּ וְחֹ֖שֶׁךְ עַל־פְּנֵ֣י תְה֑וֹם וְר֣וּחַ אֱלֹהִ֔ים מְרַחֶ֖פֶת עַל־פְּנֵ֥י הַמָּֽיִם׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:3
+^reference/
+^english
+And God said, Let there be light: and there was light.
+^english/
+^spanish
+Y dijo Dios: Sea la luz: y fué la luz.
+^spanish/
+^mandarin
+神说：「要有光」，就有了光。
+^mandarin/
+^hebrew
+וַיֹּ֥אמֶר אֱלֹהִ֖ים יְהִ֣י א֑וֹר וַֽיְהִי־אֽוֹר׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:4
+^reference/
+^english
+And God saw the light, that [it was] good: and God divided the light from the darkness.
+^english/
+^spanish
+Y vió Dios que la luz era buena: y apartó Dios la luz de las tinieblas.
+^spanish/
+^mandarin
+神看光是好的，就把光暗分开了。
+^mandarin/
+^hebrew
+וַיַּ֧רְא אֱלֹהִ֛ים אֶת־הָא֖וֹר כִּי־ט֑וֹב וַיַּבְדֵּ֣ל אֱלֹהִ֔ים בֵּ֥ין הָא֖וֹר וּבֵ֥ין הַחֹֽשֶׁךְ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:5
+^reference/
+^english
+And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day.
+^english/
+^spanish
+Y llamó Dios á la luz Día, y á las tinieblas llamó Noche: y fué la tarde y la mañana un día.
+^spanish/
+^mandarin
+神称光为「昼」，称暗为「夜」。有晚上，有早晨，这是头一日。
+^mandarin/
+^hebrew
+וַיִּקְרָ֨א אֱלֹהִ֤ים ׀ לָאוֹר֙ י֔וֹם וְלַחֹ֖שֶׁךְ קָ֣רָא לָ֑יְלָה וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם אֶחָֽד׃ פ
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:6
+^reference/
+^english
+And God said, Let there be a firmament in the midst of the waters, and let it divide the waters from the waters.
+^english/
+^spanish
+Y dijo Dios: Haya expansión en medio de las aguas, y separe las aguas de las aguas.
+^spanish/
+^mandarin
+神说：「诸水之间要有空气，将水分为上下。」
+^mandarin/
+^hebrew
+וַיֹּ֣אמֶר אֱלֹהִ֔ים יְהִ֥י רָקִ֖יעַ בְּת֣וֹךְ הַמָּ֑יִם וִיהִ֣י מַבְדִּ֔יל בֵּ֥ין מַ֖יִם לָמָֽיִם׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:7
+^reference/
+^english
+And God made the firmament, and divided the waters which [were] under the firmament from the waters which [were] above the firmament: and it was so.
+^english/
+^spanish
+E hizo Dios la expansión, y apartó las aguas que estaban debajo de la expansión, de las aguas que estaban sobre la expansión: y fué así.
+^spanish/
+^mandarin
+神就造出空气，将空气以下的水、空气以上的水分开了。事就这样成了。
+^mandarin/
+^hebrew
+וַיַּ֣עַשׂ אֱלֹהִים֮ אֶת־הָרָקִיעַ֒ וַיַּבְדֵּ֗ל בֵּ֤ין הַמַּ֨יִם֙ אֲשֶׁר֙ מִתַּ֣חַת לָרָקִ֔יעַ וּבֵ֣ין הַמַּ֔יִם אֲשֶׁ֖ר מֵעַ֣ל לָרָקִ֑יעַ וַֽיְהִי־כֵֽן׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:8
+^reference/
+^english
+And God called the firmament Heaven. And the evening and the morning were the second day.
+^english/
+^spanish
+Y llamó Dios á la expansión Cielos: y fué la tarde y la mañana el día segundo.
+^spanish/
+^mandarin
+神称空气为「天」。有晚上，有早晨，是第二日。
+^mandarin/
+^hebrew
+וַיִּקְרָ֧א אֱלֹהִ֛ים לָֽרָקִ֖יעַ שָׁמָ֑יִם וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם שֵׁנִֽי׃ פ
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:9
+^reference/
+^english
+And God said, Let the waters under the heaven be gathered together unto one place, and let the dry [land] appear: and it was so.
+^english/
+^spanish
+Y dijo Dios: Júntense las aguas que están debajo de los cielos en un lugar, y descúbrase la seca: y fué así.
+^spanish/
+^mandarin
+神说：「天下的水要聚在一处，使旱地露出来。」事就这样成了。
+^mandarin/
+^hebrew
+וַיֹּ֣אמֶר אֱלֹהִ֗ים יִקָּו֨וּ הַמַּ֜יִם מִתַּ֤חַת הַשָּׁמַ֨יִם֙ אֶל־מָק֣וֹם אֶחָ֔ד וְתֵרָאֶ֖ה הַיַּבָּשָׁ֑ה וַֽיְהִי־כֵֽן׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:10
+^reference/
+^english
+And God called the dry [land] Earth; and the gathering together of the waters called he Seas: and God saw that [it was] good.
+^english/
+^spanish
+Y llamó Dios á la seca Tierra, y á la reunión de las aguas llamó Mares: y vió Dios que era bueno.
+^spanish/
+^mandarin
+神称旱地为「地」，称水的聚处为「海」。神看着是好的。
+^mandarin/
+^hebrew
+וַיִּקְרָ֨א אֱלֹהִ֤ים ׀ לַיַּבָּשָׁה֙ אֶ֔רֶץ וּלְמִקְוֵ֥ה הַמַּ֖יִם קָרָ֣א יַמִּ֑ים וַיַּ֥רְא אֱלֹהִ֖ים כִּי־טֽוֹב׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:11
+^reference/
+^english
+And God said, Let the earth bring forth grass, the herb yielding seed, [and] the fruit tree yielding fruit after his kind, whose seed [is] in itself, upon the earth: and it was so.
+^english/
+^spanish
+Y dijo Dios: Produzca la tierra hierba verde, hierba que dé simiente; árbol de fruto que dé fruto según su género, que su simiente esté en él, sobre la tierra: y fué así.
+^spanish/
+^mandarin
+神说：「地要发生青草和结种子的菜蔬，并结果子的树木，各从其类，果子都包着核。」事就这样成了。
+^mandarin/
+^hebrew
+וַיֹּ֣אמֶר אֱלֹהִ֗ים תַּֽדְשֵׁ֤א הָאָ֨רֶץ֙ דֶּ֔שֶׁא עֵ֚שֶׂב מַזְרִ֣יעַ זֶ֔רַע עֵ֣ץ פְּרִ֞י עֹ֤שֶׂה פְּרִי֙ לְמִינ֔וֹ אֲשֶׁ֥ר זַרְעוֹ־ב֖וֹ עַל־הָאָ֑רֶץ וַֽיְהִי־כֵֽן׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:12
+^reference/
+^english
+And the earth brought forth grass, [and] herb yielding seed after his kind, and the tree yielding fruit, whose seed [was] in itself, after his kind: and God saw that [it was] good.
+^english/
+^spanish
+Y produjo la tierra hierba verde, hierba que da simiente según su naturaleza, y árbol que da fruto, cuya simiente está en él, según su género: y vió Dios que era bueno.
+^spanish/
+^mandarin
+于是地发生了青草和结种子的菜蔬，各从其类；并结果子的树木，各从其类；果子都包着核。神看着是好的。
+^mandarin/
+^hebrew
+וַתּוֹצֵ֨א הָאָ֜רֶץ דֶּ֠שֶׁא עֵ֣שֶׂב מַזְרִ֤יעַ זֶ֨רַע֙ לְמִינֵ֔הוּ וְעֵ֧ץ עֹֽשֶׂה־פְּרִ֛י אֲשֶׁ֥ר זַרְעוֹ־ב֖וֹ לְמִינֵ֑הוּ וַיַּ֥רְא אֱלֹהִ֖ים כִּי־טֽוֹב׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:13
+^reference/
+^english
+And the evening and the morning were the third day.
+^english/
+^spanish
+Y fué la tarde y la mañana el día tercero.
+^spanish/
+^mandarin
+有晚上，有早晨，是第三日。
+^mandarin/
+^hebrew
+וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם שְׁלִישִֽׁי׃ פ
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:14
+^reference/
+^english
+And God said, Let there be lights in the firmament of the heaven to divide the day from the night; and let them be for signs, and for seasons, and for days, and years:
+^english/
+^spanish
+Y dijo Dios: Sean lumbreras en la expansión de los cielos para apartar el día y la noche: y sean por señales, y para las estaciones, y para días y años;
+^spanish/
+^mandarin
+神说：「天上要有光体，可以分昼夜，作记号，定节令、日子、年岁，
+^mandarin/
+^hebrew
+וַיֹּ֣אמֶר אֱלֹהִ֗ים יְהִ֤י מְאֹרֹת֙ בִּרְקִ֣יעַ הַשָּׁמַ֔יִם לְהַבְדִּ֕יל בֵּ֥ין הַיּ֖וֹם וּבֵ֣ין הַלָּ֑יְלָה וְהָי֤וּ לְאֹתֹת֙ וּלְמ֣וֹעֲדִ֔ים וּלְיָמִ֖ים וְשָׁנִֽים׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:15
+^reference/
+^english
+And let them be for lights in the firmament of the heaven to give light upon the earth: and it was so.
+^english/
+^spanish
+Y sean por lumbreras en la expansión de los cielos para alumbrar sobre la tierra: y fué así.
+^spanish/
+^mandarin
+并要发光在天空，普照在地上。」事就这样成了。
+^mandarin/
+^hebrew
+וְהָי֤וּ לִמְאוֹרֹת֙ בִּרְקִ֣יעַ הַשָּׁמַ֔יִם לְהָאִ֖יר עַל־הָאָ֑רֶץ וַֽיְהִי־כֵֽן׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:16
+^reference/
+^english
+And God made two great lights; the greater light to rule the day, and the lesser light to rule the night: [he made] the stars also.
+^english/
+^spanish
+E hizo Dios las dos grandes lumbreras; la lumbrera mayor para que señorease en el día, y la lumbrera menor para que señorease en la noche: hizo también las estrellas.
+^spanish/
+^mandarin
+于是神造了两个大光，大的管昼，小的管夜，又造众星，
+^mandarin/
+^hebrew
+וַיַּ֣עַשׂ אֱלֹהִ֔ים אֶת־שְׁנֵ֥י הַמְּאֹרֹ֖ת הַגְּדֹלִ֑ים אֶת־הַמָּא֤וֹר הַגָּדֹל֙ לְמֶמְשֶׁ֣לֶת הַיּ֔וֹם וְאֶת־הַמָּא֤וֹר הַקָּטֹן֙ לְמֶמְשֶׁ֣לֶת הַלַּ֔יְלָה וְאֵ֖ת הַכּוֹכָבִֽים׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:17
+^reference/
+^english
+And God set them in the firmament of the heaven to give light upon the earth,
+^english/
+^spanish
+Y púsolas Dios en la expansión de los cielos, para alumbrar sobre la tierra,
+^spanish/
+^mandarin
+就把这些光摆列在天空，普照在地上，
+^mandarin/
+^hebrew
+וַיִּתֵּ֥ן אֹתָ֛ם אֱלֹהִ֖ים בִּרְקִ֣יעַ הַשָּׁמָ֑יִם לְהָאִ֖יר עַל־הָאָֽרֶץ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:18
+^reference/
+^english
+And to rule over the day and over the night, and to divide the light from the darkness: and God saw that [it was] good.
+^english/
+^spanish
+Y para señorear en el día y en la noche, y para apartar la luz y las tinieblas: y vió Dios que era bueno.
+^spanish/
+^mandarin
+管理昼夜，分别明暗。神看着是好的。
+^mandarin/
+^hebrew
+וְלִמְשֹׁל֙ בַּיּ֣וֹם וּבַלַּ֔יְלָה וּֽלֲהַבְדִּ֔יל בֵּ֥ין הָא֖וֹר וּבֵ֣ין הַחֹ֑שֶׁךְ וַיַּ֥רְא אֱלֹהִ֖ים כִּי־טֽוֹב׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:19
+^reference/
+^english
+And the evening and the morning were the fourth day.
+^english/
+^spanish
+Y fué la tarde y la mañana el día cuarto.
+^spanish/
+^mandarin
+有晚上，有早晨，是第四日。
+^mandarin/
+^hebrew
+וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם רְבִיעִֽי׃ פ
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:20
+^reference/
+^english
+And God said, Let the waters bring forth abundantly the moving creature that hath life, and fowl [that] may fly above the earth in the open firmament of heaven.
+^english/
+^spanish
+Y dijo Dios: Produzcan las aguas reptil de ánima viviente, y aves que vuelen sobre la tierra, en la abierta expansión de los cielos.
+^spanish/
+^mandarin
+神说：「水要多多滋生有生命的物；要有雀鸟飞在地面以上，天空之中。」
+^mandarin/
+^hebrew
+וַיֹּ֣אמֶר אֱלֹהִ֔ים יִשְׁרְצ֣וּ הַמַּ֔יִם שֶׁ֖רֶץ נֶ֣פֶשׁ חַיָּ֑ה וְעוֹף֙ יְעוֹפֵ֣ף עַל־הָאָ֔רֶץ עַל־פְּנֵ֖י רְקִ֥יעַ הַשָּׁמָֽיִם׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:21
+^reference/
+^english
+And God created great whales, and every living creature that moveth, which the waters brought forth abundantly, after their kind, and every winged fowl after his kind: and God saw that [it was] good.
+^english/
+^spanish
+Y crió Dios las grandes ballenas, y toda cosa viva que anda arrastrando, que las aguas produjeron según su género, y toda ave alada según su especie: y vió Dios que era bueno.
+^spanish/
+^mandarin
+神就造出大鱼和水中所滋生各样有生命的动物，各从其类；又造出各样飞鸟，各从其类。神看着是好的。
+^mandarin/
+^hebrew
+וַיִּבְרָ֣א אֱלֹהִ֔ים אֶת־הַתַּנִּינִ֖ם הַגְּדֹלִ֑ים וְאֵ֣ת כָּל־נֶ֣פֶשׁ הַֽחַיָּ֣ה ׀ הָֽרֹמֶ֡שֶׂת אֲשֶׁר֩ שָׁרְצ֨וּ הַמַּ֜יִם לְמִֽינֵהֶ֗ם וְאֵ֨ת כָּל־ע֤וֹף כָּנָף֙ לְמִינֵ֔הוּ וַיַּ֥רְא אֱלֹהִ֖ים כִּי־טֽוֹב׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:22
+^reference/
+^english
+And God blessed them, saying, Be fruitful, and multiply, and fill the waters in the seas, and let fowl multiply in the earth.
+^english/
+^spanish
+Y Dios los bendijo diciendo: Fructificad y multiplicad, y henchid las aguas en los mares, y las aves se multipliquen en la tierra.
+^spanish/
+^mandarin
+神就赐福给这一切，说：「滋生繁多，充满海中的水；雀鸟也要多生在地上。」
+^mandarin/
+^hebrew
+וַיְבָ֧רֶךְ אֹתָ֛ם אֱלֹהִ֖ים לֵאמֹ֑ר פְּר֣וּ וּרְב֗וּ וּמִלְא֤וּ אֶת־הַמַּ֨יִם֙ בַּיַּמִּ֔ים וְהָע֖וֹף יִ֥רֶב בָּאָֽרֶץ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:23
+^reference/
+^english
+And the evening and the morning were the fifth day.
+^english/
+^spanish
+Y fué la tarde y la mañana el día quinto.
+^spanish/
+^mandarin
+有晚上，有早晨，是第五日。
+^mandarin/
+^hebrew
+וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם חֲמִישִֽׁי׃ פ
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:24
+^reference/
+^english
+And God said, Let the earth bring forth the living creature after his kind, cattle, and creeping thing, and beast of the earth after his kind: and it was so.
+^english/
+^spanish
+Y dijo Dios: Produzca la tierra seres vivientes según su género, bestias y serpientes y animales de la tierra según su especie: y fué así.
+^spanish/
+^mandarin
+神说：「地要生出活物来，各从其类；牲畜、昆虫、野兽，各从其类。」事就这样成了。
+^mandarin/
+^hebrew
+וַיֹּ֣אמֶר אֱלֹהִ֗ים תּוֹצֵ֨א הָאָ֜רֶץ נֶ֤פֶשׁ חַיָּה֙ לְמִינָ֔הּ בְּהֵמָ֥ה וָרֶ֛מֶשׂ וְחַֽיְתוֹ־אֶ֖רֶץ לְמִינָ֑הּ וַֽיְהִי־כֵֽן׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:25
+^reference/
+^english
+And God made the beast of the earth after his kind, and cattle after their kind, and every thing that creepeth upon the earth after his kind: and God saw that [it was] good.
+^english/
+^spanish
+E hizo Dios animales de la tierra según su género, y ganado según su género, y todo animal que anda arrastrando sobre la tierra según su especie: y vió Dios que era bueno.
+^spanish/
+^mandarin
+于是神造出野兽，各从其类；牲畜，各从其类；地上一切昆虫，各从其类。神看着是好的。
+^mandarin/
+^hebrew
+וַיַּ֣עַשׂ אֱלֹהִים֩ אֶת־חַיַּ֨ת הָאָ֜רֶץ לְמִינָ֗הּ וְאֶת־הַבְּהֵמָה֙ לְמִינָ֔הּ וְאֵ֛ת כָּל־רֶ֥מֶשׂ הָֽאֲדָמָ֖ה לְמִינֵ֑הוּ וַיַּ֥רְא אֱלֹהִ֖ים כִּי־טֽוֹב׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:26
+^reference/
+^english
+And God said, Let us make man in our image, after our likeness: and let them have dominion over the fish of the sea, and over the fowl of the air, and over the cattle, and over all the earth, and over every creeping thing that creepeth upon the earth.
+^english/
+^spanish
+Y dijo Dios: Hagamos al hombre á nuestra imagen, conforme á nuestra semejanza; y señoree en los peces de la mar, y en las aves de los cielos, y en las bestias, y en toda la tierra, y en todo animal que anda arrastrando sobre la tierra.
+^spanish/
+^mandarin
+神说：「我们要照着我们的形像、按着我们的样式造人，使他们管理海里的鱼、空中的鸟、地上的牲畜和全地，并地上所爬的一切昆虫。」
+^mandarin/
+^hebrew
+וַיֹּ֣אמֶר אֱלֹהִ֔ים נַֽעֲשֶׂ֥ה אָדָ֛ם בְּצַלְמֵ֖נוּ כִּדְמוּתֵ֑נוּ וְיִרְדּוּ֩ בִדְגַ֨ת הַיָּ֜ם וּבְע֣וֹף הַשָּׁמַ֗יִם וּבַבְּהֵמָה֙ וּבְכָל־הָאָ֔רֶץ וּבְכָל־הָרֶ֖מֶשׂ הָֽרֹמֵ֥שׂ עַל־הָאָֽרֶץ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:27
+^reference/
+^english
+So God created man in his [own] image, in the image of God created he him; male and female created he them.
+^english/
+^spanish
+Y crió Dios al hombre á su imagen, á imagen de Dios lo crió; varón y hembra los crió.
+^spanish/
+^mandarin
+神就照着自己的形像造人，乃是照着他的形像造男造女。
+^mandarin/
+^hebrew
+וַיִּבְרָ֨א אֱלֹהִ֤ים ׀ אֶת־הָֽאָדָם֙ בְּצַלְמ֔וֹ בְּצֶ֥לֶם אֱלֹהִ֖ים בָּרָ֣א אֹת֑וֹ זָכָ֥ר וּנְקֵבָ֖ה בָּרָ֥א אֹתָֽם׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:28
+^reference/
+^english
+And God blessed them, and God said unto them, Be fruitful, and multiply, and replenish the earth, and subdue it: and have dominion over the fish of the sea, and over the fowl of the air, and over every living thing that moveth upon the earth.
+^english/
+^spanish
+Y los bendijo Dios; y díjoles Dios: Fructificad y multiplicad, y henchid la tierra, y sojuzgadla, y señoread en los peces de la mar, y en las aves de los cielos, y en todas las bestias que se mueven sobre la tierra.
+^spanish/
+^mandarin
+神就赐福给他们，又对他们说：「要生养众多，遍满地面，治理这地，也要管理海里的鱼、空中的鸟，和地上各样行动的活物。」
+^mandarin/
+^hebrew
+וַיְבָ֣רֶךְ אֹתָם֮ אֱלֹהִים֒ וַיֹּ֨אמֶר לָהֶ֜ם אֱלֹהִ֗ים פְּר֥וּ וּרְב֛וּ וּמִלְא֥וּ אֶת־הָאָ֖רֶץ וְכִבְשֻׁ֑הָ וּרְד֞וּ בִּדְגַ֤ת הַיָּם֙ וּבְע֣וֹף הַשָּׁמַ֔יִם וּבְכָל־חַיָּ֖ה הָֽרֹמֶ֥שֶׂת עַל־הָאָֽרֶץ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:29
+^reference/
+^english
+And God said, Behold, I have given you every herb bearing seed, which [is] upon the face of all the earth, and every tree, in the which [is] the fruit of a tree yielding seed; to you it shall be for meat.
+^english/
+^spanish
+Y dijo Dios: He aquí que os he dado toda hierba que da simiente, que está sobre la haz de toda la tierra; y todo árbol en que hay fruto de árbol que da simiente, seros ha para comer.
+^spanish/
+^mandarin
+神说：「看哪，我将遍地上一切结种子的菜蔬和一切树上所结有核的果子，全赐给你们作食物。
+^mandarin/
+^hebrew
+וַיֹּ֣אמֶר אֱלֹהִ֗ים הִנֵּה֩ נָתַ֨תִּי לָכֶ֜ם אֶת־כָּל־עֵ֣שֶׂב ׀ זֹרֵ֣עַ זֶ֗רַע אֲשֶׁר֙ עַל־פְּנֵ֣י כָל־הָאָ֔רֶץ וְאֶת־כָּל־הָעֵ֛ץ אֲשֶׁר־בּ֥וֹ פְרִי־עֵ֖ץ זֹרֵ֣עַ זָ֑רַע לָכֶ֥ם יִֽהְיֶ֖ה לְאָכְלָֽה׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:30
+^reference/
+^english
+And to every beast of the earth, and to every fowl of the air, and to every thing that creepeth upon the earth, wherein [there is] life, [I have given] every green herb for meat: and it was so.
+^english/
+^spanish
+Y á toda bestia de la tierra, y á todas las aves de los cielos, y á todo lo que se mueve sobre la tierra, en que hay vida, toda hierba verde les será para comer: y fué así.
+^spanish/
+^mandarin
+至于地上的走兽和空中的飞鸟，并各样爬在地上有生命的物，我将青草赐给牠们作食物。」事就这样成了。
+^mandarin/
+^hebrew
+וּֽלְכָל־חַיַּ֣ת הָ֠אָרֶץ וּלְכָל־ע֨וֹף הַשָּׁמַ֜יִם וּלְכֹ֣ל ׀ רוֹמֵ֣שׂ עַל־הָאָ֗רֶץ אֲשֶׁר־בּוֹ֙ נֶ֣פֶשׁ חַיָּ֔ה אֶת־כָּל־יֶ֥רֶק עֵ֖שֶׂב לְאָכְלָ֑ה וַֽיְהִי־כֵֽן׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+1:31
+^reference/
+^english
+And God saw every thing that he had made, and, behold, [it was] very good. And the evening and the morning were the sixth day.
+^english/
+^spanish
+Y vió Dios todo lo que había hecho, y he aquí que era bueno en gran manera. Y fué la tarde y la mañana el día sexto.
+^spanish/
+^mandarin
+神看着一切所造的都甚好。有晚上，有早晨，是第六日。
+^mandarin/
+^hebrew
+וַיַּ֤רְא אֱלֹהִים֙ אֶת־כָּל־אֲשֶׁ֣ר עָשָׂ֔ה וְהִנֵּה־ט֖וֹב מְאֹ֑ד וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם הַשִּׁשִּֽׁי׃ פ
+^hebrew/
+^passage/
+
+^part/
+
+^part
+^title
+^english
+Chapter 2
+^english/
+^spanish
+Capítulo 2
+^spanish/
+^mandarin
+第二章
+^mandarin/
+^hebrew
+פרק ב
+^hebrew/
+^title/
+
+^passage
+^reference
+2:1
+^reference/
+^english
+Thus the heavens and the earth were finished, and all the host of them.
+^english/
+^spanish
+Y FUERON acabados los cielos y la tierra, y todo su ornamento.
+^spanish/
+^mandarin
+天地万物都造齐了。
+^mandarin/
+^hebrew
+וַיְכֻלּ֛וּ הַשָּׁמַ֥יִם וְהָאָ֖רֶץ וְכָל־צְבָאָֽם׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:2
+^reference/
+^english
+And on the seventh day God ended his work which he had made; and he rested on the seventh day from all his work which he had made.
+^english/
+^spanish
+Y acabó Dios en el día séptimo su obra que hizo, y reposó el día séptimo de toda su obra que había hecho.
+^spanish/
+^mandarin
+到第七日，神造物的工已经完毕，就在第七日歇了他一切的工，安息了。
+^mandarin/
+^hebrew
+וַיְכַ֤ל אֱלֹהִים֙ בַּיּ֣וֹם הַשְּׁבִיעִ֔י מְלַאכְתּ֖וֹ אֲשֶׁ֣ר עָשָׂ֑ה וַיִּשְׁבֹּת֙ בַּיּ֣וֹם הַשְּׁבִיעִ֔י מִכָּל־מְלַאכְתּ֖וֹ אֲשֶׁ֥ר עָשָֽׂה׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:3
+^reference/
+^english
+And God blessed the seventh day, and sanctified it: because that in it he had rested from all his work which God created and made.
+^english/
+^spanish
+Y bendijo Dios al día séptimo, y santificólo, porque en él reposó de toda su obra que había Dios criado y hecho.
+^spanish/
+^mandarin
+神赐福给第七日，定为圣日；因为在这日，神歇了他一切创造的工，就安息了。
+^mandarin/
+^hebrew
+וַיְבָ֤רֶךְ אֱלֹהִים֙ אֶת־י֣וֹם הַשְּׁבִיעִ֔י וַיְקַדֵּ֖שׁ אֹת֑וֹ כִּ֣י ב֤וֹ שָׁבַת֙ מִכָּל־מְלַאכְתּ֔וֹ אֲשֶׁר־בָּרָ֥א אֱלֹהִ֖ים לַעֲשֽׂוֹת׃ פ
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:4
+^reference/
+^english
+These [are] the generations of the heavens and of the earth when they were created, in the day that the LORD God made the earth and the heavens,
+^english/
+^spanish
+Estos son los orígenes de los cielos y de la tierra cuando fueron criados, el día que Jehová Dios hizo la tierra y los cielos,
+^spanish/
+^mandarin
+创造天地的来历，在耶和华神造天地的日子，乃是这样，
+^mandarin/
+^hebrew
+אֵ֣לֶּה תוֹלְד֧וֹת הַשָּׁמַ֛יִם וְהָאָ֖רֶץ בְּהִבָּֽרְאָ֑ם בְּי֗וֹם עֲשׂ֛וֹת יְהוָ֥ה אֱלֹהִ֖ים אֶ֥רֶץ וְשָׁמָֽיִם׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:5
+^reference/
+^english
+And every plant of the field before it was in the earth, and every herb of the field before it grew: for the LORD God had not caused it to rain upon the earth, and [there was] not a man to till the ground.
+^english/
+^spanish
+Y toda planta del campo antes que fuese en la tierra, y toda hierba del campo antes que naciese: porque aun no había Jehová Dios hecho llover sobre la tierra, ni había hombre para que labrase la tierra;
+^spanish/
+^mandarin
+野地还没有草木，田间的菜蔬还没有长起来；因为耶和华神还没有降雨在地上，也没有人耕地，
+^mandarin/
+^hebrew
+וְכֹ֣ל ׀ שִׂ֣יחַ הַשָּׂדֶ֗ה טֶ֚רֶם יִֽהְיֶ֣ה בָאָ֔רֶץ וְכָל־עֵ֥שֶׂב הַשָּׂדֶ֖ה טֶ֣רֶם יִצְמָ֑ח כִּי֩ לֹ֨א הִמְטִ֜יר יְהוָ֤ה אֱלֹהִים֙ עַל־הָאָ֔רֶץ וְאָדָ֣ם אַ֔יִן לַֽעֲבֹ֖ד אֶת־הָֽאֲדָמָֽה׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:6
+^reference/
+^english
+But there went up a mist from the earth, and watered the whole face of the ground.
+^english/
+^spanish
+Mas subía de la tierra un vapor, que regaba toda la faz de la tierra.
+^spanish/
+^mandarin
+但有雾气从地上腾，滋润遍地。
+^mandarin/
+^hebrew
+וְאֵ֖ד יַֽעֲלֶ֣ה מִן־הָאָ֑רֶץ וְהִשְׁקָ֖ה אֶֽת־כָּל־פְּנֵֽי־הָֽאֲדָמָֽה׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:7
+^reference/
+^english
+And the LORD God formed man [of] the dust of the ground, and breathed into his nostrils the breath of life; and man became a living soul.
+^english/
+^spanish
+Formó, pues, Jehová Dios al hombre del polvo de la tierra, y alentó en su nariz soplo de vida; y fué el hombre en alma viviente.
+^spanish/
+^mandarin
+耶和华神用地上的尘土造人，将生气吹在他鼻孔里，他就成了有灵的活人，名叫亚当。
+^mandarin/
+^hebrew
+וַיִּיצֶר֩ יְהוָ֨ה אֱלֹהִ֜ים אֶת־הָֽאָדָ֗ם עָפָר֙ מִן־הָ֣אֲדָמָ֔ה וַיִּפַּ֥ח בְּאַפָּ֖יו נִשְׁמַ֣ת חַיִּ֑ים וַֽיְהִ֥י הָֽאָדָ֖ם לְנֶ֥פֶשׁ חַיָּֽה׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:8
+^reference/
+^english
+And the LORD God planted a garden eastward in Eden; and there he put the man whom he had formed.
+^english/
+^spanish
+Y había Jehová Dios plantado un huerto en Edén al oriente, y puso allí al hombre que había formado.
+^spanish/
+^mandarin
+耶和华神在东方的伊甸立了一个园子，把所造的人安置在那里。
+^mandarin/
+^hebrew
+וַיִּטַּ֞ע יְהוָ֧ה אֱלֹהִ֛ים גַּן־בְעֵ֖דֶן מִקֶּ֑דֶם וַיָּ֣שֶׂם שָׁ֔ם אֶת־הָֽאָדָ֖ם אֲשֶׁ֥ר יָצָֽר׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:9
+^reference/
+^english
+And out of the ground made the LORD God to grow every tree that is pleasant to the sight, and good for food; the tree of life also in the midst of the garden, and the tree of knowledge of good and evil.
+^english/
+^spanish
+Y había Jehová Dios hecho nacer de la tierra todo árbol delicioso á la vista, y bueno para comer: también el árbol de vida en medio del huerto, y el árbol de ciencia del bien y del mal.
+^spanish/
+^mandarin
+耶和华神使各样的树从地里长出来，可以悦人的眼目，其上的果子好作食物。园子当中又有生命树和分别善恶的树。
+^mandarin/
+^hebrew
+וַיַּצְמַ֞ח יְהוָ֤ה אֱלֹהִים֙ מִן־הָ֣אֲדָמָ֔ה כָּל־עֵ֛ץ נֶחְמָ֥ד לְמַרְאֶ֖ה וְט֣וֹב לְמַאֲכָ֑ל וְעֵ֤ץ הַֽחַיִּים֙ בְּת֣וֹךְ הַגָּ֔ן וְעֵ֕ץ הַדַּ֖עַת ט֥וֹב וָרָֽע׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:10
+^reference/
+^english
+And a river went out of Eden to water the garden; and from thence it was parted, and became into four heads.
+^english/
+^spanish
+Y salía de Edén un río para regar el huerto, y de allí se repartía en cuatro ramales.
+^spanish/
+^mandarin
+有河从伊甸流出来，滋润那园子，从那里分为四道：
+^mandarin/
+^hebrew
+וְנָהָרּ֙ יֹצֵ֣א מֵעֵ֔דֶן לְהַשְׁק֖וֹת אֶת־הַגָּ֑ן וּמִשָּׁם֙ יִפָּרֵ֔ד וְהָיָ֖ה לְאַרְבָּעָ֥ה רָאשִֽׁים׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:11
+^reference/
+^english
+The name of the first [is] Pison: that [is] it which compasseth the whole land of Havilah, where [there is] gold;
+^english/
+^spanish
+El nombre del uno era Pisón: éste es el que cerca toda la tierra de Havilah, donde hay oro:
+^spanish/
+^mandarin
+第一道名叫比逊，就是环绕哈腓拉全地的。在那里有金子，
+^mandarin/
+^hebrew
+שֵׁ֥ם הָֽאֶחָ֖ד פִּישׁ֑וֹן ה֣וּא הַסֹּבֵ֗ב אֵ֚ת כָּל־אֶ֣רֶץ הַֽחֲוִילָ֔ה אֲשֶׁר־שָׁ֖ם הַזָּהָֽב׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:12
+^reference/
+^english
+And the gold of that land [is] good: there [is] bdellium and the onyx stone.
+^english/
+^spanish
+Y el oro de aquella tierra es bueno: hay allí también bdelio y piedra cornerina.
+^spanish/
+^mandarin
+并且那地的金子是好的；在那里又有珍珠和红玛瑙。
+^mandarin/
+^hebrew
+וּֽזֲהַ֛ב הָאָ֥רֶץ הַהִ֖וא ט֑וֹב שָׁ֥ם הַבְּדֹ֖לַח וְאֶ֥בֶן הַשֹּֽׁהַם׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:13
+^reference/
+^english
+And the name of the second river [is] Gihon: the same [is] it that compasseth the whole land of Ethiopia.
+^english/
+^spanish
+El nombre del segundo río es Gihón: éste es el que rodea toda la tierra de Etiopía.
+^spanish/
+^mandarin
+第二道河名叫基训，就是环绕古实全地的。
+^mandarin/
+^hebrew
+וְשֵֽׁם־הַנָּהָ֥ר הַשֵּׁנִ֖י גִּיח֑וֹן ה֣וּא הַסּוֹבֵ֔ב אֵ֖ת כָּל־אֶ֥רֶץ כּֽוּשׁ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:14
+^reference/
+^english
+And the name of the third river [is] Hiddekel: that [is] it which goeth toward the east of Assyria. And the fourth river [is] Euphrates.
+^english/
+^spanish
+Y el nombre del tercer río es Hiddekel: éste es el que va delante de Asiria. Y el cuarto río es el Eufrates.
+^spanish/
+^mandarin
+第三道河名叫希底结，流在亚述的东边。第四道河就是伯拉河。
+^mandarin/
+^hebrew
+וְשֵׁ֨ם הַנָּהָ֤ר הַשְּׁלִישִׁי֙ חִדֶּ֔קֶל ה֥וּא הַֽהֹלֵ֖ךְ קִדְמַ֣ת אַשּׁ֑וּר וְהַנָּהָ֥ר הָֽרְבִיעִ֖י ה֥וּא פְרָֽת׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:15
+^reference/
+^english
+And the LORD God took the man, and put him into the garden of Eden to dress it and to keep it.
+^english/
+^spanish
+Tomó, pues, Jehová Dios al hombre, y le puso en el huerto de Edén, para que lo labrara y lo guardase.
+^spanish/
+^mandarin
+耶和华神将那人安置在伊甸园，使他修理看守。
+^mandarin/
+^hebrew
+וַיִּקַּ֛ח יְהוָ֥ה אֱלֹהִ֖ים אֶת־הָֽאָדָ֑ם וַיַּנִּחֵ֣הוּ בְגַן־עֵ֔דֶן לְעָבְדָ֖הּ וּלְשָׁמְרָֽהּ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:16
+^reference/
+^english
+And the LORD God commanded the man, saying, Of every tree of the garden thou mayest freely eat:
+^english/
+^spanish
+Y mandó Jehová Dios al hombre, diciendo: De todo árbol del huerto comerás;
+^spanish/
+^mandarin
+耶和华神吩咐他说：「园中各样树上的果子，你可以随意吃，
+^mandarin/
+^hebrew
+וַיְצַו֙ יְהוָ֣ה אֱלֹהִ֔ים עַל־הָֽאָדָ֖ם לֵאמֹ֑ר מִכֹּ֥ל עֵֽץ־הַגָּ֖ן אָכֹ֥ל תֹּאכֵֽל׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:17
+^reference/
+^english
+But of the tree of the knowledge of good and evil, thou shalt not eat of it: for in the day that thou eatest thereof thou shalt surely die.
+^english/
+^spanish
+Mas del árbol de ciencia del bien y del mal no comerás de él; porque el día que de él comieres, morirás.
+^spanish/
+^mandarin
+只是分别善恶树上的果子，你不可吃，因为你吃的日子必定死！」
+^mandarin/
+^hebrew
+וּמֵעֵ֗ץ הַדַּ֨עַת֙ ט֣וֹב וָרָ֔ע לֹ֥א תֹאכַ֖ל מִמֶּ֑נּוּ כִּ֗י בְּי֛וֹם אֲכָלְךָ֥ מִמֶּ֖נּוּ מ֥וֹת תָּמֽוּת׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:18
+^reference/
+^english
+And the LORD God said, [It is] not good that the man should be alone; I will make him an help meet for him.
+^english/
+^spanish
+Y dijo Jehová Dios: No es bueno que el hombre esté solo; haréle ayuda idónea para él.
+^spanish/
+^mandarin
+耶和华神说：「那人独居不好，我要为他造一个配偶帮助他。」
+^mandarin/
+^hebrew
+וַיֹּ֨אמֶר֙ יְהוָ֣ה אֱלֹהִ֔ים לֹא־ט֛וֹב הֱי֥וֹת הָֽאָדָ֖ם לְבַדּ֑וֹ אֶֽעֱשֶׂהּ־לּ֥וֹ עֵ֖זֶר כְּנֶגְדּֽוֹ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:19
+^reference/
+^english
+And out of the ground the LORD God formed every beast of the field, and every fowl of the air; and brought [them] unto Adam to see what he would call them: and whatsoever Adam called every living creature, that [was] the name thereof.
+^english/
+^spanish
+Formó, pues, Jehová Dios de la tierra toda bestia del campo, y toda ave de los cielos, y trájolas á Adam, para que viese cómo les había de llamar; y todo lo que Adam llamó á los animales vivientes, ese es su nombre.
+^spanish/
+^mandarin
+耶和华神用土所造成的野地各样走兽和空中各样飞鸟，都带到那人面前，看他叫甚么。那人怎样叫各样的活物，那就是牠的名字。
+^mandarin/
+^hebrew
+וַיִּצֶר֩ יְהוָ֨ה אֱלֹהִ֜ים מִן־הָֽאֲדָמָ֗ה כָּל־חַיַּ֤ת הַשָּׂדֶה֙ וְאֵת֙ כָּל־ע֣וֹף הַשָּׁמַ֔יִם וַיָּבֵא֙ אֶל־הָ֣אָדָ֔ם לִרְא֖וֹת מַה־יִּקְרָא־ל֑וֹ וְכֹל֩ אֲשֶׁ֨ר יִקְרָא־ל֧וֹ הָֽאָדָ֛ם נֶ֥פֶשׁ חַיָּ֖ה ה֥וּא שְׁמֽוֹ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:20
+^reference/
+^english
+And Adam gave names to all cattle, and to the fowl of the air, and to every beast of the field; but for Adam there was not found an help meet for him.
+^english/
+^spanish
+Y puso Adam nombres á toda bestia y ave de los cielos y á todo animal del campo: mas para Adam no halló ayuda que estuviese idónea para él.
+^spanish/
+^mandarin
+那人便给一切牲畜和空中飞鸟、野地走兽都起了名；只是那人没有遇见配偶帮助他。
+^mandarin/
+^hebrew
+וַיִּקְרָ֨א הָֽאָדָ֜ם שֵׁמ֗וֹת לְכָל־הַבְּהֵמָה֙ וּלְע֣וֹף הַשָּׁמַ֔יִם וּלְכֹ֖ל חַיַּ֣ת הַשָּׂדֶ֑ה וּלְאָדָ֕ם לֹֽא־מָצָ֥א עֵ֖זֶר כְּנֶגְדּֽוֹ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:21
+^reference/
+^english
+And the LORD God caused a deep sleep to fall upon Adam and he slept: and he took one of his ribs, and closed up the flesh instead thereof;
+^english/
+^spanish
+Y Jehová Dios hizo caer sueño sobre Adam, y se quedó dormido: entonces tomó una de sus costillas, y cerró la carne en su lugar;
+^spanish/
+^mandarin
+耶和华神使他沉睡，他就睡了；于是取下他的一条肋骨，又把肉合起来。
+^mandarin/
+^hebrew
+וַיַּפֵּל֩ יְהוָ֨ה אֱלֹהִ֧ים ׀ תַּרְדֵּמָ֛ה עַל־הָאָדָ֖ם וַיִּישָׁ֑ן וַיִּקַּ֗ח אַחַת֙ מִצַּלְעֹתָ֔יו וַיִּסְגֹּ֥ר בָּשָׂ֖ר תַּחְתֶּֽנָּה׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:22
+^reference/
+^english
+And the rib, which the LORD God had taken from man, made he a woman, and brought her unto the man.
+^english/
+^spanish
+Y de la costilla que Jehová Dios tomó del hombre, hizo una mujer, y trájola al hombre.
+^spanish/
+^mandarin
+耶和华神就用那人身上所取的肋骨造成一个女人，领她到那人跟前。
+^mandarin/
+^hebrew
+וַיִּבֶן֩ יְהוָ֨ה אֱלֹהִ֧ים ׀ אֶֽת־הַצֵּלָ֛ע אֲשֶׁר־לָקַ֥ח מִן־הָֽאָדָ֖ם לְאִשָּׁ֑ה וַיְבִאֶ֖הָ אֶל־הָֽאָדָֽם׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:23
+^reference/
+^english
+And Adam said, This [is] now bone of my bones, and flesh of my flesh: she shall be called Woman, because she was taken out of Man.
+^english/
+^spanish
+Y dijo Adam: Esto es ahora hueso de mis huesos, y carne de mi carne: ésta será llamada Varona, porque del varón fué tomada.
+^spanish/
+^mandarin
+那人说：这是我骨中的骨，肉中的肉，可以称她为「女人」，因为她是从「男人」身上取出来的。
+^mandarin/
+^hebrew
+וַיֹּאמֶר֮ הָֽאָדָם֒ זֹ֣את הַפַּ֗עַם עֶ֚צֶם מֵֽעֲצָמַ֔י וּבָשָׂ֖ר מִבְּשָׂרִ֑י לְזֹאת֙ יִקָּרֵ֣א אִשָּׁ֔ה כִּ֥י מֵאִ֖ישׁ לֻֽקֳחָה־זֹּֽאת׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:24
+^reference/
+^english
+Therefore shall a man leave his father and his mother, and shall cleave unto his wife: and they shall be one flesh.
+^english/
+^spanish
+Por tanto, dejará el hombre á su padre y á su madre, y allegarse ha á su mujer, y serán una sola carne.
+^spanish/
+^mandarin
+因此，人要离开父母，与妻子连合，二人成为一体。
+^mandarin/
+^hebrew
+עַל־כֵּן֙ יַֽעֲזָב־אִ֔ישׁ אֶת־אָבִ֖יו וְאֶת־אִמּ֑וֹ וְדָבַ֣ק בְּאִשְׁתּ֔וֹ וְהָי֖וּ לְבָשָׂ֥ר אֶחָֽד׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+2:25
+^reference/
+^english
+And they were both naked, the man and his wife, and were not ashamed.
+^english/
+^spanish
+Y estaban ambos desnudos, Adam y su mujer, y no se avergonzaban.
+^spanish/
+^mandarin
+当时夫妻二人赤身露体，并不羞耻。
+^mandarin/
+^hebrew
+וַיִּֽהְי֤וּ שְׁנֵיהֶם֙ עֲרוּמִּ֔ים הָֽאָדָ֖ם וְאִשְׁתּ֑וֹ וְלֹ֖א יִתְבֹּשָֽׁשׁוּ׃
+^hebrew/
+^passage/
+
+^part/
+
+^part
+^title
+^english
+Chapter 3
+^english/
+^spanish
+Capítulo 3
+^spanish/
+^mandarin
+第三章
+^mandarin/
+^hebrew
+פרק ג
+^hebrew/
+^title/
+
+^passage
+^reference
+3:1
+^reference/
+^english
+Now the serpent was more subtil than any beast of the field which the LORD God had made. And he said unto the woman, Yea, hath God said, Ye shall not eat of every tree of the garden?
+^english/
+^spanish
+EMPERO la serpiente era astuta, más que todos los animales del campo que Jehová Dios había hecho; la cual dijo á la mujer: ¿Conque Dios os ha dicho: No comáis de todo árbol del huerto?
+^spanish/
+^mandarin
+耶和华神所造的，惟有蛇比田野一切的活物更狡猾。蛇对女人说：「神岂是真说，不许你们吃园中所有树上的果子吗？」
+^mandarin/
+^hebrew
+וְהַנָּחָשׁ֙ הָיָ֣ה עָר֔וּם מִכֹּל֙ חַיַּ֣ת הַשָּׂדֶ֔ה אֲשֶׁ֥ר עָשָׂ֖ה יְהוָ֣ה אֱלֹהִ֑ים וַיֹּ֨אמֶר֙ אֶל־הָ֣אִשָּׁ֔ה אַ֚ף כִּֽי־אָמַ֣ר אֱלֹהִ֔ים לֹ֣א תֹֽאכְל֔וּ מִכֹּ֖ל עֵ֥ץ הַגָּֽן׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:2
+^reference/
+^english
+And the woman said unto the serpent, We may eat of the fruit of the trees of the garden:
+^english/
+^spanish
+Y la mujer respondió á la serpiente: Del fruto de los árboles del huerto comemos;
+^spanish/
+^mandarin
+女人对蛇说：「园中树上的果子，我们可以吃，
+^mandarin/
+^hebrew
+וַתֹּ֥אמֶר הָֽאִשָּׁ֖ה אֶל־הַנָּחָ֑שׁ מִפְּרִ֥י עֵֽץ־הַגָּ֖ן נֹאכֵֽל׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:3
+^reference/
+^english
+But of the fruit of the tree which [is] in the midst of the garden, God hath said, Ye shall not eat of it, neither shall ye touch it, lest ye die.
+^english/
+^spanish
+Mas del fruto del árbol que está en medio del huerto dijo Dios: No comeréis de él, ni le tocaréis, porque no muráis.
+^spanish/
+^mandarin
+惟有园当中那棵树上的果子，神曾说：『你们不可吃，也不可摸，免得你们死。』」
+^mandarin/
+^hebrew
+וּמִפְּרִ֣י הָעֵץ֮ אֲשֶׁ֣ר בְּתוֹךְ־הַגָּן֒ אָמַ֣ר אֱלֹהִ֗ים לֹ֤א תֹֽאכְלוּ֙ מִמֶּ֔נּוּ וְלֹ֥א תִגְּע֖וּ בּ֑וֹ פֶּן־תְּמֻתֽוּן׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:4
+^reference/
+^english
+And the serpent said unto the woman, Ye shall not surely die:
+^english/
+^spanish
+Entonces la serpiente dijo á la mujer: No moriréis;
+^spanish/
+^mandarin
+蛇对女人说：「你们不一定死；
+^mandarin/
+^hebrew
+וַיֹּ֥אמֶר הַנָּחָ֖שׁ אֶל־הָֽאִשָּׁ֑ה לֹֽא־מ֖וֹת תְּמֻתֽוּן׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:5
+^reference/
+^english
+For God doth know that in the day ye eat thereof, then your eyes shall be opened, and ye shall be as gods, knowing good and evil.
+^english/
+^spanish
+Mas sabe Dios que el día que comiereis de él, serán abiertos vuestros ojos, y seréis como dioses sabiendo el bien y el mal.
+^spanish/
+^mandarin
+因为神知道，你们吃的日子眼睛就明亮了，你们便如神能知道善恶。」
+^mandarin/
+^hebrew
+כִּ֚י יֹדֵ֣עַ אֱלֹהִ֔ים כִּ֗י בְּיוֹם֙ אֲכָלְכֶ֣ם מִמֶּ֔נּוּ וְנִפְקְח֖וּ עֵֽינֵיכֶ֑ם וִהְיִיתֶם֙ כֵּֽאלֹהִ֔ים יֹדְעֵ֖י ט֥וֹב וָרָֽע׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:6
+^reference/
+^english
+And when the woman saw that the tree [was] good for food, and that it [was] pleasant to the eyes, and a tree to be desired to make [one] wise, she took of the fruit thereof, and did eat, and gave also unto her husband with her; and he did eat.
+^english/
+^spanish
+Y vió la mujer que el árbol era bueno para comer, y que era agradable á los ojos, y árbol codiciable para alcanzar la sabiduría; y tomó de su fruto, y comió; y dió también á su marido, el cual comió así como ella.
+^spanish/
+^mandarin
+于是女人见那棵树的果子好作食物，也悦人的眼目，且是可喜爱的，能使人有智慧，就摘下果子来吃了，又给她丈夫，她丈夫也吃了。
+^mandarin/
+^hebrew
+וַתֵּ֣רֶא הָֽאִשָּׁ֡ה כִּ֣י טוֹב֩ הָעֵ֨ץ לְמַאֲכָ֜ל וְכִ֧י תַֽאֲוָה־ה֣וּא לָעֵינַ֗יִם וְנֶחְמָ֤ד הָעֵץ֙ לְהַשְׂכִּ֔יל וַתִּקַּ֥ח מִפִּרְי֖וֹ וַתֹּאכַ֑ל וַתִּתֵּ֧ן גַּם־לְאִישָׁ֛הּ עִמָּ֖הּ וַיֹּאכַֽל׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:7
+^reference/
+^english
+And the eyes of them both were opened, and they knew that they [were] naked; and they sewed fig leaves together, and made themselves aprons.
+^english/
+^spanish
+Y fueron abiertos los ojos de entrambos, y conocieron que estaban desnudos: entonces cosieron hojas de higuera, y se hicieron delantales.
+^spanish/
+^mandarin
+他们二人的眼睛就明亮了，才知道自己是赤身露体，便拿无花果树的叶子为自己编作裙子。
+^mandarin/
+^hebrew
+וַתִּפָּקַ֨חְנָה֙ עֵינֵ֣י שְׁנֵיהֶ֔ם וַיֵּ֣דְע֔וּ כִּ֥י עֵֽירֻמִּ֖ם הֵ֑ם וַֽיִּתְפְּרוּ֙ עֲלֵ֣ה תְאֵנָ֔ה וַיַּעֲשׂ֥וּ לָהֶ֖ם חֲגֹרֹֽת׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:8
+^reference/
+^english
+And they heard the voice of the LORD God walking in the garden in the cool of the day: and Adam and his wife hid themselves from the presence of the LORD God amongst the trees of the garden.
+^english/
+^spanish
+Y oyeron la voz de Jehová Dios que se paseaba en el huerto al aire del día: y escondióse el hombre y su mujer de la presencia de Jehová Dios entre los árboles del huerto.
+^spanish/
+^mandarin
+天起了凉风，耶和华神在园中行走。那人和他妻子听见神的声音，就藏在园里的树木中，躲避耶和华神的面。
+^mandarin/
+^hebrew
+וַֽיִּשְׁמְע֞וּ אֶת־ק֨וֹל יְהוָ֧ה אֱלֹהִ֛ים מִתְהַלֵּ֥ךְ בַּגָּ֖ן לְר֣וּחַ הַיּ֑וֹם וַיִּתְחַבֵּ֨א הָֽאָדָ֜ם וְאִשְׁתּ֗וֹ מִפְּנֵי֙ יְהוָ֣ה אֱלֹהִ֔ים בְּת֖וֹךְ עֵ֥ץ הַגָּֽן׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:9
+^reference/
+^english
+And the LORD God called unto Adam, and said unto him, Where [art] thou?
+^english/
+^spanish
+Y llamó Jehová Dios al hombre, y le dijo: ¿Dónde estás tú?
+^spanish/
+^mandarin
+耶和华神呼唤那人，对他说：「你在那里？」
+^mandarin/
+^hebrew
+וַיִּקְרָ֛א יְהוָ֥ה אֱלֹהִ֖ים אֶל־הָֽאָדָ֑ם וַיֹּ֥אמֶר ל֖וֹ אַיֶּֽכָּה׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:10
+^reference/
+^english
+And he said, I heard thy voice in the garden, and I was afraid, because I [was] naked; and I hid myself.
+^english/
+^spanish
+Y él respondió: Oí tu voz en el huerto, y tuve miedo, porque estaba desnudo; y escondíme.
+^spanish/
+^mandarin
+他说：「我在园中听见你的声音，我就害怕；因为我赤身露体，我便藏了。」
+^mandarin/
+^hebrew
+וַיֹּ֕אמֶר אֶת־קֹלְךָ֥ שָׁמַ֖עְתִּי בַּגָּ֑ן וָאִירָ֛א כִּֽי־עֵירֹ֥ם אָנֹ֖כִי וָאֵחָבֵֽא׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:11
+^reference/
+^english
+And he said, Who told thee that thou [wast] naked? Hast thou eaten of the tree, whereof I commanded thee that thou shouldest not eat?
+^english/
+^spanish
+Y díjole: ¿Quién te enseñó que estabas desnudo? ¿Has comido del árbol de que yo te mandé no comieses?
+^spanish/
+^mandarin
+耶和华说：「谁告诉你赤身露体呢？莫非你吃了我吩咐你不可吃的那树上的果子吗？」
+^mandarin/
+^hebrew
+וַיֹּ֕אמֶר מִ֚י הִגִּ֣יד לְךָ֔ כִּ֥י עֵירֹ֖ם אָ֑תָּה הֲמִן־הָעֵ֗ץ אֲשֶׁ֧ר צִוִּיתִ֛יךָ לְבִלְתִּ֥י אֲכָל־מִמֶּ֖נּוּ אָכָֽלְתָּ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:12
+^reference/
+^english
+And the man said, The woman whom thou gavest [to be] with me, she gave me of the tree, and I did eat.
+^english/
+^spanish
+Y el hombre respondió: La mujer que me diste por compañera me dió del árbol, y yo comí.
+^spanish/
+^mandarin
+那人说：「你所赐给我、与我同居的女人，她把那树上的果子给我，我就吃了。」
+^mandarin/
+^hebrew
+וַיֹּ֖אמֶר הָֽאָדָ֑ם הָֽאִשָּׁה֙ אֲשֶׁ֣ר נָתַ֣תָּה עִמָּדִ֔י הִ֛וא נָֽתְנָה־לִּ֥י מִן־הָעֵ֖ץ וָאֹכֵֽל׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:13
+^reference/
+^english
+And the LORD God said unto the woman, What [is] this [that] thou hast done? And the woman said, The serpent beguiled me, and I did eat.
+^english/
+^spanish
+Entonces Jehová Dios dijo á la mujer: ¿Qué es lo que has hecho? Y dijo la mujer: La serpiente me engañó, y comí.
+^spanish/
+^mandarin
+耶和华神对女人说：「你作的是甚么事呢？」女人说：「那蛇引诱我，我就吃了。」
+^mandarin/
+^hebrew
+וַיֹּ֨אמֶר יְהוָ֧ה אֱלֹהִ֛ים לָאִשָּׁ֖ה מַה־זֹּ֣את עָשִׂ֑ית וַתֹּ֨אמֶר֙ הָֽאִשָּׁ֔ה הַנָּחָ֥שׁ הִשִּׁיאַ֖נִי וָאֹכֵֽל׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:14
+^reference/
+^english
+And the LORD God said unto the serpent, Because thou hast done this, thou [art] cursed above all cattle, and above every beast of the field; upon thy belly shalt thou go, and dust shalt thou eat all the days of thy life:
+^english/
+^spanish
+Y Jehová Dios dijo á la serpiente: Por cuanto esto hiciste, maldita serás entre todas las bestias y entre todos los animales del campo; sobre tu pecho andarás, y polvo comerás todos los días de tu vida:
+^spanish/
+^mandarin
+耶和华神对蛇说：「你既作了这事，就必受咒诅，比一切的牲畜野兽更甚。你必用肚子行走，终身吃土。
+^mandarin/
+^hebrew
+וַיֹּאמֶר֩ יְהֹוָ֨ה אֱלֹהִ֥ים ׀ אֶֽל־הַנָּחָשׁ֮ כִּ֣י עָשִׂ֣יתָ זֹּאת֒ אָר֤וּר אַתָּה֙ מִכָּל־הַבְּהֵמָ֔ה וּמִכֹּ֖ל חַיַּ֣ת הַשָּׂדֶ֑ה עַל־גְּחֹנְךָ֣ תֵלֵ֔ךְ וְעָפָ֥ר תֹּאכַ֖ל כָּל־יְמֵ֥י חַיֶּֽיךָ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:15
+^reference/
+^english
+And I will put enmity between thee and the woman, and between thy seed and her seed; it shall bruise thy head, and thou shalt bruise his heel.
+^english/
+^spanish
+Y enemistad pondré entre ti y la mujer, y entre tu simiente y la simiente suya; ésta te herirá en la cabeza, y tú le herirás en el calcañar.
+^spanish/
+^mandarin
+我又要叫你和女人彼此为仇；你的后裔和女人的后裔也彼此为仇。女人的后裔要伤你的头；你要伤他的脚跟。」
+^mandarin/
+^hebrew
+וְאֵיבָ֣ה ׀ אָשִׁ֗ית בֵּֽינְךָ֙ וּבֵ֣ין הָֽאִשָּׁ֔ה וּבֵ֥ין זַרְעֲךָ֖ וּבֵ֣ין זַרְעָ֑הּ ה֚וּא יְשׁוּפְךָ֣ רֹ֔אשׁ וְאַתָּ֖ה תְּשׁוּפֶ֥נּוּ עָקֵֽב׃ ס
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:16
+^reference/
+^english
+Unto the woman he said, I will greatly multiply thy sorrow and thy conception; in sorrow thou shalt bring forth children; and thy desire [shall be] to thy husband, and he shall rule over thee.
+^english/
+^spanish
+A la mujer dijo: Multiplicaré en gran manera tus dolores y tus preñeces; con dolor parirás los hijos; y á tu marido será tu deseo, y él se enseñoreará de ti.
+^spanish/
+^mandarin
+又对女人说：「我必多多加增你怀胎的苦楚；你生产儿女必多受苦楚。你必恋慕你丈夫；你丈夫必管辖你。」
+^mandarin/
+^hebrew
+אֶֽל־הָאִשָּׁ֣ה אָמַ֗ר הַרְבָּ֤ה אַרְבֶּה֙ עִצְּבוֹנֵ֣ךְ וְהֵֽרֹנֵ֔ךְ בְּעֶ֖צֶב תֵּֽלְדִ֣י בָנִ֑ים וְאֶל־אִישֵׁךְ֙ תְּשׁ֣וּקָתֵ֔ךְ וְה֖וּא יִמְשָׁל־בָּֽךְ׃ ס
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:17
+^reference/
+^english
+And unto Adam he said, Because thou hast hearkened unto the voice of thy wife, and hast eaten of the tree, of which I commanded thee, saying, Thou shalt not eat of it: cursed [is] the ground for thy sake; in sorrow shalt thou eat [of] it all the days of thy life;
+^english/
+^spanish
+Y al hombre dijo: Por cuanto obedeciste á la voz de tu mujer, y comiste del árbol de que te mandé diciendo, No comerás de él; maldita será la tierra por amor de ti; con dolor comerás de ella todos los días de tu vida;
+^spanish/
+^mandarin
+又对亚当说：「你既听从妻子的话，吃了我所吩咐你不可吃的那树上的果子，地必为你的缘故受咒诅；你必终身劳苦，才能从地里得吃的。
+^mandarin/
+^hebrew
+וּלְאָדָ֣ם אָמַ֗ר כִּֽי־שָׁמַעְתָּ֮ לְק֣וֹל אִשְׁתֶּךָ֒ וַתֹּ֨אכַל֙ מִן־הָעֵ֔ץ אֲשֶׁ֤ר צִוִּיתִ֨יךָ֙ לֵאמֹ֔ר לֹ֥א תֹאכַ֖ל מִמֶּ֑נּוּ אֲרוּרָ֤ה הָֽאֲדָמָה֙ בַּֽעֲבוּרֶ֔ךָ בְּעִצָּבוֹן֙ תֹּֽאכֲלֶ֔נָּה כֹּ֖ל יְמֵ֥י חַיֶּֽיךָ׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:18
+^reference/
+^english
+Thorns also and thistles shall it bring forth to thee; and thou shalt eat the herb of the field;
+^english/
+^spanish
+Espinos y cardos te producirá, y comerás hierba del campo;
+^spanish/
+^mandarin
+地必给你长出荆棘和蒺藜来；你也要吃田间的菜蔬。
+^mandarin/
+^hebrew
+וְק֥וֹץ וְדַרְדַּ֖ר תַּצְמִ֣יחַֽ לָ֑ךְ וְאָכַלְתָּ֖ אֶת־עֵ֥שֶׂב הַשָּׂדֶֽה׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:19
+^reference/
+^english
+In the sweat of thy face shalt thou eat bread, till thou return unto the ground; for out of it wast thou taken: for dust thou [art,] and unto dust shalt thou return.
+^english/
+^spanish
+En el sudor de tu rostro comerás el pan hasta que vuelvas á la tierra; porque de ella fuiste tomado: pues polvo eres, y al polvo serás tornado.
+^spanish/
+^mandarin
+你必汗流满面才得糊口，直到你归了土，因为你是从土而出的。你本是尘土，仍要归于尘土。」
+^mandarin/
+^hebrew
+בְּזֵעַ֤ת אַפֶּ֨יךָ֙ תֹּ֣אכַל לֶ֔חֶם עַ֤ד שֽׁוּבְךָ֙ אֶל־הָ֣אֲדָמָ֔ה כִּ֥י מִמֶּ֖נָּה לֻקָּ֑חְתָּ כִּֽי־עָפָ֣ר אַ֔תָּה וְאֶל־עָפָ֖ר תָּשֽׁוּב׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:20
+^reference/
+^english
+And Adam called his wife’s name Eve; because she was the mother of all living.
+^english/
+^spanish
+Y llamó el hombre el nombre de su mujer, Eva; por cuanto ella era madre de todos los vivientes.
+^spanish/
+^mandarin
+亚当给他妻子起名叫夏娃，因为她是众生之母。
+^mandarin/
+^hebrew
+וַיִּקְרָ֧א הָֽאָדָ֛ם שֵׁ֥ם אִשְׁתּ֖וֹ חַוָּ֑ה כִּ֛י הִ֥וא הָֽיְתָ֖ה אֵ֥ם כָּל־חָֽי׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:21
+^reference/
+^english
+Unto Adam also and to his wife did the LORD God make coats of skins, and clothed them.
+^english/
+^spanish
+Y Jehová Dios hizo al hombre y á su mujer túnicas de pieles, y vistiólos.
+^spanish/
+^mandarin
+耶和华神为亚当和他妻子用皮子作衣服给他们穿。
+^mandarin/
+^hebrew
+וַיַּעַשׂ֩ יְהוָ֨ה אֱלֹהִ֜ים לְאָדָ֧ם וּלְאִשְׁתּ֛וֹ כָּתְנ֥וֹת ע֖וֹר וַיַּלְבִּשֵֽׁם׃ פ
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:22
+^reference/
+^english
+And the LORD God said, Behold, the man is become as one of us, to know good and evil: and now, lest he put forth his hand, and take also of the tree of life, and eat, and live for ever:
+^english/
+^spanish
+Y dijo Jehová Dios: He aquí el hombre es como uno de Nos sabiendo el bien y el mal: ahora, pues, porque no alargue su mano, y tome también del árbol de la vida, y coma, y viva para siempre:
+^spanish/
+^mandarin
+耶和华神说：「那人已经与我们相似，能知道善恶；现在恐怕他伸手又摘生命树的果子吃，就永远活着。」
+^mandarin/
+^hebrew
+וַיֹּ֣אמֶר ׀ יְהוָ֣ה אֱלֹהִ֗ים הֵ֤ן הָֽאָדָם֙ הָיָה֙ כְּאַחַ֣ד מִמֶּ֔נּוּ לָדַ֖עַת ט֣וֹב וָרָ֑ע וְעַתָּ֣ה ׀ פֶּן־יִשְׁלַ֣ח יָד֗וֹ וְלָקַח֙ גַּ֚ם מֵעֵ֣ץ הַֽחַיִּ֔ים וְאָכַ֖ל וָחַ֥י לְעֹלָֽם׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:23
+^reference/
+^english
+Therefore the LORD God sent him forth from the garden of Eden, to till the ground from whence he was taken.
+^english/
+^spanish
+Y sacólo Jehová del huerto de Edén, para que labrase la tierra de que fué tomado.
+^spanish/
+^mandarin
+耶和华神便打发他出伊甸园去，耕种他所自出之土。
+^mandarin/
+^hebrew
+וַֽיְשַׁלְּחֵ֛הוּ יְהוָ֥ה אֱלֹהִ֖ים מִגַּן־עֵ֑דֶן לַֽעֲבֹד֙ אֶת־הָ֣אֲדָמָ֔ה אֲשֶׁ֥ר לֻקַּ֖ח מִשָּֽׁם׃
+^hebrew/
+^passage/
+
+^passage
+^reference
+3:24
+^reference/
+^english
+So he drove out the man; and he placed at the east of the garden of Eden Cherubim, and a flaming sword which turned every way, to keep the way of the tree of life.
+^english/
+^spanish
+Echó, pues, fuera al hombre, y puso al oriente del huerto de Edén querubines, y una espada encendida que se revolvía á todos lados, para guardar el camino del árbol de la vida.
+^spanish/
+^mandarin
+于是把他赶出去了；又在伊甸园的东边安设基路伯和四面转动发火焰的剑，要把守生命树的道路。
+^mandarin/
+^hebrew
+וַיְגָ֖רֶשׁ אֶת־הָֽאָדָ֑ם וַיַּשְׁכֵּן֩ מִקֶּ֨דֶם לְגַן־עֵ֜דֶן אֶת־הַכְּרֻבִ֗ים וְאֵ֨ת לַ֤הַט הַחֶ֨רֶב֙ הַמִּתְהַפֶּ֔כֶת לִשְׁמֹ֕ר אֶת־דֶּ֖רֶךְ עֵ֥ץ הַֽחַיִּֽים׃ ס
+^hebrew/
+^passage/
+
+^part/
+
+^parallel_text/
+^Springwater/

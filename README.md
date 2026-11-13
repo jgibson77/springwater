@@ -135,6 +135,7 @@ Anyone writing another implementation can check it against `tools/conformance_ve
 | **technical.schema** | Technical documentation |
 | **rosetta.schema** | Self-descriptive archival docs |
 | **authoring.schema** | Authoring profiles |
+| **parallel.schema** | One text in several languages, aligned passage by passage |
 | **presentation.schema** | Presentations: how a document type looks |
 
 All validate against `schema.schema.springwater` (meta-schema).
@@ -148,7 +149,10 @@ A schema says what a document is: its elements and how they nest. It says nothin
 ## Examples
 
 Three short documents, each valid against its schema, show the same format
-across different kinds of writing. The complete files are in
+across different kinds of writing. A fourth,
+[`examples/genesis_1_3.springwater`](examples/genesis_1_3.springwater), carries
+Genesis 1 to 3 verse by verse in English, Spanish, Mandarin, and the original
+Hebrew, each verse holding all four languages side by side. The complete files are in
 [`examples/`](examples/); longer, self-describing walk-throughs live in
 [`ROSETTA.springwater`](ROSETTA.springwater).
 
