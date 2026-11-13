@@ -11,6 +11,10 @@ Springwater Core is unchanged: the seven rules and `SYNTAX.txt` are as frozen.
 - The screenplay schema no longer has a `page_break` element. A document
   does not store where a page ends; pages exist only when a presentation is
   applied.
+- In the screenplay schema, `title_page` is renamed `metadata` and the
+  `centered` element is removed. Both were named for how something looks.
+  The break after a screenplay's metadata is now a rule in the screenplay
+  presentation, as it already was for novels.
 - The renderer reads a presentation instead of a schema:
   `HTMLRenderer.render(_:presentation:title:)`.
 - Added `CONVENTIONS.md` (non-normative) and `tools/conformance_vectors.json`.

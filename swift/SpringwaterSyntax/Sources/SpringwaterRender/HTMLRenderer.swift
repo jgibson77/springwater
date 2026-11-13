@@ -75,12 +75,6 @@ public enum HTMLRenderer {
         // held in the document but not rendered (metadata: scene number, sequence label)
         if style?.hidden == true { return }
 
-        // page break marker
-        if name == "page_break" {
-            out.append(#"<div class="sw-pagebreak"></div>"#)
-            return
-        }
-
         // dual dialogue: two side-by-side columns
         if name == "dual_dialogue" {
             out.append(#"<div class="sw-dual">"#)
@@ -108,18 +102,12 @@ public enum HTMLRenderer {
             return
         }
 
-        // container (incl. title_page, acts, scene, dialogue, root): recurse
+        // container (incl. metadata, acts, scene, dialogue, root): recurse
         // A style on a container must not suppress its descendants.
         if !kids.isEmpty {
             out.append(#"<div class="sw-container sw-\#(name)">"#)
             for k in kids { renderElement(k, styles, into: &out) }
             out.append("</div>")
-            // the title page is semantically its own page (renderer convention,
-            // not presentation-driven; a title_page render rule with page_break_after
-            // would move this into canon).
-            if name == "title_page" {
-                out.append(#"<div class="sw-pagebreak"></div>"#)
-            }
             return
         }
 
@@ -171,13 +159,10 @@ public enum HTMLRenderer {
           font-size: 12pt; line-height: 1; white-space: pre-wrap;
         }
         .sw-container { }
-        .sw-title_page { margin-bottom: 3em; }
         .sw-dual { display: flex; gap: .3in; }
         .sw-dualcol { flex: 1 1 0; }
         .sw-dualcol .sw-character, .sw-dualcol .sw-extension { margin-left: 0 !important; text-align:center; }
         .sw-dualcol .sw-lines, .sw-dualcol .sw-parenthetical { margin-left: 0 !important; width:auto !important; }
-        .sw-pagebreak { break-before: page; page-break-before: always; height: 0; }
-        @media screen { .sw-pagebreak { height: 0.7in; } }
         @page { size: \(page.width) \(page.height); margin: \(page.margins); }
         @media print {
           :root { color-scheme: light; }

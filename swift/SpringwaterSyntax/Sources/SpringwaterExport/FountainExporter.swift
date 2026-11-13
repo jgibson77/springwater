@@ -20,7 +20,7 @@ public enum FountainExporter {
         guard let screenplay = document.root.exportChildElements.first else { return "\n" }
         for el in screenplay.exportChildElements {
             switch el.name {
-            case "title_page":
+            case "metadata":
                 blocks.append(titlePageBlock(el))
             case "act1", "act2", "act3":
                 blocks.append("# ACT " + (romanAct[el.name] ?? "I"))
@@ -74,10 +74,6 @@ public enum FountainExporter {
             for (i, d) in ds.enumerated() { emit(d, into: &blocks, dualSecond: i == 1) }
         case "transition":
             blocks.append(transitionBlock(el.exportScalar))
-        case "centered":
-            blocks.append(">" + esc(el.exportScalar) + "<")
-        case "page_break":
-            blocks.append("===")
         default:
             let t = el.exportContent
             if !t.isEmpty { blocks.append(actionBlock(t)) }

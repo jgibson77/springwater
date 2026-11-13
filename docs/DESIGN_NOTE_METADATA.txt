@@ -1,3 +1,11 @@
+UPDATE (November 2026)
+The screenplay schema's title_page element is now named metadata, the same
+name the novel schema uses. A title page is one way of printing these fields;
+the fields themselves (title, credits, revision, contact) are facts about the
+work, and a schema names what a thing is, not how it is laid out. The fields
+and their reasons below are unchanged. Where this note says "title page",
+read "the screenplay's metadata".
+
 ================================================================================
 DESIGN NOTE: METADATA AS DOMAIN CONVENTION
 ================================================================================

@@ -6,9 +6,9 @@ import SpringwaterSyntax
 // It pins the exact Fountain projection the Swift exporter must reproduce; it is
 // not a round-trip assertion (no Fountain importer ships with this package).
 
-private let tinyDoc = "^Springwater\n^screenplay\n^title_page\n^title\nLOW WATER\n^title/\n^written_by\nJG\n^written_by/\n^title_page/\n^act1\n^transition\nFADE IN:\n^transition/\n^scene\n^slugline\nEXT. DAM - DAY\n^slugline/\n^action\nWater falls.\n^action/\n^action\n    NORTH: INLET\n    SOUTH: RACE\n^action/\n^dialogue\n^character\nMcKAY\n^character/\n^extension\n(V.O.)\n^extension/\n^lines\nUse *17* here.\n^lines/\n^dialogue/\n^dual_dialogue\n^dialogue\n^character\nEVAN\n^character/\n^lines\nOpen.\n^lines/\n^dialogue/\n^dialogue\n^character\nLIAN\n^character/\n^lines\nHolding.\n^lines/\n^dialogue/\n^dual_dialogue/\n^transition\nCUT TO:\n^transition/\n^centered\nTHE END\n^centered/\n^page_break\n^page_break/\n^scene/\n^act1/\n^screenplay/\n^Springwater/\n"
+private let tinyDoc = "^Springwater\n^screenplay\n^metadata\n^title\nLOW WATER\n^title/\n^written_by\nJG\n^written_by/\n^metadata/\n^act1\n^transition\nFADE IN:\n^transition/\n^scene\n^slugline\nEXT. DAM - DAY\n^slugline/\n^action\nWater falls.\n^action/\n^action\n    NORTH: INLET\n    SOUTH: RACE\n^action/\n^dialogue\n^character\nMcKAY\n^character/\n^extension\n(V.O.)\n^extension/\n^lines\nUse *17* here.\n^lines/\n^dialogue/\n^dual_dialogue\n^dialogue\n^character\nEVAN\n^character/\n^lines\nOpen.\n^lines/\n^dialogue/\n^dialogue\n^character\nLIAN\n^character/\n^lines\nHolding.\n^lines/\n^dialogue/\n^dual_dialogue/\n^transition\nCUT TO:\n^transition/\n^scene/\n^act1/\n^screenplay/\n^Springwater/\n"
 
-private let expected = "Title: LOW WATER\nCredit: JG\n\n# ACT I\n\n>FADE IN:\n\nEXT. DAM - DAY\n\nWater falls.\n\n!    NORTH: INLET\n    SOUTH: RACE\n\n@McKAY (V.O.)\nUse \\*17\\* here.\n\nEVAN\nOpen.\n\nLIAN ^\nHolding.\n\nCUT TO:\n\n>THE END<\n\n===\n"
+private let expected = "Title: LOW WATER\nCredit: JG\n\n# ACT I\n\n>FADE IN:\n\nEXT. DAM - DAY\n\nWater falls.\n\n!    NORTH: INLET\n    SOUTH: RACE\n\n@McKAY (V.O.)\nUse \\*17\\* here.\n\nEVAN\nOpen.\n\nLIAN ^\nHolding.\n\nCUT TO:\n"
 
 private func exported(_ text: String) throws -> String {
     FountainExporter.export(try SpringwaterParser.parse(text))

@@ -445,7 +445,7 @@ To read a tree, visit the root, then each child in order, descending into each e
 
 ^semantic_concepts
 ^document_type_patterns
-Different domains organize their heads differently, and Springwater imposes none of it. A published work may group bibliographic fields under a metadata element; a screenplay may keep flat title-page fields to match industry practice; a manual may use a simple header; a log may have no head at all. The schema for each domain chooses the pattern. Springwater provides structure; schemas provide convention; the domain determines organization.
+Different domains organize their heads differently, and Springwater imposes none of it. A published work may group bibliographic fields under a metadata element; a screenplay may carry credit, revision, and contact fields to match industry practice; a manual may use a simple header; a log may have no head at all. The schema for each domain chooses the pattern. Springwater provides structure; schemas provide convention; the domain determines organization.
 ^document_type_patterns/
 ^semantic_concepts/
 

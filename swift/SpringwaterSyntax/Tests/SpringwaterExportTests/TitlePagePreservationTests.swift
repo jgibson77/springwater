@@ -18,14 +18,14 @@ struct TitlePagePreservationTests {
         let source = """
         ^Springwater
         ^screenplay
-        ^title_page
+        ^metadata
         ^title
         PRESERVATION AUDIT
         ^title/
         ^\(field)
         \(value)
         ^\(field)/
-        ^title_page/
+        ^metadata/
         ^act1
         ^scene
         ^slugline
@@ -60,7 +60,7 @@ struct TitlePagePreservationTests {
     @Test func authorContentSurvivesExport() throws {
         let value = "Ada Preservation Sentinel"
         let output = try validatedExport(field: "author", value: value)
-        // title_page.author now maps to the Fountain Author key (written_by -> Credit).
+        // metadata.author now maps to the Fountain Author key (written_by -> Credit).
         #expect(output.contains("Author: \(value)"))
     }
 

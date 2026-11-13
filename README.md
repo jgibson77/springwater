@@ -141,17 +141,17 @@ across different kinds of writing. The complete files are in
 
 ### Screenplay — [`examples/the_first_swim.springwater`](examples/the_first_swim.springwater)
 
-Nested structure: a title page, then an act holding a scene with a slug line,
+Nested structure: the work's metadata, then an act holding a scene with a slug line,
 action, and dialogue.
 
 ```springwater
 ^Springwater
 ^screenplay
-^title_page
+^metadata
 ^title
 THE FIRST SWIM
 ^title/
-^title_page/
+^metadata/
 ^act1
 ^scene
 ^slugline

@@ -57,16 +57,11 @@ private func styles(_ text: String) throws -> RenderStyles {
     #expect(body.contains(#"<div class="sw-character">B</div>"#))
 }
 
-@Test func pageBreakRenders() throws {
-    let doc = "^Springwater\n^screenplay\n^scene\n^slugline\nX\n^slugline/\n^page_break\n^page_break/\n^scene/\n^screenplay/\n^Springwater/\n"
+@Test func screenplayMetadataIsAnOrdinaryContainer() throws {
+    let doc = "^Springwater\n^screenplay\n^metadata\n^title\nT\n^title/\n^metadata/\n^screenplay/\n^Springwater/\n"
     let body = HTMLRenderer.bodyHTML(try SpringwaterParser.parse(doc), styles: RenderStyles(styles: [:]))
-    #expect(body.contains(#"<div class="sw-pagebreak"></div>"#))
-}
-
-@Test func titlePageGetsItsOwnPage() throws {
-    let doc = "^Springwater\n^screenplay\n^title_page\n^title\nT\n^title/\n^title_page/\n^screenplay/\n^Springwater/\n"
-    let body = HTMLRenderer.bodyHTML(try SpringwaterParser.parse(doc), styles: RenderStyles(styles: [:]))
-    #expect(body.contains(#"<div class="sw-container sw-title_page"><div class="sw-title">T</div></div><div class="sw-pagebreak"></div>"#))
+    #expect(body.contains(#"<div class="sw-container sw-metadata"><div class="sw-title">T</div></div>"#))
+    #expect(!body.contains("sw-pagebreak"))
 }
 
 @Test func escapesContent() throws {

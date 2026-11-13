@@ -33,7 +33,7 @@ screenplay
 act1
 ^must_contain/
 ^may_contain
-title_page, act2, act3, validated_by, note
+metadata, act2, act3, validated_by, note
 ^may_contain/
 ^cannot_contain
 chapter, paragraph, section, novel
@@ -42,7 +42,7 @@ chapter, paragraph, section, novel
 
 ^rule
 ^tag
-title_page
+metadata
 ^tag/
 ^must_contain
 title
@@ -81,7 +81,7 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-title_page
+metadata
 ^parent_must_be/
 ^rule/
 
@@ -96,7 +96,7 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-title_page
+metadata
 ^parent_must_be/
 ^rule/
 
@@ -111,7 +111,7 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-title_page
+metadata
 ^parent_must_be/
 ^rule/
 
@@ -126,7 +126,7 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-title_page
+metadata
 ^parent_must_be/
 ^rule/
 
@@ -138,7 +138,7 @@ contact
 true
 ^text_only/
 ^parent_must_be
-title_page
+metadata
 ^parent_must_be/
 ^rule/
 
@@ -153,7 +153,7 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-title_page
+metadata
 ^parent_must_be/
 ^rule/
 
@@ -168,7 +168,7 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-title_page
+metadata
 ^parent_must_be/
 ^rule/
 
@@ -237,7 +237,7 @@ scene
 slugline
 ^must_contain/
 ^may_contain
-number, action, dialogue, transition, shot, dual_dialogue, montage, intercut, centered
+number, action, dialogue, transition, shot, dual_dialogue, montage, intercut
 ^may_contain/
 ^parent_must_be
 act1, act2, act3, sequence, montage, intercut
@@ -267,7 +267,7 @@ sequence
 scene, sequence
 ^must_contain_one_of/
 ^may_contain
-label, transition, centered
+label, transition
 ^may_contain/
 ^parent_must_be
 act1, act2, act3, sequence
@@ -475,21 +475,6 @@ end_intercut
 ^tag/
 ^parent_must_be
 intercut
-^parent_must_be/
-^rule/
-
-^rule
-^tag
-centered
-^tag/
-^text_only
-true
-^text_only/
-^cannot_be_empty
-true
-^cannot_be_empty/
-^parent_must_be
-scene, sequence, act1, act2, act3
 ^parent_must_be/
 ^rule/
 

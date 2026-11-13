@@ -65,6 +65,18 @@ https://quoteunquoteapps.com/courierprime/
 
 ^render
 ^tag
+metadata
+^tag/
+^spacing_after
+3 lines
+^spacing_after/
+^page_break_after
+true
+^page_break_after/
+^render/
+
+^render
+^tag
 title
 ^tag/
 ^transform
@@ -405,24 +417,6 @@ uppercase
 ^spacing_before/
 ^spacing_after
 2 lines
-^spacing_after/
-^render/
-
-^render
-^tag
-centered
-^tag/
-^align
-center
-^align/
-^font_weight
-regular
-^font_weight/
-^spacing_before
-1 line
-^spacing_before/
-^spacing_after
-1 line
 ^spacing_after/
 ^render/
 
