@@ -1,0 +1,46 @@
+P	minimal	XlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlci8K	tree:<Springwater|>
+P	minimal without trailing newline	XlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlci8=	tree:<Springwater|>
+P	single container	XlNwcmluZ3dhdGVyCl5kb2N1bWVudApIZWxsbywgd29ybGQhCl5kb2N1bWVudC8KXlNwcmluZ3dhdGVyLwo=	tree:<Springwater|<document|=lf SGVsbG8sIHdvcmxkIQ==|>|>
+P	mixed content ordering	XlNwcmluZ3dhdGVyCl5wYXJhZ3JhcGgKVGhlIHdvcmQKXmVtcGhhc2lzCmltcG9ydGFudApeZW1waGFzaXMvCmFwcGVhcnMgaW4gdGhpcyBzZW50ZW5jZS4KXnBhcmFncmFwaC8KXlNwcmluZ3dhdGVyLwo=	tree:<Springwater|<paragraph|=lf VGhlIHdvcmQ=|<emphasis|=lf aW1wb3J0YW50|>|=lf YXBwZWFycyBpbiB0aGlzIHNlbnRlbmNlLg==|>|>
+P	code annotations are content	XlNwcmluZ3dhdGVyCl5jb2RlCkBTdGF0ZSB2YXIgY291bnQgPSAwCkBPYnNlcnZhYmxlIGNsYXNzIE1vZGVsIHt9CiNpbmNsdWRlIDxzdGRpby5oPgokUEFUSApqb2huQGV4YW1wbGUuY29tCl5jb2RlLwpeU3ByaW5nd2F0ZXIvCg==	tree:<Springwater|<code|=lf QFN0YXRlIHZhciBjb3VudCA9IDA=|=lf QE9ic2VydmFibGUgY2xhc3MgTW9kZWwge30=|=lf I2luY2x1ZGUgPHN0ZGlvLmg+|=lf JFBBVEg=|=lf am9obkBleGFtcGxlLmNvbQ==|>|>
+P	content indentation preserved	XlNwcmluZ3dhdGVyCl5jb2RlCiAgICBpbmRlbnRlZCBsaW5lCl5jb2RlLwpeU3ByaW5nd2F0ZXIvCg==	tree:<Springwater|<code|=lf ICAgIGluZGVudGVkIGxpbmU=|>|>
+P	blank lines preserved	XlNwcmluZ3dhdGVyCl5wb2VtCkZpcnN0CgpUaGlyZApecG9lbS8KXlNwcmluZ3dhdGVyLwo=	tree:<Springwater|<poem|=lf Rmlyc3Q=|=lf |=lf VGhpcmQ=|>|>
+P	indented tags are structural	XlNwcmluZ3dhdGVyCiAgXnNlY3Rpb24KICBjb250ZW50CiAgXnNlY3Rpb24vCl5TcHJpbmd3YXRlci8K	tree:<Springwater|<section|=lf ICBjb250ZW50|>|>
+P	NBSP line is content	XlNwcmluZ3dhdGVyCl5wCsKgXmNoYXB0ZXIKXnAvCl5TcHJpbmd3YXRlci8K	tree:<Springwater|<p|=lf wqBeY2hhcHRlcg==|>|>
+P	U+2028 is content	XlNwcmluZ3dhdGVyCl5wCmZpcnN04oCoc2Vjb25kCl5wLwpeU3ByaW5nd2F0ZXIvCg==	tree:<Springwater|<p|=lf Zmlyc3TigKhzZWNvbmQ=|>|>
+P	mixed line endings preserved	XlNwcmluZ3dhdGVyCl5wDQphbHBoYQ0KYmV0YQpnYW1tYQ1ecC8KXlNwcmluZ3dhdGVyLwo=	tree:<Springwater|<p|=crlf YWxwaGE=|=lf YmV0YQ==|=cr Z2FtbWE=|>|>
+P	interior U+FEFF is content	XlNwcmluZ3dhdGVyCl5wCmJlZm9yZe+7v2FmdGVyCl5wLwpeU3ByaW5nd2F0ZXIvCg==	tree:<Springwater|<p|=lf YmVmb3Jl77u/YWZ0ZXI=|>|>
+P	leading BOM	77u/XlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlci8K	error:leadingBOM
+P	invalid UTF-8	XlNwcmluZ3dhdGVyCv/+gApeU3ByaW5nd2F0ZXIvCg==	error:invalidUTF8
+P	empty document	-	error:emptyDocument
+P	wrong case root	XnNwcmluZ3dhdGVyCl5zcHJpbmd3YXRlci8K	error:missingRootOpen
+P	content before root	UHJlYW1ibGUKXlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlci8K	error:missingRootOpen
+P	content after root close	XlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlci8KVHJhaWxpbmcK	error:trailingLinesAfterRootClose
+P	nested root	XlNwcmluZ3dhdGVyCl5TcHJpbmd3YXRlcgpeU3ByaW5nd2F0ZXIvCl5TcHJpbmd3YXRlci8K	error:reservedRootName
+P	unclosed tag	XlNwcmluZ3dhdGVyCl5wYXJhZ3JhcGgKQ29udGVudAo=	error:unclosedTag
+P	missing root close	XlNwcmluZ3dhdGVyCmNvbnRlbnQK	error:missingRootClose
+P	case mismatch	XlNwcmluZ3dhdGVyCl5DaGFwdGVyCkNvbnRlbnQKXmNoYXB0ZXIvCl5TcHJpbmd3YXRlci8K	error:mismatchedClosingTag
+P	improper nesting	XlNwcmluZ3dhdGVyCl5vdXRlcgpeaW5uZXIKXm91dGVyLwpeaW5uZXIvCl5TcHJpbmd3YXRlci8K	error:mismatchedClosingTag
+P	root close mid-document then paragraph close	XlNwcmluZ3dhdGVyCl5wYXJhZ3JhcGgKVGV4dApeU3ByaW5nd2F0ZXIvCl5wYXJhZ3JhcGgvCg==	error:mismatchedClosingTag
+P	invalid caret line: '^my-tag'	XlNwcmluZ3dhdGVyCl5teS10YWcKXlNwcmluZ3dhdGVyLwo=	error:invalidCaretLine
+P	invalid caret line: '^123'	XlNwcmluZ3dhdGVyCl4xMjMKXlNwcmluZ3dhdGVyLwo=	error:invalidCaretLine
+P	invalid caret line: '^_name'	XlNwcmluZ3dhdGVyCl5fbmFtZQpeU3ByaW5nd2F0ZXIvCg==	error:invalidCaretLine
+P	invalid caret line: '^'	XlNwcmluZ3dhdGVyCl4KXlNwcmluZ3dhdGVyLwo=	error:invalidCaretLine
+P	invalid caret line: '^/'	XlNwcmluZ3dhdGVyCl4vCl5TcHJpbmd3YXRlci8K	error:invalidCaretLine
+P	invalid caret line: '^^tag'	XlNwcmluZ3dhdGVyCl5edGFnCl5TcHJpbmd3YXRlci8K	error:invalidCaretLine
+P	invalid caret line: '^tag  /'	XlNwcmluZ3dhdGVyCl50YWcgIC8KXlNwcmluZ3dhdGVyLwo=	error:invalidCaretLine
+P	invalid caret line: '^tag /more'	XlNwcmluZ3dhdGVyCl50YWcgL21vcmUKXlNwcmluZ3dhdGVyLwo=	error:invalidCaretLine
+P	invalid caret line: '^paragraph This is text. ^paragraph/'	XlNwcmluZ3dhdGVyCl5wYXJhZ3JhcGggVGhpcyBpcyB0ZXh0LiBecGFyYWdyYXBoLwpeU3ByaW5nd2F0ZXIvCg==	error:invalidCaretLine
+P	invalid caret line: '^john said hello'	XlNwcmluZ3dhdGVyCl5qb2huIHNhaWQgaGVsbG8KXlNwcmluZ3dhdGVyLwo=	error:invalidCaretLine
+C	XmNoYXB0ZXI=	open:chapter
+C	ICBeY2hhcHRlciAg	open:chapter
+C	XmNoYXB0ZXIv	close:chapter
+C	ICBeY2hhcHRlci8gIA==	close:chapter
+C	Y2hhcHRlcg==	content:-
+C	dGV4dCBeY2hhcHRlcg==	content:-
+C	RW1haWw6IGFAYi5jb20=	content:-
+C		content:-
+C	ICAg	content:-
+C	XmNoYXB0ZXIgdGV4dA==	invalid:-
+C	Xm15LXRhZw==	invalid:-
+C	wqBeY2hhcHRlcg==	content:-
