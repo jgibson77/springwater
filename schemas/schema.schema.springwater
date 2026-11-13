@@ -48,7 +48,7 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-schema, screenplay, novel, technical
+schema
 ^parent_must_be/
 ^rule/
 

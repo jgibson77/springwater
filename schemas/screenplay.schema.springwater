@@ -237,7 +237,7 @@ scene
 slugline
 ^must_contain/
 ^may_contain
-number, action, dialogue, transition, shot, dual_dialogue, montage, intercut, page_break, centered
+number, action, dialogue, transition, shot, dual_dialogue, montage, intercut, centered
 ^may_contain/
 ^parent_must_be
 act1, act2, act3, sequence, montage, intercut
@@ -267,7 +267,7 @@ sequence
 scene, sequence
 ^must_contain_one_of/
 ^may_contain
-label, transition, centered, page_break
+label, transition, centered
 ^may_contain/
 ^parent_must_be
 act1, act2, act3, sequence
@@ -475,15 +475,6 @@ end_intercut
 ^tag/
 ^parent_must_be
 intercut
-^parent_must_be/
-^rule/
-
-^rule
-^tag
-page_break
-^tag/
-^parent_must_be
-scene, sequence, act1, act2, act3
 ^parent_must_be/
 ^rule/
 

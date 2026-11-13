@@ -410,15 +410,6 @@ uppercase
 
 ^render
 ^tag
-page_break
-^tag/
-^page_break_before
-true
-^page_break_before/
-^render/
-
-^render
-^tag
 centered
 ^tag/
 ^align
