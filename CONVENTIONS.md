@@ -130,6 +130,42 @@ answer it separately.
 `examples/genesis_1_3.self_contained.springwater` is the Genesis example
 carrying its schema and the schema for schemas.
 
+## The primer
+
+Everything that explains Springwater is written in a language: the rules in
+`SYNTAX.txt`, the schemas, this file. A reader who has none of those languages
+still has the marks themselves, and the marks follow a pattern that can be
+found by looking and counting:
+
+- some lines begin with the same mark;
+- each such line appears twice, the second time with one more stroke at its end;
+- the pairs sit inside one another and never cross;
+- everything else lies between them.
+
+`PRIMER.springwater` teaches that pattern from nothing, using no words until
+its last step. It is a valid Springwater document with no schema: it stands on
+the seven rules alone. Its steps, in order:
+
+1. **A pair holds something.** The same pair holds nothing, then one stroke,
+   then two, then three. The marks stay the same; what they hold changes.
+2. **A different label holds a different kind of thing.** A second label holds
+   a different sign, counted the same way.
+3. **A pair can hold several lines.**
+4. **A pair can hold pairs.** A third label holds one of the first, then two,
+   then three.
+5. **Pairs go inside pairs to any depth**, and different kinds sit side by side.
+6. **The same thing written different ways.** The counts one to ten, each as
+   strokes, as a digit, and as a word in English, Spanish, Mandarin, and
+   Hebrew, under the same labels the Genesis example uses.
+
+The labels in steps 1 to 5 are single letters because they are meant to be
+read as marks, not words. The last step is the bridge to language: a reader
+who has followed the strokes learns ten words in each of four scripts, and
+learns which label goes with which script.
+
+The primer cannot make a lost language readable. Nothing can. What it does is
+remove the need to be told how the notation works.
+
 ## Non-goals
 
 These were considered and rejected, because each costs more than the problem

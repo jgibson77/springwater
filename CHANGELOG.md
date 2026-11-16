@@ -42,6 +42,17 @@ result of no document.
   Kotlin validators accept carried `schema` and `presentation` elements at the
   top level and can read a carried schema. Added
   `examples/genesis_1_3.self_contained.springwater`.
+- Added `PRIMER.springwater`: a document that teaches the notation from
+  nothing, by counting, using no words until its last step. `CONVENTIONS.md`
+  explains it.
+- Block editing rules in the Swift package (`BlockEditor`, `AuthoringProfile`):
+  the pure functions behind writing a document block by block with no tags
+  typed. Return adds the next block, Tab changes a block's kind, and what comes
+  next is read from the authoring profile, or from the schema when there is
+  none. No screen uses them yet.
+- The screenplay authoring profile gained completions for what follows action,
+  dialogue, and a shot inside a scene, and for what follows a scene, montage,
+  or transition inside each act.
 - Added `SpringwaterEditorSupport` to the Swift package: tolerant analysis for
   editors, apart from the strict parser.
 - Added a first document-based app for Mac, iPhone, and iPad in

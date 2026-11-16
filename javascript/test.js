@@ -86,5 +86,32 @@ console.log(`repository documents: ${documents.length} checked`);
   console.log("self-contained documents: checked");
 }
 
+// 4. The primer: valid on the seven rules alone, and it teaches what it claims.
+{
+  const bytes = read("PRIMER.springwater");
+  const root = SW.parse(bytes);
+  if (SW.serialize(root) !== bytes.toString("utf8")) fail("primer: not canonical");
+  const primer = root.children.find((c) => c.name === "primer");
+  const kids = primer ? primer.children.filter((c) => c.children) : [];
+  const text = (e) => e.children.filter((c) => !c.children).map((c) => c.text);
+  // Step 1: the first label holds nothing, then one, two, three strokes.
+  const firstFour = kids.slice(0, 4);
+  if (firstFour.some((e) => e.name !== "a") || firstFour.map((e) => text(e).join("")).join(",") !== ",|,||,|||") {
+    fail("primer: the opening count is wrong");
+  }
+  // Step 6: ten passages; the strokes, the digit, and the position all agree.
+  const passages = kids.filter((e) => e.name === "passage");
+  if (passages.length !== 10) fail("primer: expected ten passages");
+  passages.forEach((p, i) => {
+    const part = (n) => p.children.find((c) => c.name === n);
+    const names = p.children.filter((c) => c.children).map((c) => c.name).join(",");
+    if (names !== "count,digit,english,spanish,mandarin,hebrew") fail("primer: passage " + (i + 1) + " has the wrong parts");
+    else if (text(part("count"))[0] !== "|".repeat(i + 1) || text(part("digit"))[0] !== String(i + 1)) {
+      fail("primer: passage " + (i + 1) + " miscounts");
+    }
+  });
+  console.log("primer: checked");
+}
+
 console.log(failures === 0 ? "all checks passed" : `${failures} failure(s)`);
 process.exit(failures === 0 ? 0 : 1);

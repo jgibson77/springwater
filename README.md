@@ -156,7 +156,10 @@ Genesis 1 to 3 verse by verse in English, Spanish, Mandarin, and the original
 Hebrew, each verse holding all four languages side by side. A fifth,
 [`examples/genesis_1_3.self_contained.springwater`](examples/genesis_1_3.self_contained.springwater),
 is the same text carrying its own schema, so it can be checked with nothing
-outside the file. The complete files are in
+outside the file.
+
+[`PRIMER.springwater`](PRIMER.springwater) teaches the notation itself from
+nothing, by counting, for a reader who shares no language with the writer. The complete files are in
 [`examples/`](examples/); longer, self-describing walk-throughs live in
 [`ROSETTA.springwater`](ROSETTA.springwater).
 
