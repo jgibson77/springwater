@@ -120,6 +120,7 @@ No collisions with code annotations, email addresses, comments, variables, or ot
 | Swift | `swift/SpringwaterSyntax` | Reference: parser, serializer, schema validator, renderer, Fountain export, with tests |
 | JavaScript | `javascript/springwater.js` | Parser, serializer, schema validator. `node javascript/test.js` runs the conformance vectors and checks every document in this repository |
 | Kotlin | `kotlin/Springwater.kt` | Parser, serializer, schema validator for Android and the JVM. `kotlin/Test.kt` runs the conformance vectors and checks every document in this repository; the commands are at the top of that file |
+| Go | `go/main.go` | Parser and canonical serializer written from `SYNTAX.txt` alone, as a test of the written rules. `go test ./...` in `go/` runs the conformance vectors and checks every document in this repository. See `go/CLEANROOM.md` |
 | Python | `tools/springwater-validate` | Syntax validator only |
 
 Anyone writing another implementation can check it against `tools/conformance_vectors.json`.

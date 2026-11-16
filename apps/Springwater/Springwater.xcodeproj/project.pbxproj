@@ -1,0 +1,311 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5A0000012CE0000000A0B0C0 /* SpringwaterSyntax in Frameworks */ = {isa = PBXBuildFile; productRef = 5A0000022CE0000000A0B0C0 /* SpringwaterSyntax */; };
+		5A0000032CE0000000A0B0C0 /* SpringwaterSchema in Frameworks */ = {isa = PBXBuildFile; productRef = 5A0000042CE0000000A0B0C0 /* SpringwaterSchema */; };
+		5A0000052CE0000000A0B0C0 /* SpringwaterRender in Frameworks */ = {isa = PBXBuildFile; productRef = 5A0000062CE0000000A0B0C0 /* SpringwaterRender */; };
+		5A0000072CE0000000A0B0C0 /* schemas in Resources */ = {isa = PBXBuildFile; fileRef = 5A0000082CE0000000A0B0C0 /* schemas */; };
+		5A0000092CE0000000A0B0C0 /* presentations in Resources */ = {isa = PBXBuildFile; fileRef = 5A0000102CE0000000A0B0C0 /* presentations */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5A0000082CE0000000A0B0C0 /* schemas */ = {isa = PBXFileReference; lastKnownFileType = folder; name = schemas; path = ../../schemas; sourceTree = "<group>"; };
+		5A0000102CE0000000A0B0C0 /* presentations */ = {isa = PBXFileReference; lastKnownFileType = folder; name = presentations; path = ../../presentations; sourceTree = "<group>"; };
+		5A0000112CE0000000A0B0C0 /* Springwater.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Springwater.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		5A0000122CE0000000A0B0C0 /* Exceptions for "Springwater" folder in "Springwater" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5A0000132CE0000000A0B0C0 /* Springwater */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5A0000142CE0000000A0B0C0 /* Springwater */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				5A0000122CE0000000A0B0C0 /* Exceptions for "Springwater" folder in "Springwater" target */,
+			);
+			path = Springwater;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5A0000152CE0000000A0B0C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A0000012CE0000000A0B0C0 /* SpringwaterSyntax in Frameworks */,
+				5A0000032CE0000000A0B0C0 /* SpringwaterSchema in Frameworks */,
+				5A0000052CE0000000A0B0C0 /* SpringwaterRender in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5A0000162CE0000000A0B0C0 = {
+			isa = PBXGroup;
+			children = (
+				5A0000142CE0000000A0B0C0 /* Springwater */,
+				5A0000082CE0000000A0B0C0 /* schemas */,
+				5A0000102CE0000000A0B0C0 /* presentations */,
+				5A0000172CE0000000A0B0C0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5A0000172CE0000000A0B0C0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5A0000112CE0000000A0B0C0 /* Springwater.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5A0000132CE0000000A0B0C0 /* Springwater */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A0000182CE0000000A0B0C0 /* Build configuration list for PBXNativeTarget "Springwater" */;
+			buildPhases = (
+				5A0000192CE0000000A0B0C0 /* Sources */,
+				5A0000152CE0000000A0B0C0 /* Frameworks */,
+				5A0000202CE0000000A0B0C0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5A0000142CE0000000A0B0C0 /* Springwater */,
+			);
+			name = Springwater;
+			packageProductDependencies = (
+				5A0000022CE0000000A0B0C0 /* SpringwaterSyntax */,
+				5A0000042CE0000000A0B0C0 /* SpringwaterSchema */,
+				5A0000062CE0000000A0B0C0 /* SpringwaterRender */,
+			);
+			productName = Springwater;
+			productReference = 5A0000112CE0000000A0B0C0 /* Springwater.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5A0000212CE0000000A0B0C0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2710;
+				LastUpgradeCheck = 2710;
+				TargetAttributes = {
+					5A0000132CE0000000A0B0C0 = {
+						CreatedOnToolsVersion = 27.1;
+					};
+				};
+			};
+			buildConfigurationList = 5A0000222CE0000000A0B0C0 /* Build configuration list for PBXProject "Springwater" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5A0000162CE0000000A0B0C0;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5A0000232CE0000000A0B0C0 /* XCLocalSwiftPackageReference "../../swift/SpringwaterSyntax" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5A0000172CE0000000A0B0C0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5A0000132CE0000000A0B0C0 /* Springwater */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5A0000202CE0000000A0B0C0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A0000072CE0000000A0B0C0 /* schemas in Resources */,
+				5A0000092CE0000000A0B0C0 /* presentations in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5A0000192CE0000000A0B0C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5A0000242CE0000000A0B0C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5A0000252CE0000000A0B0C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q4TTF5M68F;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Springwater/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Springwater;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.jgibson77.Springwater;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		5A0000262CE0000000A0B0C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5A0000272CE0000000A0B0C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q4TTF5M68F;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Springwater/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Springwater;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.jgibson77.Springwater;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5A0000182CE0000000A0B0C0 /* Build configuration list for PBXNativeTarget "Springwater" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A0000252CE0000000A0B0C0 /* Debug */,
+				5A0000272CE0000000A0B0C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5A0000222CE0000000A0B0C0 /* Build configuration list for PBXProject "Springwater" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A0000242CE0000000A0B0C0 /* Debug */,
+				5A0000262CE0000000A0B0C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		5A0000232CE0000000A0B0C0 /* XCLocalSwiftPackageReference "../../swift/SpringwaterSyntax" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../swift/SpringwaterSyntax;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5A0000022CE0000000A0B0C0 /* SpringwaterSyntax */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpringwaterSyntax;
+		};
+		5A0000042CE0000000A0B0C0 /* SpringwaterSchema */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpringwaterSchema;
+		};
+		5A0000062CE0000000A0B0C0 /* SpringwaterRender */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpringwaterRender;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5A0000212CE0000000A0B0C0 /* Project object */;
+}

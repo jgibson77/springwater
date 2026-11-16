@@ -26,6 +26,15 @@ Springwater Core is unchanged: the seven rules and `SYNTAX.txt` are as frozen.
   in English, Spanish, Mandarin, and Hebrew, aligned verse by verse.
 - `CONVENTIONS.md` now covers marks inside a line: they are content, and the
   document says what they mean.
+- Added a Go parser (`go/`) written from `SYNTAX.txt` alone. It agrees with
+  every conformance vector and every document in the repository.
+  `go/CLEANROOM.md` records the result and the places where the rules left a
+  choice to the implementer.
+- Added `SpringwaterEditorSupport` to the Swift package: tolerant analysis for
+  editors, apart from the strict parser.
+- Added a first document-based app for Mac, iPhone, and iPad in
+  `apps/Springwater`: it opens, edits, validates, and saves `.springwater`
+  files.
 
 ## v1.0 - Initial public release
 
