@@ -2,8 +2,12 @@ import SwiftUI
 import SpringwaterSchema
 import SpringwaterSyntax
 
-/// One document window: the source or the page, a status line, and an
-/// inspector that lists what is wrong.
+/// One document window.
+///
+/// Where there is room, the source and the page sit side by side, the way a
+/// Markdown editor shows the text and its result: type on the left, read on
+/// the right. On a narrow screen there is room for one, and a control at the
+/// top switches between them. A status line and an inspector say what is wrong.
 struct DocumentView: View {
     @Binding var file: SpringwaterFile
     let library: Library
@@ -14,14 +18,25 @@ struct DocumentView: View {
         var id: Self { self }
     }
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     @State private var mode: Mode = .source
     @State private var reading: Reading?
+    /// The most recent text that was valid Springwater. The page keeps showing
+    /// it while the writer is partway through a tag, so the page does not
+    /// vanish on every keystroke.
+    @State private var lastValid: SpringwaterDocument?
     @State private var showsIssues = false
     @State private var startedBlank = false
 
     /// A new, untouched document: offer the kinds before showing an empty page.
     private var isChoosingKind: Bool {
         !startedBlank && file.text == SpringwaterFile.emptyDocumentText
+    }
+
+    /// True when the window is wide enough for the source and the page together.
+    private var showsBoth: Bool {
+        horizontalSizeClass == .regular
     }
 
     var body: some View {
@@ -32,13 +47,15 @@ struct DocumentView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Picker("View", selection: $mode) {
-                        ForEach(Mode.allCases) { mode in
-                            Text(mode.rawValue).tag(mode)
+                if !showsBoth {
+                    ToolbarItem(placement: .principal) {
+                        Picker("View", selection: $mode) {
+                            ForEach(Mode.allCases) { mode in
+                                Text(mode.rawValue).tag(mode)
+                            }
                         }
+                        .pickerStyle(.segmented)
                     }
-                    .pickerStyle(.segmented)
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Toggle("Issues", systemImage: "exclamationmark.triangle", isOn: $showsIssues)
@@ -54,7 +71,11 @@ struct DocumentView: View {
                     try? await Task.sleep(for: .milliseconds(250))
                     if Task.isCancelled { return }
                 }
-                reading = Reading(text: file.text, library: library)
+                let reading = Reading(text: file.text, library: library)
+                self.reading = reading
+                if let document = reading.document {
+                    lastValid = document
+                }
             }
     }
 
@@ -68,32 +89,61 @@ struct DocumentView: View {
                     startedBlank = true
                 }
             }
+        } else if showsBoth {
+            sideBySide
         } else {
-            documentContent
+            switch mode {
+            case .source: SourceTextView(text: $file.text)
+            case .page: pagePane
+            }
         }
     }
 
+    /// The source on the left and the page on the right.
     @ViewBuilder
-    private var documentContent: some View {
-        switch mode {
-        case .source:
-            SourceEditor(text: $file.text)
-        case .page:
-            switch reading?.syntax {
-            case .valid(let document):
-                PageView(
-                    document: document,
-                    presentation: reading?.root.flatMap { library.presentations[$0] }
-                )
-            case .invalid(let error):
-                ContentUnavailableView(
-                    "Not Valid Springwater",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(error.description)
-                )
-            case nil:
-                ProgressView()
-            }
+    private var sideBySide: some View {
+        #if os(macOS)
+        HSplitView {
+            SourceTextView(text: $file.text)
+                .frame(minWidth: 260, maxWidth: .infinity, maxHeight: .infinity)
+            pagePane
+                .frame(minWidth: 260, maxWidth: .infinity, maxHeight: .infinity)
+        }
+        #else
+        HStack(spacing: 0) {
+            SourceTextView(text: $file.text)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            Divider()
+            pagePane
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        #endif
+    }
+
+    /// The page for the latest valid text. While the current text is not valid
+    /// Springwater the last good page stays, dimmed, and the status line says
+    /// what is wrong.
+    @ViewBuilder
+    private var pagePane: some View {
+        if let document = lastValid {
+            let root = CarriedDocuments.workName(of: document)
+            PageView(
+                document: document,
+                presentation: root.flatMap { root in
+                    CarriedDocuments.presentationDocument(in: document, for: root)
+                        ?? library.presentations[root]
+                }
+            )
+            .equatable()
+            .opacity(reading?.document == nil ? 0.45 : 1)
+        } else if case .invalid(let error) = reading?.syntax {
+            ContentUnavailableView(
+                "Not Valid Springwater",
+                systemImage: "exclamationmark.triangle",
+                description: Text(error.description)
+            )
+        } else {
+            ProgressView()
         }
     }
 }
@@ -113,72 +163,6 @@ private struct KindChooser: View {
                 }
             }
         }
-    }
-}
-
-/// The document's text, edited as plain text.
-private struct SourceEditor: View {
-    @Binding var text: String
-    @State private var selection: TextSelection?
-
-    var body: some View {
-        TextEditor(text: $text, selection: $selection)
-            .font(.system(.body, design: .monospaced))
-            .autocorrectionDisabled()
-            #if os(iOS)
-            .textInputAutocapitalization(.never)
-            .toolbar {
-                // The caret sits two keyboard pages deep on iPhone, and every
-                // tag begins with one.
-                ToolbarItemGroup(placement: .keyboard) {
-                    Button("^") { replaceSelection(with: "^") }
-                        .font(.system(.title3, design: .monospaced))
-                        .accessibilityLabel("Caret")
-                    Button("^/", action: closeInnermostElement)
-                        .font(.system(.title3, design: .monospaced))
-                        .accessibilityLabel("Close Tag")
-                    Spacer()
-                }
-            }
-            #endif
-    }
-
-    /// The selected range, or the end of the text when nothing is selected.
-    private var selectedRange: Range<String.Index> {
-        if case .selection(let range) = selection?.indices, range.upperBound <= text.endIndex {
-            range
-        } else {
-            text.endIndex..<text.endIndex
-        }
-    }
-
-    /// Types `insertion` at the insertion point, replacing any selected text,
-    /// and leaves the insertion point after it.
-    private func replaceSelection(with insertion: String) {
-        let range = selectedRange
-        let offset = text.utf16.distance(from: text.utf16.startIndex, to: range.lowerBound)
-        text.replaceSubrange(range, with: insertion)
-        selection = TextSelection(
-            insertionPoint: String.Index(utf16Offset: offset + insertion.utf16.count, in: text)
-        )
-    }
-
-    /// Writes the closing tag for the innermost element still open before the
-    /// insertion point, on a line of its own. Does nothing when none is open.
-    private func closeInnermostElement() {
-        let range = selectedRange
-        let before = text[..<range.lowerBound]
-        guard let name = SpringwaterEditorSupport.openElementNames(in: String(before)).last else {
-            return
-        }
-        var insertion = "^\(name)/"
-        if let previous = before.last, !previous.isNewline {
-            insertion = "\n" + insertion
-        }
-        if text[range.upperBound...].first?.isNewline != true {
-            insertion += "\n"
-        }
-        replaceSelection(with: insertion)
     }
 }
 
@@ -225,7 +209,10 @@ private struct StatusLine: View {
             Label("No schema for \(root)", systemImage: "questionmark.circle")
                 .foregroundStyle(.secondary)
         case .checked(let root, let issues) where issues.isEmpty:
-            Label("Valid \(root)", systemImage: "checkmark.circle")
+            Label(
+                reading.usesCarriedSchema ? "Valid \(root), by the schema it carries" : "Valid \(root)",
+                systemImage: "checkmark.circle"
+            )
         case .checked(let root, let issues):
             Label(
                 issues.count == 1 ? "1 \(root) issue" : "\(issues.count) \(root) issues",

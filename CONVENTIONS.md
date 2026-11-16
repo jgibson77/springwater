@@ -1,8 +1,9 @@
 # Conventions
 
 *Non-normative.* Nothing here changes the seven rules of Springwater v1.0. A
-conforming parser need not know any of it. These are authoring patterns that sit
-above the core format and use only ordinary content lines.
+conforming parser need not know any of it. These are patterns that sit above
+the core format and use only what it already has: ordinary content lines and
+ordinary tags.
 
 ## Quoting Springwater inside Springwater
 
@@ -81,6 +82,53 @@ And God saw the light, that [it was] good: and God divided the light from the da
 
 Springwater preserves the characters exactly and interprets none of them. The
 meaning of a mark belongs to the document and its schema, not to the core.
+
+## Self-contained documents
+
+A document names its schema in `validated_by`, for example
+`parallel.schema v1.0`. That is a name, not a place. If the schema is lost, the
+tags remain readable but what they were meant to require is a guess.
+
+A schema is itself Springwater, so a document can carry its schema inside
+itself. Nothing is quoted and nothing is escaped: the schema's tags are
+ordinary tags, placed beside the work as further top-level elements.
+
+~~~
+^Springwater
+^parallel_text
+(the work)
+^parallel_text/
+^schema
+(the schema whose required_root is parallel_text)
+^schema/
+^schema
+(the schema whose required_root is schema: the schema for schemas)
+^schema/
+^Springwater/
+~~~
+
+The convention:
+
+- The **work** is the first top-level element.
+- The document may carry, after the work, top-level `schema` and
+  `presentation` elements. No other top-level element may be carried.
+- The schema a document carries for an element name is the first top-level
+  `schema` whose `required_root` is that name. The presentation it carries is
+  the first top-level `presentation` whose `target_schema` is that name.
+- A carried schema is a document like any other. It is valid when it conforms
+  to the schema for schemas, which the document may carry too. With both, the
+  file needs nothing outside itself to be checked.
+- Carried elements are not part of the work. The work's schema does not judge
+  them, and a rendering of the work does not show them.
+
+A validator that knows this convention checks the work against the schema the
+document carries, when it carries one, and says that it did. A carried schema
+is the document's own account of itself. Whether that account matches a schema
+published under the same name is a separate question, and a validator may
+answer it separately.
+
+`examples/genesis_1_3.self_contained.springwater` is the Genesis example
+carrying its schema and the schema for schemas.
 
 ## Non-goals
 

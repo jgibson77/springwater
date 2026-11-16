@@ -50,5 +50,41 @@ for (const f of documents) {
 }
 console.log(`repository documents: ${documents.length} checked`);
 
+// 3. Self-contained documents: a document may carry its own schema.
+{
+  const f = "examples/genesis_1_3.self_contained.springwater";
+  const root = SW.parse(read(f));
+  const own = SW.carriedSchema(root);
+  if (!own) fail("self-contained: no carried schema found");
+  else {
+    if (own.requiredRoot !== "parallel_text") fail("self-contained: carried schema is for " + own.requiredRoot);
+    if (SW.validate(own, root).length) fail("self-contained: work is not valid against its carried schema");
+    // The carried schema catches what a bundled schema would.
+    const text = read(f).toString("utf8").replace(/\^hebrew\n[^\n]*\n\^hebrew\/\n(?=\^passage\/)/, "");
+    if (SW.validate(SW.carriedSchema(SW.parse(Buffer.from(text))), SW.parse(Buffer.from(text))).length === 0) {
+      fail("self-contained: carried schema missed a removed language");
+    }
+  }
+  // It also carries the schema for schemas, so nothing outside the file is needed.
+  const metaEl = SW.carriedSchemaElement(root, "schema");
+  if (!metaEl) fail("self-contained: no carried schema for schemas");
+  else {
+    const carriedMeta = SW.buildSchemaFromElement(metaEl);
+    for (const e of root.children.filter((c) => c.name === "schema")) {
+      if (SW.validate(carriedMeta, { name: "Springwater", children: [e] }).length) {
+        fail("self-contained: a carried schema is not valid against the carried schema for schemas");
+      }
+    }
+  }
+  // A document that carries no schema reports none.
+  if (SW.carriedSchema(SW.parse(read("examples/genesis_1_3.springwater"))) !== null) fail("carried schema found where there is none");
+  // Only schema and presentation may be carried; anything else is still unexpected.
+  const stray = SW.parse(Buffer.from("^Springwater\n^parallel_text\n^parallel_text/\n^notes\n^notes/\n^Springwater/\n"));
+  if (!SW.validate(byRoot["parallel_text"], stray).some((m) => m.includes("unexpected top-level element <notes>"))) {
+    fail("stray top-level element was not reported");
+  }
+  console.log("self-contained documents: checked");
+}
+
 console.log(failures === 0 ? "all checks passed" : `${failures} failure(s)`);
 process.exit(failures === 0 ? 0 : 1);

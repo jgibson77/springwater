@@ -38,3 +38,27 @@ import Testing
     let text = "^Springwater\n^scene\n^ not a tag\n^9lives\nplain ^caret inside\n"
     #expect(SpringwaterEditorSupport.openElementNames(in: text) == ["Springwater", "scene"])
 }
+
+@Test func elementToCloseIsTheInnermostOpenElement() {
+    let before = "^Springwater\n^scene\n^slugline\nINT. HOUSE - DAY\n"
+    #expect(SpringwaterEditorSupport.elementToClose(before: before, after: "") == "slugline")
+}
+
+@Test func nothingToCloseWhenTheElementIsClosedFurtherDown() {
+    // A starter document: the writer types inside an element that is already closed.
+    let before = "^Springwater\n^scene\n^slugline\nINT. HOUSE - DAY"
+    let after = "\n^slugline/\n^scene/\n^Springwater/\n"
+    #expect(SpringwaterEditorSupport.elementToClose(before: before, after: after) == nil)
+}
+
+@Test func elementToCloseIgnoresElementsOpenedAndClosedLater() {
+    let before = "^Springwater\n^scene\n"
+    let after = "^action\nShe waits.\n^action/\n"
+    #expect(SpringwaterEditorSupport.elementToClose(before: before, after: after) == "scene")
+}
+
+@Test func nothingToCloseInACompleteDocument() {
+    let before = "^Springwater\n^scene\n^scene/\n"
+    #expect(SpringwaterEditorSupport.elementToClose(before: before, after: "^Springwater/\n") == nil)
+    #expect(SpringwaterEditorSupport.elementToClose(before: "", after: "") == nil)
+}

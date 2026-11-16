@@ -197,7 +197,12 @@ class Schema(val requiredRoot: String, val rules: Map<String, Rule>) {
         val top = root.childElements
         val required = top.filter { it.name == requiredRoot }
         if (required.isEmpty()) issues.add("missing required root <$requiredRoot>")
-        for (e in top) if (e.name != requiredRoot) issues.add("unexpected top-level element <${e.name}>")
+        // A document may carry its own schema and presentation beside the work
+        // (see CONVENTIONS.md, "Self-contained documents"). They are not part of
+        // the work and are not judged by the work's schema.
+        for (e in top) {
+            if (e.name != requiredRoot && e.name !in CARRIED) issues.add("unexpected top-level element <${e.name}>")
+        }
         for (e in required) check(e, "Springwater", issues)
         return issues
     }
@@ -241,6 +246,43 @@ class Schema(val requiredRoot: String, val rules: Map<String, Rule>) {
         fun from(schemaRoot: Element): Schema {
             val schemaEl = schemaRoot.childElements.firstOrNull { it.name == "schema" }
                 ?: throw IllegalArgumentException("no schema element")
+            return fromElement(schemaEl)
+        }
+
+        /** The element names a document may carry at its top level beside the work. */
+        val CARRIED = listOf("schema", "presentation")
+
+        /**
+         * The `schema` element this document carries for elements named [name]:
+         * the first top-level `schema` whose required_root is [name].
+         */
+        fun carriedSchemaElement(root: Element, name: String): Element? =
+            root.childElements.firstOrNull { e ->
+                e.name == "schema" && e.childElements.any { it.name == "required_root" && it.scalar == name }
+            }
+
+        /**
+         * The `presentation` element this document carries for elements named
+         * [name]: the first top-level `presentation` whose target_schema is [name].
+         */
+        fun carriedPresentationElement(root: Element, name: String): Element? =
+            root.childElements.firstOrNull { e ->
+                e.name == "presentation" && e.childElements.any { m ->
+                    m.name == "metadata" && m.childElements.any { it.name == "target_schema" && it.scalar == name }
+                }
+            }
+
+        /**
+         * The schema a document carries for its own work (its first top-level
+         * element). Null when it carries none.
+         */
+        fun carried(root: Element): Schema? {
+            val work = root.childElements.firstOrNull() ?: return null
+            return carriedSchemaElement(root, work.name)?.let { fromElement(it) }
+        }
+
+        /** Build a schema model from a `schema` element, wherever it was found. */
+        fun fromElement(schemaEl: Element): Schema {
             var requiredRoot = ""
             val rules = LinkedHashMap<String, Rule>()
             for (e in schemaEl.childElements) {

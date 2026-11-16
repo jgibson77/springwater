@@ -137,6 +137,11 @@ const list = (text) => text.split(",").map((p) => p.trim()).filter((p) => p.leng
 function buildSchema(schemaRoot) {
   const schemaEl = childElements(schemaRoot).find((e) => e.name === "schema");
   if (!schemaEl) throw new Error("no schema element");
+  return buildSchemaFromElement(schemaEl);
+}
+
+// Build a schema model from a `schema` element, wherever it was found.
+function buildSchemaFromElement(schemaEl) {
   const schema = { requiredRoot: null, rules: {} };
   for (const e of childElements(schemaEl)) {
     if (e.name === "required_root") schema.requiredRoot = scalar(e);
@@ -185,7 +190,12 @@ function validate(schema, root) {
   const required = top.filter((e) => e.name === schema.requiredRoot);
   if (required.length === 0) issues.push(`missing required root <${schema.requiredRoot}>`);
   for (const e of top) {
-    if (e.name !== schema.requiredRoot) issues.push(`unexpected top-level element <${e.name}>`);
+    // A document may carry its own schema and presentation beside the work
+    // (see CONVENTIONS.md, "Self-contained documents"). They are not part of
+    // the work and are not judged by the work's schema.
+    if (e.name !== schema.requiredRoot && !CARRIED.includes(e.name)) {
+      issues.push(`unexpected top-level element <${e.name}>`);
+    }
   }
   for (const e of required) check(e, "Springwater", schema, issues);
   return issues;
@@ -230,6 +240,39 @@ function check(el, parent, schema, issues) {
   if (!rule.allowsUnknownChildren) for (const k of kids) check(k, el.name, schema, issues);
 }
 
+// ---------------------------------------------- self-contained documents
+
+// The element names a document may carry at its top level beside the work.
+const CARRIED = ["schema", "presentation"];
+
+// The `schema` element this document carries for elements named `name`:
+// the first top-level `schema` whose required_root is `name`. Null if none.
+function carriedSchemaElement(root, name) {
+  return childElements(root).find((e) =>
+    e.name === "schema" && childElements(e).some((c) => c.name === "required_root" && scalar(c) === name)
+  ) || null;
+}
+
+// The `presentation` element this document carries for elements named
+// `name`: the first top-level `presentation` whose target_schema is `name`.
+function carriedPresentationElement(root, name) {
+  return childElements(root).find((e) => {
+    if (e.name !== "presentation") return false;
+    const metadata = childElements(e).find((c) => c.name === "metadata");
+    return !!metadata && childElements(metadata).some((c) => c.name === "target_schema" && scalar(c) === name);
+  }) || null;
+}
+
+// The schema a document carries for its own work (its first top-level
+// element), as a schema model. Null when it carries none.
+function carriedSchema(root) {
+  const work = childElements(root)[0];
+  if (!work) return null;
+  const el = carriedSchemaElement(root, work.name);
+  return el ? buildSchemaFromElement(el) : null;
+}
+
 module.exports = {
   SpringwaterError, parse, serialize, classify, trimmed, physicalLines, buildSchema, validate,
+  buildSchemaFromElement, carriedSchema, carriedSchemaElement, carriedPresentationElement,
 };

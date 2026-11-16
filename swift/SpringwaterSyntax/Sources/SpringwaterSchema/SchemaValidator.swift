@@ -22,7 +22,10 @@ public enum SchemaValidator {
                 message: "missing required root <\(schema.requiredRoot)> at document root"
             ))
         }
-        for element in top where element.name != schema.requiredRoot {
+        // A document may carry its own schema and presentation beside the work.
+        // They are not part of the work and are not judged by the work's schema.
+        for element in top
+        where element.name != schema.requiredRoot && !CarriedDocuments.names.contains(element.name) {
             issues.append(.init(
                 category: .unknownTag, tag: element.name,
                 message: "unexpected top-level element <\(element.name)> (only <\(schema.requiredRoot)> allowed at document root)"

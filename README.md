@@ -153,7 +153,10 @@ Three short documents, each valid against its schema, show the same format
 across different kinds of writing. A fourth,
 [`examples/genesis_1_3.springwater`](examples/genesis_1_3.springwater), carries
 Genesis 1 to 3 verse by verse in English, Spanish, Mandarin, and the original
-Hebrew, each verse holding all four languages side by side. The complete files are in
+Hebrew, each verse holding all four languages side by side. A fifth,
+[`examples/genesis_1_3.self_contained.springwater`](examples/genesis_1_3.self_contained.springwater),
+is the same text carrying its own schema, so it can be checked with nothing
+outside the file. The complete files are in
 [`examples/`](examples/); longer, self-describing walk-throughs live in
 [`ROSETTA.springwater`](ROSETTA.springwater).
 

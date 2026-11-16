@@ -89,6 +89,35 @@ fun main(args: Array<String>) {
     }
     println("repository documents: ${documents.size} checked")
 
+    // 3. Self-contained documents: a document may carry its own schema.
+    run {
+        val root = Springwater.parse(File(repo, "examples/genesis_1_3.self_contained.springwater").readBytes())
+        val own = Schema.carried(root)
+        if (own == null || own.requiredRoot != "parallel_text") {
+            failures += 1; println("FAIL self-contained: carried schema not found")
+        } else if (own.validate(root).isNotEmpty()) {
+            failures += 1; println("FAIL self-contained: work is not valid against its carried schema")
+        }
+        val metaEl = Schema.carriedSchemaElement(root, "schema")
+        if (metaEl == null) {
+            failures += 1; println("FAIL self-contained: no carried schema for schemas")
+        } else {
+            val carriedMeta = Schema.fromElement(metaEl)
+            for (e in root.childElements.filter { it.name == "schema" }) {
+                if (carriedMeta.validate(Element("Springwater", listOf(e))).isNotEmpty()) {
+                    failures += 1; println("FAIL self-contained: a carried schema is not valid against the carried schema for schemas")
+                }
+            }
+        }
+        val plain = Springwater.parse(File(repo, "examples/genesis_1_3.springwater").readBytes())
+        if (Schema.carried(plain) != null) { failures += 1; println("FAIL carried schema found where there is none") }
+        val stray = Springwater.parse("^Springwater\n^parallel_text\n^parallel_text/\n^notes\n^notes/\n^Springwater/\n".toByteArray())
+        if (byRoot["parallel_text"]!!.validate(stray).none { it.contains("unexpected top-level element <notes>") }) {
+            failures += 1; println("FAIL stray top-level element was not reported")
+        }
+        println("self-contained documents: checked")
+    }
+
     println(if (failures == 0) "all checks passed" else "$failures failure(s)")
     if (failures != 0) System.exit(1)
 }

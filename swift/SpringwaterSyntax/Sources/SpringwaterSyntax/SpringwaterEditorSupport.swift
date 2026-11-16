@@ -30,4 +30,33 @@ public enum SpringwaterEditorSupport {
         }
         return open
     }
+
+    /// The name of the element a writer should close at a point in the text,
+    /// or nil when there is nothing to close there.
+    ///
+    /// `before` is the text up to the insertion point and `after` is the rest.
+    /// The answer is the innermost element open at that point, unless the text
+    /// that follows already closes it. Without that check, closing an element
+    /// that is closed further down would write a second closing tag and make
+    /// the document invalid.
+    public static func elementToClose(before: String, after: String) -> String? {
+        var open = openElementNames(in: before)
+        guard let innermost = open.last else { return nil }
+        let depth = open.count
+        for line in SpringwaterParser.physicalLines(of: after) {
+            switch SpringwaterParser.classify(SpringwaterParser.trimmed(line.text)) {
+            case .openingTag(let name):
+                open.append(name)
+            case .closingTag(let name):
+                if open.last == name {
+                    open.removeLast()
+                    // The innermost element at the insertion point has been closed.
+                    if open.count < depth { return nil }
+                }
+            case .content, .invalidCaretLine:
+                break
+            }
+        }
+        return innermost
+    }
 }

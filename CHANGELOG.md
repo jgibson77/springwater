@@ -36,11 +36,18 @@ result of no document.
   a line break ends the line before it and does not begin a new one, and a CR
   immediately followed by an LF is one CRLF. Every implementation already
   behaved this way.
+- Self-contained documents: a document may carry its schema, and the schema
+  for schemas, beside its work, so that it can be checked with nothing outside
+  the file. `CONVENTIONS.md` defines the convention. The Swift, JavaScript, and
+  Kotlin validators accept carried `schema` and `presentation` elements at the
+  top level and can read a carried schema. Added
+  `examples/genesis_1_3.self_contained.springwater`.
 - Added `SpringwaterEditorSupport` to the Swift package: tolerant analysis for
   editors, apart from the strict parser.
 - Added a first document-based app for Mac, iPhone, and iPad in
   `apps/Springwater`: it opens, edits, validates, and saves `.springwater`
-  files.
+  files. The source and the page sit side by side where there is room, and
+  the source editor changes nothing the writer types.
 
 ## v1.0 - Initial public release
 

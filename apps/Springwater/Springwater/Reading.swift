@@ -24,6 +24,10 @@ struct Reading {
     let syntax: Syntax
     let kind: Kind
 
+    /// True when the document was checked against a schema it carries inside
+    /// itself, not one that ships with the app.
+    let usesCarriedSchema: Bool
+
     init(text: String, library: Library) {
         let document: SpringwaterDocument
         do {
@@ -31,15 +35,21 @@ struct Reading {
         } catch {
             syntax = .invalid(error)
             kind = .none
+            usesCarriedSchema = false
             return
         }
         syntax = .valid(document)
 
-        guard let root = document.root.elements.first?.name else {
+        guard let root = CarriedDocuments.workName(of: document) else {
             kind = .none
+            usesCarriedSchema = false
             return
         }
-        guard let schema = library.kinds[root]?.schema else {
+        // A document's own schema speaks for it. The app's schemas are for
+        // documents that carry none.
+        let carried = CarriedDocuments.schema(in: document)
+        usesCarriedSchema = carried != nil
+        guard let schema = carried ?? library.kinds[root]?.schema else {
             kind = .unknown(root: root)
             return
         }

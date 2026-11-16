@@ -1,6 +1,7 @@
 import CoreText
 import SwiftUI
 import SpringwaterRender
+import SpringwaterSchema
 import SpringwaterSyntax
 
 /// The document shown as readable text, dressed by a presentation when the
@@ -36,6 +37,14 @@ struct PageView: View {
     }
 }
 
+/// Two pages are the same when they show the same document the same way, so
+/// the page is not laid out again for every keystroke in the source beside it.
+extension PageView: Equatable {
+    nonisolated static func == (lhs: PageView, rhs: PageView) -> Bool {
+        lhs.document == rhs.document && lhs.presentation == rhs.presentation
+    }
+}
+
 /// One run of text on the page with the style its element is given.
 private struct Block: Identifiable {
     let id: Int
@@ -47,7 +56,10 @@ private struct Block: Identifiable {
     /// leaves print their content.
     static func blocks(of document: SpringwaterDocument, styles: RenderStyles) -> [Block] {
         var blocks: [Block] = []
-        for element in document.root.elements {
+        // The page shows the work. A schema or presentation the document carries
+        // beside it describes the work and is not part of what is read.
+        for (index, element) in document.root.elements.enumerated()
+        where index == 0 || !CarriedDocuments.names.contains(element.name) {
             append(element, styles: styles, to: &blocks)
         }
         return blocks
@@ -58,6 +70,10 @@ private struct Block: Identifiable {
         styles: RenderStyles,
         to blocks: inout [Block]
     ) {
+        // `validated_by` names the document's schema. It is a note about the
+        // document, not something the writer wrote to be read on the page.
+        if element.name == "validated_by" { return }
+
         let style = styles[element.name]
         if style?.hidden == true { return }
 
