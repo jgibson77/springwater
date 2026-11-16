@@ -71,6 +71,9 @@ One of:
 Only these three sequences divide lines. Unicode line separator (U+2028)
 and paragraph separator (U+2029) are ordinary content characters.
 
+Line breaks are matched longest first: a CR immediately followed by an LF
+is always one CRLF, never a CR followed by an LF.
+
 PHYSICAL LINE:
 A unit produced by dividing the decoded character stream at line breaks.
 
@@ -79,6 +82,10 @@ A physical line has two parts:
 - LINE-ENDING SEQUENCE: the LF, CRLF, or CR that terminates the line,
   or absent if the line is the final line of a file with no trailing
   line break.
+
+A line break ends the physical line that precedes it and does not begin a
+new one. A byte stream that ends with a line break therefore has no empty
+physical line after it; only the empty byte stream has zero physical lines.
 
 Physical lines are numbered starting at 1.
 
@@ -1068,5 +1075,9 @@ classification, the distinct-root-lines constraint, and Rule 3/Rule 4
 cross-reference. No change alters the parsed result of any document that was
 valid or invalid before this revision; every correction makes explicit a
 property the parsing algorithm already had.
+Revised: clarifying revision stating that a line break ends the line before
+it and does not begin a new one, and that a CR immediately followed by an LF
+is one CRLF. Both were found by an implementation written from this document
+alone. Neither alters the parsed result of any document.
 
 ================================================================================

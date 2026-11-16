@@ -33,6 +33,8 @@ An implementation by a human stranger would be stronger evidence.
 None of these changed an outcome. They are recorded because each is a place
 where `SYNTAX.txt` could say more.
 
+Items 1 and 2 have since been stated in `SYNTAX.txt` by a clarifying revision.
+
 1. **Trailing line break.** The rules do not say outright that a final line
    break does not begin a new, empty physical line. Read the other way, every
    file ending in a line break would be invalid. Implemented: a line break

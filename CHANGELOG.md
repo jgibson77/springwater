@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-Springwater Core is unchanged: the seven rules and `SYNTAX.txt` are as frozen.
+Springwater Core is unchanged: the seven rules are as frozen. `SYNTAX.txt`
+received one clarifying revision, described below, that changes the parsed
+result of no document.
 
 - Schemas now describe only what a document is. The `font`, `page`, and
   `rendering_rules` blocks moved, unchanged, out of every schema into separate
@@ -30,6 +32,10 @@ Springwater Core is unchanged: the seven rules and `SYNTAX.txt` are as frozen.
   every conformance vector and every document in the repository.
   `go/CLEANROOM.md` records the result and the places where the rules left a
   choice to the implementer.
+- `SYNTAX.txt` now states two things the clean-room implementer had to infer:
+  a line break ends the line before it and does not begin a new one, and a CR
+  immediately followed by an LF is one CRLF. Every implementation already
+  behaved this way.
 - Added `SpringwaterEditorSupport` to the Swift package: tolerant analysis for
   editors, apart from the strict parser.
 - Added a first document-based app for Mac, iPhone, and iPad in
