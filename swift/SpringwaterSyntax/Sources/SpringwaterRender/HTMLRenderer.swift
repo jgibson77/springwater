@@ -76,7 +76,7 @@ public enum HTMLRenderer {
         if style?.hidden == true { return }
 
         // dual dialogue: two side-by-side columns
-        if name == "dual_dialogue" {
+        if name == "dual_dialogue" || style?.sideBySide == true {
             out.append(#"<div class="sw-dual">"#)
             for d in kids {
                 out.append(#"<div class="sw-dualcol">"#)
@@ -96,6 +96,10 @@ public enum HTMLRenderer {
                previous.hasSuffix("</div>"), !previous.hasPrefix(#"<div class="sw-container"#) {
                 out[out.count - 1] = String(previous.dropLast(6)) + " " + inline(text, styles) + "</div>"
                 return
+            }
+            // a line printed above the content, in the same style ("Written by")
+            if let above = style.labelAbove, !text.isEmpty {
+                out.append(#"<div class="sw-\#(name)">\#(esc(above))</div>"#)
             }
             out.append(#"<div class="sw-\#(name)">\#(inline(text, styles))</div>"#)
             return

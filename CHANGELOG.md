@@ -63,6 +63,16 @@ result of no document.
   - The redundant list of forbidden novel elements is removed.
   - Documents valid under 1.0 remain valid unless they used a montage or
     intercut, repeated a slugline or cue, or put one out of place.
+- Added `examples/the_light_at_cormorant_rock.springwater`, a five-page
+  screenplay that uses every element of screenplay schema 2.0.
+- The app has a writing surface. In Write the writer types on the page and
+  types no tags: Return adds the block that usually comes next, Tab turns a
+  block into another kind, and Delete in an empty block removes it. What
+  comes next is read from the authoring profile when there is one and from
+  the schema when there is not. The app now bundles `profiles/`.
+- Presentations may set `label_above` (a line printed above an element's
+  content) and `side_by_side` (an element's children set in columns). The
+  screenplay presentation uses them for title-page credits and dual dialogue.
 - Emphasis: text between two underscores. `CONVENTIONS.md` defines the rule,
   the screenplay schema declares the mark, and the screenplay presentation
   underlines it. The app's page and the HTML renderer draw it.

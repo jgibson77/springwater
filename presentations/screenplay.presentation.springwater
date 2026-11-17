@@ -106,6 +106,9 @@ regular
 ^spacing_after
 1 line
 ^spacing_after/
+^label_above
+Written by
+^label_above/
 ^render/
 
 ^render
@@ -121,6 +124,9 @@ regular
 ^spacing_after
 1 line
 ^spacing_after/
+^label_above
+Story by
+^label_above/
 ^render/
 
 ^render
@@ -136,6 +142,9 @@ regular
 ^spacing_after
 1 line
 ^spacing_after/
+^label_above
+Screenplay by
+^label_above/
 ^render/
 
 ^render
@@ -151,6 +160,9 @@ regular
 ^spacing_after
 2 lines
 ^spacing_after/
+^label_above
+by
+^label_above/
 ^render/
 
 ^render
@@ -523,9 +535,9 @@ true
 ^tag
 dual_dialogue
 ^tag/
-^content
-DUAL_DIALOGUE_LAYOUT
-^content/
+^side_by_side
+true
+^side_by_side/
 ^render/
 
 ^render

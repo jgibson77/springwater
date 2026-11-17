@@ -22,6 +22,8 @@ public struct RenderStyle: Sendable, Equatable {
     public var content: String?          // literal label (montage/intercut/markers)
     public var hidden: Bool              // held in the document, not rendered
     public var joinsPrevious: Bool       // printed on the same line as the block before it
+    public var labelAbove: String?       // a line printed above the content, such as "Written by"
+    public var sideBySide: Bool          // the element's children are set in columns, left to right
 
     public init(
         transform: String? = nil, indent: String? = nil, textIndent: String? = nil,
@@ -29,7 +31,8 @@ public struct RenderStyle: Sendable, Equatable {
         fontWeight: String? = nil, fontStyle: String? = nil, align: String? = nil,
         spacingBefore: String? = nil, spacingAfter: String? = nil,
         pageBreakBefore: Bool = false, pageBreakAfter: Bool = false,
-        content: String? = nil, hidden: Bool = false, joinsPrevious: Bool = false
+        content: String? = nil, hidden: Bool = false, joinsPrevious: Bool = false,
+        labelAbove: String? = nil, sideBySide: Bool = false
     ) {
         self.transform = transform; self.indent = indent; self.maxWidth = maxWidth
         self.textIndent = textIndent; self.lineHeight = lineHeight
@@ -38,6 +41,8 @@ public struct RenderStyle: Sendable, Equatable {
         self.pageBreakBefore = pageBreakBefore; self.pageBreakAfter = pageBreakAfter
         self.content = content; self.hidden = hidden
         self.joinsPrevious = joinsPrevious
+        self.labelAbove = labelAbove
+        self.sideBySide = sideBySide
     }
 
     /// True when no property is set (renders to an empty CSS rule body).
@@ -91,6 +96,8 @@ public struct RenderStyles: Sendable, Equatable {
                 case "content": style.content = v
                 case "hidden": style.hidden = (v == "true")
                 case "joins_previous": style.joinsPrevious = (v == "true")
+                case "label_above": style.labelAbove = v
+                case "side_by_side": style.sideBySide = (v == "true")
                 default: break
                 }
             }

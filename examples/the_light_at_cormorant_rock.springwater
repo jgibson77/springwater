@@ -1,0 +1,593 @@
+^Springwater
+^screenplay
+^validated_by
+screenplay.schema v2.0
+^validated_by/
+
+^metadata
+^title
+THE LIGHT AT CORMORANT ROCK
+^title/
+^written_by
+Mara Ellison
+^written_by/
+^story_by
+Mara Ellison and Tobias Wren
+^story_by/
+^screenplay_by
+Mara Ellison
+^screenplay_by/
+^author
+M. Ellison
+^author/
+^based_on
+Based on a story told in harbor towns
+^based_on/
+^contact
+Cormorant Pictures
+14 Quay Street
+contact@example.com
+^contact/
+^revision
+Blue Revision
+^revision/
+^date
+November 17, 2026
+^date/
+^copyright
+Copyright 2026. Example text written for the Springwater project.
+^copyright/
+^registration
+Registration number goes here
+^registration/
+^metadata/
+
+^note
+This screenplay is an example. It uses every element the screenplay schema defines at least once. The names in the credits are invented.
+^note/
+
+^act1
+^transition
+FADE IN:
+^transition/
+
+^scene
+^number
+1
+^number/
+^slugline
+EXT. CORMORANT ROCK - DUSK
+^slugline/
+
+^action
+A fist of black stone a mile off the coast. On it, a white tower, and nothing else. Gulls wheel below the gallery rail. The sea is flat and the color of slate.
+^action/
+
+^super
+Cormorant Rock. The last manned light on the coast.
+^super/
+
+^action
+A supply boat pulls away from the landing, leaving one figure on the steps with a duffel bag: TOMAS REY, 19, town shoes, already seasick. He watches the boat go. Then he looks up at the tower, all hundred and ten feet of it.
+^action/
+
+^shot
+THE LAMP ROOM WINDOWS
+^shot/
+
+^action
+catch the last of the sun and throw it back, gold, then go dark as the sun drops.
+^action/
+^scene/
+
+^scene
+^number
+2
+^number/
+^slugline
+INT. LIGHTHOUSE - WATCH ROOM - CONTINUOUS
+^slugline/
+
+^action
+A round room. A stove, a radio set older than Tomas, a logbook the size of a paving stone. ADA MARSH, 60s, forty years on this rock, does not look up from the log when he comes in.
+^action/
+
+^dialogue
+^character
+ADA
+^character/
+^lines
+You're the relief.
+^lines/
+^dialogue/
+
+^dialogue
+^character
+TOMAS
+^character/
+^lines
+Tomas. Tomas Rey. They said you'd show me the round.
+^lines/
+^dialogue/
+
+^dialogue
+^character
+ADA
+^character/
+^lines
+They say a great deal. Boots by the stove. You'll want them dry by midnight.
+^lines/
+^dialogue/
+
+^note
+Ada never asks him a question in this scene. Keep it that way through the next draft.
+^note/
+
+^action
+He sits to pull off his shoes. She finally looks at him, and at the shoes, and almost smiles.
+^action/
+
+^dialogue
+^character
+TOMAS
+^character/
+^lines
+How long have you kept it?
+^lines/
+^dialogue/
+
+^dialogue
+^character
+ADA
+^character/
+^lines
+Forty years in March.
+^lines/
+^dialogue/
+
+^dialogue
+^character
+TOMAS
+^character/
+^lines
+And they're really closing it.
+^lines/
+^dialogue/
+
+^dialogue
+^character
+ADA
+^character/
+^parenthetical
+(flat)
+^parenthetical/
+^lines
+They are _automating_ it. Which is closing it, with a press release.
+^lines/
+^dialogue/
+
+^action
+The radio crackles. Both of them turn toward it and speak at once.
+^action/
+
+^dual_dialogue
+^dialogue
+^character
+ADA
+^character/
+^lines
+That's the harbor master. Leave it.
+^lines/
+^dialogue/
+
+^dialogue
+^character
+TOMAS
+^character/
+^lines
+Should I get that? I can get that.
+^lines/
+^dialogue/
+^dual_dialogue/
+
+^action
+He leaves it. The crackle dies.
+^action/
+
+^montage
+^heading
+MONTAGE - ADA TEACHES THE ROUND
+^heading/
+
+^shot
+Ada's hand on a brass oil can, Tomas's hand copying it a beat late.
+^shot/
+
+^shot
+The spiral stair, from above. Two lanterns climbing.
+^shot/
+
+^action
+In the lamp room she shows him the great lens: a cage of glass taller than both of them, floating on its bath of mercury. She turns it with one finger.
+^action/
+
+^dialogue
+^character
+ADA
+^character/
+^extension
+(V.O.)
+^extension/
+^lines
+One finger. If it takes two, something's wrong and you call me.
+^lines/
+^dialogue/
+
+^shot
+A cloth, a prism, a thumbprint wiped away.
+^shot/
+
+^super
+9:40 PM
+^super/
+
+^shot
+The lamp lit. The beam swings out over the water for the first time tonight.
+^shot/
+
+^note
+Six shots is plenty. If this runs long, cut the oil can.
+^note/
+
+^closing
+END MONTAGE
+^closing/
+^montage/
+
+^action
+Tomas writes the lighting time in the log. His handwriting, under forty years of hers.
+^action/
+^scene/
+^act1/
+
+^omitted
+^number
+3
+^number/
+^omitted/
+
+^act2
+^sequence
+^label
+The storm
+^label/
+
+^note
+Everything in this sequence happens between ten and midnight.
+^note/
+
+^scene
+^number
+4
+^number/
+^slugline
+EXT. OPEN WATER - NIGHT
+^slugline/
+
+^action
+Rain, sideways. A forty-foot trawler, the MARGUERITE, wallows beam-on to a rising sea. No running lights. No engine note. Just the slap of water on a dead hull.
+^action/
+^scene/
+
+^intercut
+^heading
+INTERCUT - WATCH ROOM / MARGUERITE WHEELHOUSE
+^heading/
+
+^scene
+^number
+5
+^number/
+^slugline
+INT. MARGUERITE - WHEELHOUSE - NIGHT
+^slugline/
+
+^action
+JUNE OKAFOR, 40s, soaked, braced against the wheel with a handset in her fist. One battery lamp. Water moves across the deck plates.
+^action/
+^scene/
+
+^dialogue
+^character
+JUNE
+^character/
+^extension
+(INTO RADIO)
+^extension/
+^lines
+Cormorant Light, Cormorant Light, this is Marguerite. I have no engine and no chart plotter. Tell me you can hear me.
+^lines/
+^dialogue/
+
+^action
+In the watch room Ada is already at the set. Tomas stands behind her with one boot on.
+^action/
+
+^dialogue
+^character
+ADA
+^character/
+^lines
+I hear you, June. Where's your anchor?
+^lines/
+^dialogue/
+
+^dialogue
+^character
+JUNE
+^character/
+^extension
+(OVER RADIO)
+^extension/
+^lines
+Dragging. I can see your beam. I can't tell how far.
+^lines/
+^dialogue/
+
+^dialogue
+^character
+ADA
+^character/
+^lines
+Then keep seeing it. You hold that light on your port bow and you'll clear the Teeth. Lose it and you won't.
+^lines/
+^dialogue/
+
+^action
+June wipes her eyes with the back of her wrist. She is very tired.
+^action/
+
+^dialogue
+^character
+JUNE
+^character/
+^extension
+(OVER RADIO)
+^extension/
+^lines
+Talk to me, Ada. I keep closing my eyes.
+^lines/
+^dialogue/
+
+^action
+Ada looks at the handset. Then, to Tomas's astonishment, she sings. Not well.
+^action/
+
+^dialogue
+^character
+ADA
+^character/
+^parenthetical
+(singing)
+^parenthetical/
+^lyrics
+Hold to the light, hold to the light,
+the rock is black but the lamp is bright,
+and morning comes to the ones who wait,
+hold to the light, it's not too late.
+^lyrics/
+^dialogue/
+
+^dialogue
+^character
+JUNE
+^character/
+^extension
+(OVER RADIO)
+^extension/
+^parenthetical
+(joining, cracked)
+^parenthetical/
+^lyrics
+Hold to the light, it's not too late.
+^lyrics/
+^dialogue/
+
+^note
+The song is original to this example. Ada's mother sang it; that goes unsaid.
+^note/
+
+^closing
+END INTERCUT
+^closing/
+^intercut/
+
+^scene
+^number
+6
+^number/
+^slugline
+INT. LIGHTHOUSE - WATCH ROOM - CONTINUOUS
+^slugline/
+
+^action
+The stove light flickers. The radio's dial goes dim. Somewhere below, a generator coughs twice and stops.
+^action/
+
+^action
+Ada and Tomas look up at the ceiling at the same instant.
+^action/
+
+^shot
+THE BEAM
+^shot/
+
+^action
+sweeping across the rain, slowing, slowing. It stops. It points at nothing.
+^action/
+
+^dialogue
+^character
+TOMAS
+^character/
+^lines
+It's still lit.
+^lines/
+^dialogue/
+
+^dialogue
+^character
+ADA
+^character/
+^lines
+Lit isn't enough. A light that doesn't turn is a streetlamp. She'll steer for it and it'll put her on the Teeth.
+^lines/
+^dialogue/
+
+^action
+She is already on the stair. He is one boot behind her.
+^action/
+^scene/
+^sequence/
+^act2/
+
+^act3
+^scene
+^number
+7
+^number/
+^slugline
+INT. LIGHTHOUSE - LAMP ROOM - NIGHT
+^slugline/
+
+^action
+The lens hangs dead in its cage, the lamp blazing inside it. Rain hammers the glass. Ada throws open a locker and hauls out a hand crank the length of her arm.
+^action/
+
+^dialogue
+^character
+ADA
+^character/
+^lines
+One turn every ten seconds. Not nine. Not eleven. Boats count it.
+^lines/
+^dialogue/
+
+^action
+She fits the crank and leans on it. The lens does not move. She leans harder. Forty years, and tonight her shoulder will not do it.
+^action/
+
+^action
+Tomas puts his hands beside hers.
+^action/
+
+^dialogue
+^character
+TOMAS
+^character/
+^lines
+Count for me.
+^lines/
+^dialogue/
+
+^dialogue
+^character
+ADA
+^character/
+^parenthetical
+(after a moment)
+^parenthetical/
+^lines
+One. Two. Three.
+^lines/
+^dialogue/
+
+^action
+The lens shudders, and turns. The beam swings out over the water.
+^action/
+
+^shot
+TOMAS'S HANDS on the crank. ADA'S FINGER tapping the count on the brass.
+^shot/
+
+^dialogue
+^character
+JUNE
+^character/
+^extension
+(V.O.)
+^extension/
+^lines
+I've got you. I've got you, Cormorant, you're turning. Port bow. I've got you.
+^lines/
+^dialogue/
+
+^action
+Neither of them answers. There is no breath to spare. They turn the light.
+^action/
+
+^title_card
+Six hours later
+^title_card/
+^scene/
+
+^scene
+^number
+8
+^number/
+^slugline
+EXT. HARBOR MOUTH - DAWN
+^slugline/
+
+^action
+Gray water going pink. The Marguerite comes in under tow, low in the stern, every soul on the quay watching her.
+^action/
+
+^action
+On the far horizon the lighthouse is a white thread. Its beam still turns, pale now against the daylight, ten seconds to the sweep.
+^action/
+^scene/
+
+^scene
+^number
+9
+^number/
+^slugline
+INT. LIGHTHOUSE - WATCH ROOM - DAY
+^slugline/
+
+^action
+Tomas asleep in the chair, hands wrapped in rags. Ada opens the log. She finds last night's line, in his handwriting, and under it she writes one word. We do not see the word.
+^action/
+
+^action
+She caps the pen and sets it on his side of the desk.
+^action/
+
+^dialogue
+^character
+ADA
+^character/
+^parenthetical
+(quietly)
+^parenthetical/
+^lines
+One finger. You call me if it takes two.
+^lines/
+^dialogue/
+
+^action
+She goes to put the kettle on.
+^action/
+^scene/
+
+^transition
+FADE OUT.
+^transition/
+
+^title_card
+THE END
+^title_card/
+^act3/
+^screenplay/
+^Springwater/

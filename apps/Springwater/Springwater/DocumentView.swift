@@ -4,15 +4,18 @@ import SpringwaterSyntax
 
 /// One document window.
 ///
-/// Where there is room, the source and the page sit side by side, the way a
-/// Markdown editor shows the text and its result: type on the left, read on
-/// the right. On a narrow screen there is room for one, and a control at the
-/// top switches between them. A status line and an inspector say what is wrong.
+/// There are three ways to look at a document. Write is the page as a place
+/// to type, with no tags in sight. Source is the Springwater text itself.
+/// Page is the document as it reads. Where there is room, the source sits on
+/// the left and Write or Page on the right, and each follows the other. On a
+/// narrow screen there is room for one, and a control at the top switches
+/// between them. A status line and an inspector say what is wrong.
 struct DocumentView: View {
     @Binding var file: SpringwaterFile
     let library: Library
 
     private enum Mode: String, CaseIterable, Identifiable {
+        case write = "Write"
         case source = "Source"
         case page = "Page"
         var id: Self { self }
@@ -20,7 +23,7 @@ struct DocumentView: View {
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
-    @State private var mode: Mode = .source
+    @State private var mode: Mode = .write
     @State private var reading: Reading?
     /// The most recent text that was valid Springwater. The page keeps showing
     /// it while the writer is partway through a tag, so the page does not
@@ -47,15 +50,14 @@ struct DocumentView: View {
                 }
             }
             .toolbar {
-                if !showsBoth {
-                    ToolbarItem(placement: .principal) {
-                        Picker("View", selection: $mode) {
-                            ForEach(Mode.allCases) { mode in
-                                Text(mode.rawValue).tag(mode)
-                            }
+                ToolbarItem(placement: .principal) {
+                    // Beside the source there is only the right-hand side to choose.
+                    Picker("View", selection: showsBoth ? rightSide : $mode) {
+                        ForEach(showsBoth ? [Mode.write, .page] : Mode.allCases) { mode in
+                            Text(mode.rawValue).tag(mode)
                         }
-                        .pickerStyle(.segmented)
                     }
+                    .pickerStyle(.segmented)
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Toggle("Issues", systemImage: "exclamationmark.triangle", isOn: $showsIssues)
@@ -93,6 +95,7 @@ struct DocumentView: View {
             sideBySide
         } else {
             switch mode {
+            case .write: writingPane
             case .source: SourceTextView(text: $file.text)
             case .page: pagePane
             }
@@ -106,7 +109,7 @@ struct DocumentView: View {
         HSplitView {
             SourceTextView(text: $file.text)
                 .frame(minWidth: 260, maxWidth: .infinity, maxHeight: .infinity)
-            pagePane
+            rightPane
                 .frame(minWidth: 260, maxWidth: .infinity, maxHeight: .infinity)
         }
         #else
@@ -114,10 +117,63 @@ struct DocumentView: View {
             SourceTextView(text: $file.text)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             Divider()
-            pagePane
+            rightPane
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         #endif
+    }
+
+    /// What sits beside the source: the page to write on, or the page to read.
+    private var rightSide: Binding<Mode> {
+        Binding(
+            get: { mode == .page ? .page : .write },
+            set: { mode = $0 }
+        )
+    }
+
+    @ViewBuilder
+    private var rightPane: some View {
+        if mode == .page {
+            pagePane
+        } else {
+            writingPane
+        }
+    }
+
+    /// The page as a place to write. Each change made on it becomes the
+    /// document's text at once, so the source beside it follows. While the
+    /// source is not valid Springwater the page cannot be typed on: there is
+    /// no document to change until the source is whole again.
+    @ViewBuilder
+    private var writingPane: some View {
+        if let document = lastValid {
+            let root = CarriedDocuments.workName(of: document)
+            let isCurrent = reading?.document != nil
+            PageEditor(
+                document: document,
+                presentation: root.flatMap { root in
+                    CarriedDocuments.presentationDocument(in: document, for: root)
+                        ?? library.presentations[root]
+                },
+                engine: BlockEditor(
+                    schema: reading?.schema,
+                    profile: root.flatMap { library.profiles[$0] }
+                )
+            ) { changed in
+                lastValid = changed
+                file.text = SpringwaterSerializer.serialize(changed)
+            }
+            .disabled(!isCurrent)
+            .opacity(isCurrent ? 1 : 0.45)
+        } else if case .invalid(let error) = reading?.syntax {
+            ContentUnavailableView(
+                "Not Valid Springwater",
+                systemImage: "exclamationmark.triangle",
+                description: Text(error.description)
+            )
+        } else {
+            ProgressView()
+        }
     }
 
     /// The page for the latest valid text. While the current text is not valid

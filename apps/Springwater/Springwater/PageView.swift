@@ -50,6 +50,9 @@ private struct Block: Identifiable {
     let id: Int
     let text: String
     let style: RenderStyle
+    /// When not empty, this block is a row of columns and has no text of its
+    /// own: two speakers talking at once, set side by side.
+    var columns: [[Block]] = []
 
     /// Walks the tree the same way the HTML renderer does: hidden elements are
     /// skipped, labelled containers print their label, containers recurse, and
@@ -91,7 +94,32 @@ private struct Block: Identifiable {
                 )
                 return
             }
+            // A line printed above the content, in the same style, as a title
+            // page prints "Written by" above the name. It is never transformed.
+            if let style, let above = style.labelAbove {
+                var labelStyle = style
+                labelStyle.transform = nil
+                labelStyle.spacingAfter = "1 line"
+                blocks.append(Block(id: blocks.count, text: above, style: labelStyle))
+                var valueStyle = style
+                valueStyle.spacingBefore = nil
+                blocks.append(Block(id: blocks.count, text: shown, style: valueStyle))
+                return
+            }
             blocks.append(Block(id: blocks.count, text: shown, style: style ?? RenderStyle()))
+            return
+        }
+        // Children set in columns, left to right.
+        if let style, style.sideBySide {
+            var columns: [[Block]] = []
+            for child in children {
+                var column: [Block] = []
+                append(child, styles: styles, to: &column)
+                if !column.isEmpty { columns.append(column) }
+            }
+            if !columns.isEmpty {
+                blocks.append(Block(id: blocks.count, text: "", style: style, columns: columns))
+            }
             return
         }
         if let style, let label = style.content {
@@ -109,10 +137,33 @@ private struct BlockView: View {
     let scale: CGFloat
 
     var body: some View {
+        if block.columns.isEmpty {
+            textBlock
+        } else {
+            columns
+        }
+    }
+
+    /// Columns share the width evenly. Inside a column the indents shrink with
+    /// it, so a cue still sits right of its lines.
+    private var columns: some View {
+        HStack(alignment: .top, spacing: 12 * scale) {
+            ForEach(Array(block.columns.enumerated()), id: \.offset) { _, column in
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(column) { inner in
+                        BlockView(block: inner, sheet: sheet, scale: scale * 0.45)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+            }
+        }
+    }
+
+    private var textBlock: some View {
         let style = block.style
         let lineHeight = sheet.fontSize * 1.2
 
-        Text(attributed)
+        return Text(attributed)
             .font(sheet.font)
             .bold(style.fontWeight == "bold")
             .italic(style.fontStyle == "italic")
@@ -172,7 +223,7 @@ private struct BlockView: View {
 }
 
 /// The page measures and typeface a presentation asks for, in points.
-private struct Sheet {
+struct Sheet {
     let styles: RenderStyles
     let width: CGFloat
     let marginTop: CGFloat
@@ -180,6 +231,9 @@ private struct Sheet {
     let marginRight: CGFloat
     let fontSize: CGFloat
     let font: Font
+    /// The installed font family the presentation asks for, or nil when the
+    /// system has none of them and its own serif face is used.
+    let fontFamily: String?
 
     init(presentation: SpringwaterDocument?) {
         let page = presentation.map(PageStyle.init(parsing:)) ?? PageStyle()
@@ -199,7 +253,8 @@ private struct Sheet {
         let names = ["family", "fallback"].compactMap {
             fontElement?.firstElement(named: $0)?.trimmedContent
         }
-        if let family = names.first(where: Self.isInstalled) {
+        fontFamily = names.first(where: Self.isInstalled)
+        if let family = fontFamily {
             font = .custom(family, size: size, relativeTo: .body)
         } else {
             font = .system(.body, design: .serif)
@@ -214,7 +269,7 @@ private struct Sheet {
 }
 
 /// Reads the lengths a presentation writes, such as `1.5in` and `2 lines`.
-private enum Measure {
+enum Measure {
     /// A length in points, or nil when the text is not a length this app knows.
     static func points(_ text: String?) -> CGFloat? {
         guard let text = text?.trimmingCharacters(in: .whitespaces) else { return nil }

@@ -2,9 +2,9 @@ import Foundation
 import SpringwaterSchema
 import SpringwaterSyntax
 
-/// The schemas and presentations that ship inside the app.
+/// The schemas, presentations, and authoring profiles that ship inside the app.
 ///
-/// They are the repository's own `schemas/` and `presentations/` folders,
+/// They are the repository's own `schemas/`, `presentations/`, and `profiles/` folders,
 /// copied into the bundle unchanged at build time.
 struct Library: Sendable {
     /// One bundled schema and what the app needs to offer it by name.
@@ -25,6 +25,10 @@ struct Library: Sendable {
 
     /// Presentation documents keyed by the schema root they dress.
     private(set) var presentations: [String: SpringwaterDocument] = [:]
+
+    /// Authoring profiles keyed by the schema root they are for. A profile says
+    /// what a writer usually wants next; the page uses it for Return and Tab.
+    private(set) var profiles: [String: AuthoringProfile] = [:]
 
     static let bundled = Library(bundle: .main)
 
@@ -51,6 +55,12 @@ struct Library: Sendable {
                 .trimmedContent
             if let target, !target.isEmpty {
                 presentations[target] = document
+            }
+        }
+        for (_, document) in Self.documents(in: "profiles", of: bundle) {
+            let profile = AuthoringProfile(parsing: document)
+            if let target = profile.targetSchema, !target.isEmpty {
+                profiles[target] = profile
             }
         }
     }
