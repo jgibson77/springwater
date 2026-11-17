@@ -1,6 +1,6 @@
 ================================================================================
 SPRINGWATER SCHEMA
-Specification v1.0
+Specification v1.1
 ================================================================================
 
 This document defines how a Springwater schema is read and how a document is
@@ -47,9 +47,10 @@ A schema is closed. An element the schema does not name, or names but does not
 allow in that place, is an issue. A schema says so itself: every schema
 declares its strictness as absolute.
 
-A schema is small on purpose. It cannot express order among elements, value
-types beyond true/false and one exact value, or references between elements.
-See LIMITS.
+A schema is small on purpose. It can say which children come first and that a
+child appears at most once, but not a full order among children, value types
+beyond true/false and one exact value, or references between elements. See
+LIMITS.
 
 ================================================================================
 TERMS
@@ -126,7 +127,7 @@ a schema document is itself well formed is a separate question, answered by
 validating it against the schema for schemas.
 
 Reading a schema element produces a SCHEMA MODEL:
-- a required root, which is a tag name;
+- a required root, which is a name;
 - a set of rules, at most one per tag name.
 
 THE REQUIRED ROOT:
@@ -161,7 +162,7 @@ name:
       has no tag, even if an earlier tag element gave it one.
 
   must_contain, may_contain, cannot_contain, must_contain_one_of,
-  parent_must_be
+  parent_must_be, at_most_one, starts_with
       The rule's list of that name is the element's list.
 
   cannot_be_empty, text_only, must_be_boolean, allows_unknown_children
@@ -207,8 +208,12 @@ SCHEMA when that collection is empty.
 
 An issue has three parts:
 - KIND: one of the names below.
-- ELEMENT: a tag name.
-- OTHER: a second tag name, present for some kinds.
+- ELEMENT: a name.
+- OTHER: a second name, present for some kinds.
+
+ELEMENT and OTHER are usually tag names. Where they are taken from a schema
+(the required root, an item of a rule's list) they are whatever the schema
+says, which need not be a legal tag name.
 
 The kinds, what ELEMENT and OTHER hold, and the category each belongs to:
 
@@ -226,6 +231,8 @@ The kinds, what ELEMENT and OTHER hold, and the category each belongs to:
   missing_child       the containing element  the missing child   missing_required
   missing_one_of      the containing element  (none)              missing_required
   wrong_count         the containing element  the counted child   missing_required
+  too_many            the containing element  the repeated child  invalid_nesting
+  out_of_order        the containing element  the misplaced child invalid_nesting
 
 The four categories empty_tags, unknown_tags, invalid_nesting, and
 missing_required are the ones a schema names in its validation element. The
@@ -312,7 +319,20 @@ To CHECK an element E with parent name P:
     E named N. If F is not equal to K, add wrong_count with ELEMENT E's name
     and OTHER N.
 
-2k. If the rule's allows_unknown_children flag is false, CHECK each child
+2k. For each distinct name N in the rule's at_most_one list, in the order of
+    first appearance in that list: if more than one child element of E is
+    named N, add too_many with ELEMENT E's name and OTHER N. One issue is
+    added however many extra there are.
+
+2l. If the rule's starts_with list is not empty: let LAST be "none" and let
+    PASSED be false. For each child element C of E, in order:
+    - If C's name is not in the starts_with list, set PASSED to true.
+    - Otherwise let I be the position of the first occurrence of C's name in
+      the list. If PASSED is true, or LAST is not "none" and I is less than
+      LAST, add out_of_order with ELEMENT E's name and OTHER C's name.
+      Otherwise set LAST to I.
+
+2m. If the rule's allows_unknown_children flag is false, CHECK each child
     element of E, in order, with parent name E's name.
 
     If the flag is true, the child elements of E are not checked at all.
@@ -330,10 +350,23 @@ to work them out.
   root is schema checks every top-level schema element.
 
 - must_contain means at least one. Any number of child elements with a
-  required name satisfies it. Only a count requires an exact number.
+  required name satisfies it. A count requires an exact number, and
+  at_most_one forbids a second.
+
+- at_most_one and starts_with restrict; they do not permit. A name in either
+  list is allowed as a child only if another list allows it.
+
+- starts_with says that the listed children, when present, come before every
+  other child element and in the listed order. A listed child may be absent.
+  The same listed name may repeat in place. Content lines are not child
+  elements and may appear anywhere.
+
+- Every child that breaks the order produces its own out_of_order issue. A
+  child that is out of order does not change what later children are compared
+  with.
 
 - A child that is not allowed, and a child that is forbidden, are still
-  checked in step 2k. One misplaced element can therefore produce several
+  checked in step 2m. One misplaced element can therefore produce several
   issues: child_not_allowed or forbidden_child from its parent, then whatever
   its own check finds.
 
@@ -354,8 +387,20 @@ to work them out.
 
 - allows_unknown_children switches off two things for that element: the
   child_not_allowed test, and every check of its descendants. The rule's
-  must_contain, must_contain_one_of, count, and cannot_contain still apply to
-  its direct children.
+  must_contain, must_contain_one_of, count, cannot_contain, at_most_one, and
+  starts_with still apply to its direct children.
+
+- A name that appears more than once in a starts_with list takes the position
+  of its first appearance. Later appearances in the list have no effect.
+
+- Every child element takes part in step 2l, including one that is forbidden
+  or not allowed.
+
+- A flag is read from the element's value, so surrounding schema whitespace
+  does not matter: a line holding " true " sets the flag.
+
+- Categories classify issues for whoever reads a result. They play no part in
+  the algorithm and do not affect whether a document is valid.
 
 - text_only does not require text. An element with the flag and no children
   at all satisfies it.
@@ -391,9 +436,8 @@ Informative.
 
 A schema cannot say:
 
-- that one element must come before another;
-- that an element may appear at most once, other than by a count, of which a
-  rule has one;
+- an order among children beyond "these come first, in this order";
+- that an element may appear at most some number of times greater than one;
 - that a value is a number, a date, or matches a pattern;
 - that one element refers to another.
 
@@ -407,12 +451,16 @@ STATUS
 
 Informative.
 
-Springwater Schema v1.0
+Springwater Schema v1.1
 
-This document describes validation as the published validators performed it,
+Version 1.0 described validation as the published validators performed it,
 with three differences among them resolved in favor of the definitions given
 here: what counts as whitespace around a value, how a count is read, and what
 happens when a schema has no required root.
+
+Version 1.1 adds two rule properties, at_most_one and starts_with, and the
+two kinds of issue they produce, too_many and out_of_order. Every schema that
+uses neither is read and applied exactly as under version 1.0.
 
 Unlike SYNTAX.txt, this document is not frozen. Schemas are versioned and are
 expected to change.

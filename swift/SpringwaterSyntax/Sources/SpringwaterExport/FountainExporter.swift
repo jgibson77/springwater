@@ -74,6 +74,20 @@ public enum FountainExporter {
             for (i, d) in ds.enumerated() { emit(d, into: &blocks, dualSecond: i == 1) }
         case "transition":
             blocks.append(transitionBlock(el.exportScalar))
+        case "note":
+            // A writer's remark: a Fountain note, never action.
+            let text = el.exportContent
+            if !text.isEmpty { blocks.append("[[" + esc(text) + "]]") }
+        case "title_card":
+            // Fountain centers text written between > and <.
+            let text = el.exportScalar
+            if !text.isEmpty { blocks.append(">" + esc(text) + "<") }
+        case "montage", "intercut":
+            // The heading, what is shown, and the closing line, each in turn.
+            for child in el.exportChildElements { emit(child, into: &blocks) }
+        case "omitted":
+            let number = el.exportChildElements.first { $0.name == "number" }?.exportScalar ?? ""
+            blocks.append(".OMITTED" + (number.isEmpty ? "" : " #\(number)#"))
         default:
             let t = el.exportContent
             if !t.isEmpty { blocks.append(actionBlock(t)) }
@@ -112,6 +126,9 @@ public enum FountainExporter {
             case "extension": ext = c.exportScalar
             case "parenthetical": body.append(esc(c.exportScalar))
             case "lines": body.append(esc(c.exportContent))
+            case "lyrics":
+                // Fountain marks each sung line with a leading tilde.
+                body.append(esc(c.exportContent).components(separatedBy: "\n").map { "~" + $0 }.joined(separator: "\n"))
             default: break
             }
         }

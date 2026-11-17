@@ -67,6 +67,11 @@ public struct Rule: Sendable, Equatable {
     public var mustEqual: String?
     public var mustBeBoolean: Bool
     public var allowsUnknownChildren: Bool
+    /// Child names that may appear at most once.
+    public var atMostOne: [String]
+    /// Child names that, when present, come before every other child element
+    /// and in this order.
+    public var startsWith: [String]
 
     public init(
         tag: String,
@@ -75,7 +80,8 @@ public struct Rule: Sendable, Equatable {
         mustContainCount: CountConstraint? = nil, parentMustBe: [String] = [],
         cannotBeEmpty: Bool = false, textOnly: Bool = false,
         mustEqual: String? = nil, mustBeBoolean: Bool = false,
-        allowsUnknownChildren: Bool = false
+        allowsUnknownChildren: Bool = false,
+        atMostOne: [String] = [], startsWith: [String] = []
     ) {
         self.tag = tag
         self.mustContain = mustContain; self.mayContain = mayContain
@@ -84,6 +90,7 @@ public struct Rule: Sendable, Equatable {
         self.cannotBeEmpty = cannotBeEmpty; self.textOnly = textOnly
         self.mustEqual = mustEqual; self.mustBeBoolean = mustBeBoolean
         self.allowsUnknownChildren = allowsUnknownChildren
+        self.atMostOne = atMostOne; self.startsWith = startsWith
     }
 
     /// An exact-count constraint: the element must contain exactly `count`
@@ -115,6 +122,8 @@ public struct Rule: Sendable, Equatable {
                     r.mustContainCount = CountConstraint(tag: parts[0], count: n)
                 }
             case "parent_must_be": r.parentMustBe = Schema.csv(value)
+            case "at_most_one": r.atMostOne = Schema.csv(value)
+            case "starts_with": r.startsWith = Schema.csv(value)
             case "cannot_be_empty": r.cannotBeEmpty = (value == "true")
             case "text_only": r.textOnly = (value == "true")
             case "must_equal": r.mustEqual = value

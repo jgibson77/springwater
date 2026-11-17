@@ -155,6 +155,7 @@ function buildSchemaFromElement(schemaEl) {
         tag: null, mustContain: [], mayContain: [], cannotContain: [], mustContainOneOf: [],
         mustContainCount: null, parentMustBe: [], cannotBeEmpty: false, textOnly: false,
         mustEqual: null, mustBeBoolean: false, allowsUnknownChildren: false,
+        atMostOne: [], startsWith: [],
       };
       for (const p of childElements(r)) {
         const v = scalar(p);
@@ -172,6 +173,8 @@ function buildSchemaFromElement(schemaEl) {
             break;
           }
           case "parent_must_be": rule.parentMustBe = list(v); break;
+          case "at_most_one": rule.atMostOne = list(v); break;
+          case "starts_with": rule.startsWith = list(v); break;
           case "cannot_be_empty": rule.cannotBeEmpty = v === "true"; break;
           case "text_only": rule.textOnly = v === "true"; break;
           case "must_equal": rule.mustEqual = v; break;
@@ -231,6 +234,18 @@ function check(el, parent, schema, add) {
     const { tag, count } = rule.mustContainCount;
     if (names.filter((n) => n === tag).length !== count) add("wrong_count", el.name, tag);
   }
+  for (const n of [...new Set(rule.atMostOne)]) {
+    if (names.filter((x) => x === n).length > 1) add("too_many", el.name, n);
+  }
+  if (rule.startsWith.length) {
+    let last = -1, passed = false;
+    for (const n of names) {
+      const i = rule.startsWith.indexOf(n);
+      if (i < 0) passed = true;
+      else if (passed || i < last) add("out_of_order", el.name, n);
+      else last = i;
+    }
+  }
   if (!rule.allowsUnknownChildren) for (const k of kids) check(k, el.name, schema, add);
 }
 
@@ -241,6 +256,7 @@ const ISSUE_CATEGORY = {
   not_equal: "mismatch", not_boolean: "mismatch", forbidden_child: "invalid_nesting",
   child_not_allowed: "unknown_tags", missing_child: "missing_required", missing_one_of: "missing_required",
   wrong_count: "missing_required",
+  too_many: "invalid_nesting", out_of_order: "invalid_nesting",
 };
 
 // One issue in words. The wording is not part of the specification.
@@ -259,6 +275,8 @@ function describeIssue(i) {
     case "missing_child": return `<${i.element}> is missing required <${i.other}>`;
     case "missing_one_of": return `<${i.element}> is missing one of its required alternatives`;
     case "wrong_count": return `<${i.element}> has the wrong number of <${i.other}>`;
+    case "too_many": return `<${i.element}> has more than one <${i.other}>`;
+    case "out_of_order": return `<${i.other}> is out of order in <${i.element}>`;
     default: return `${i.kind} <${i.element}>`;
   }
 }

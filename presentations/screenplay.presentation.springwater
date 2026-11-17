@@ -1,7 +1,7 @@
 ^Springwater
 ^presentation
 ^validated_by
-presentation.schema v1.0
+presentation.schema v1.1
 ^validated_by/
 
 ^metadata
@@ -9,7 +9,7 @@ presentation.schema v1.0
 Screenplay
 ^name/
 ^version
-1.0
+2.0
 ^version/
 ^target_schema
 screenplay
@@ -110,6 +110,36 @@ regular
 
 ^render
 ^tag
+story_by
+^tag/
+^align
+center
+^align/
+^font_weight
+regular
+^font_weight/
+^spacing_after
+1 line
+^spacing_after/
+^render/
+
+^render
+^tag
+screenplay_by
+^tag/
+^align
+center
+^align/
+^font_weight
+regular
+^font_weight/
+^spacing_after
+1 line
+^spacing_after/
+^render/
+
+^render
+^tag
 author
 ^tag/
 ^align
@@ -185,6 +215,33 @@ regular
 
 ^render
 ^tag
+copyright
+^tag/
+^align
+left
+^align/
+^font_weight
+regular
+^font_weight/
+^render/
+
+^render
+^tag
+registration
+^tag/
+^align
+left
+^align/
+^font_weight
+regular
+^font_weight/
+^spacing_after
+1 line
+^spacing_after/
+^render/
+
+^render
+^tag
 slugline
 ^tag/
 ^transform
@@ -253,6 +310,9 @@ uppercase
 ^font_weight
 regular
 ^font_weight/
+^joins_previous
+true
+^joins_previous/
 ^render/
 
 ^render
@@ -283,6 +343,27 @@ lines
 ^font_weight
 regular
 ^font_weight/
+^spacing_after
+1 line
+^spacing_after/
+^render/
+
+^render
+^tag
+lyrics
+^tag/
+^indent
+1.0in
+^indent/
+^max_width
+3.5in
+^max_width/
+^font_weight
+regular
+^font_weight/
+^font_style
+italic
+^font_style/
 ^spacing_after
 1 line
 ^spacing_after/
@@ -329,95 +410,122 @@ regular
 
 ^render
 ^tag
+super
+^tag/
+^transform
+uppercase
+^transform/
+^indent
+0in
+^indent/
+^font_weight
+regular
+^font_weight/
+^spacing_after
+1 line
+^spacing_after/
+^render/
+
+^render
+^tag
+title_card
+^tag/
+^transform
+uppercase
+^transform/
+^align
+center
+^align/
+^font_weight
+regular
+^font_weight/
+^spacing_before
+2 lines
+^spacing_before/
+^spacing_after
+2 lines
+^spacing_after/
+^render/
+
+^render
+^tag
+heading
+^tag/
+^transform
+uppercase
+^transform/
+^indent
+0in
+^indent/
+^font_weight
+regular
+^font_weight/
+^spacing_before
+2 lines
+^spacing_before/
+^spacing_after
+1 line
+^spacing_after/
+^render/
+
+^render
+^tag
+closing
+^tag/
+^transform
+uppercase
+^transform/
+^indent
+0in
+^indent/
+^font_weight
+regular
+^font_weight/
+^spacing_before
+1 line
+^spacing_before/
+^spacing_after
+2 lines
+^spacing_after/
+^render/
+
+^render
+^tag
+omitted
+^tag/
+^content
+OMITTED
+^content/
+^transform
+uppercase
+^transform/
+^indent
+0in
+^indent/
+^spacing_before
+2 lines
+^spacing_before/
+^spacing_after
+1 line
+^spacing_after/
+^render/
+
+^render
+^tag
+note
+^tag/
+^hidden
+true
+^hidden/
+^render/
+
+^render
+^tag
 dual_dialogue
 ^tag/
 ^content
 DUAL_DIALOGUE_LAYOUT
 ^content/
-^render/
-
-^render
-^tag
-montage
-^tag/
-^content
-MONTAGE:
-^content/
-^transform
-uppercase
-^transform/
-^indent
-0in
-^indent/
-^spacing_before
-2 lines
-^spacing_before/
-^spacing_after
-1 line
-^spacing_after/
-^render/
-
-^render
-^tag
-end_montage
-^tag/
-^content
-END MONTAGE
-^content/
-^transform
-uppercase
-^transform/
-^indent
-0in
-^indent/
-^spacing_before
-1 line
-^spacing_before/
-^spacing_after
-2 lines
-^spacing_after/
-^render/
-
-^render
-^tag
-intercut
-^tag/
-^content
-INTERCUT:
-^content/
-^transform
-uppercase
-^transform/
-^indent
-0in
-^indent/
-^spacing_before
-2 lines
-^spacing_before/
-^spacing_after
-1 line
-^spacing_after/
-^render/
-
-^render
-^tag
-end_intercut
-^tag/
-^content
-END INTERCUT
-^content/
-^transform
-uppercase
-^transform/
-^indent
-0in
-^indent/
-^spacing_before
-1 line
-^spacing_before/
-^spacing_after
-2 lines
-^spacing_after/
 ^render/
 
 ^render
@@ -439,6 +547,17 @@ true
 ^render/
 
 ^rendering_rules/
+
+^mark_rules
+^mark_rule
+^name
+emphasis
+^name/
+^style
+underline
+^style/
+^mark_rule/
+^mark_rules/
 
 ^presentation/
 ^Springwater/

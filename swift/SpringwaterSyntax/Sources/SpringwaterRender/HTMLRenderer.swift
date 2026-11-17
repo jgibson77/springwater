@@ -91,7 +91,13 @@ public enum HTMLRenderer {
         if let style, kids.isEmpty {
             let label = style.content
             let text = (label != nil && content.isEmpty) ? label! : content
-            out.append(#"<div class="sw-\#(name)">\#(esc(text))</div>"#)
+            // printed on the same line as the block before it (a cue's extension)
+            if style.joinsPrevious, let previous = out.last,
+               previous.hasSuffix("</div>"), !previous.hasPrefix(#"<div class="sw-container"#) {
+                out[out.count - 1] = String(previous.dropLast(6)) + " " + inline(text, styles) + "</div>"
+                return
+            }
+            out.append(#"<div class="sw-\#(name)">\#(inline(text, styles))</div>"#)
             return
         }
 
@@ -113,8 +119,20 @@ public enum HTMLRenderer {
 
         // fallback: styled leaf even without a rule
         if !content.isEmpty {
-            out.append(#"<div class="sw-\#(name)">\#(esc(content))</div>"#)
+            out.append(#"<div class="sw-\#(name)">\#(inline(content, styles))</div>"#)
         }
+    }
+
+    /// Escaped text, with emphasis drawn when the presentation says how.
+    /// Without a rule for emphasis the text is escaped and nothing more.
+    static func inline(_ text: String, _ styles: RenderStyles) -> String {
+        guard let emphasis = styles.markStyles["emphasis"] else { return esc(text) }
+        let tag = emphasis == "underline" ? "u" : "em"
+        return text.components(separatedBy: "\n").map { line in
+            InlineMarks.runs(in: line).map { run in
+                run.isEmphasized ? "<\(tag)>\(esc(run.text))</\(tag)>" : esc(run.text)
+            }.joined()
+        }.joined(separator: "\n")
     }
 
     // MARK: - Full page

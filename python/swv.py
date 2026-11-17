@@ -168,7 +168,7 @@ def is_empty(e):
 
 
 LIST_NAMES = ("must_contain", "may_contain", "cannot_contain",
-              "must_contain_one_of", "parent_must_be")
+              "must_contain_one_of", "parent_must_be", "at_most_one", "starts_with")
 FLAG_NAMES = ("cannot_be_empty", "text_only", "must_be_boolean",
               "allows_unknown_children")
 
@@ -309,7 +309,30 @@ def validate(doc_root, model):
             N, K = rule.count
             if names.count(N) != K:
                 add("wrong_count", name, N)
-        if not auc:
+        seen = set()
+        for N in L["at_most_one"]:          # 2k
+            if N in seen:
+                continue
+            seen.add(N)
+            if names.count(N) > 1:
+                add("too_many", name, N)
+        sw = L["starts_with"]               # 2l
+        if sw:
+            pos = {}
+            for i, N in enumerate(sw):
+                pos.setdefault(N, i)
+            last = None
+            passed = False
+            for cn in names:
+                if cn not in pos:
+                    passed = True
+                else:
+                    i = pos[cn]
+                    if passed or (last is not None and i < last):
+                        add("out_of_order", name, cn)
+                    else:
+                        last = i
+        if not auc:                          # 2m
             for k in reversed(kids):
                 work.append((k, name))
     return issues

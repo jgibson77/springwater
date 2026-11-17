@@ -136,5 +136,38 @@ console.log(`repository documents: ${documents.length} checked`);
   console.log("schema conformance vectors: " + agreed + " of " + vectors.length + " agree");
 }
 
+// 6. The screenplay schema says what it claims to.
+{
+  const schema = byRoot["screenplay"];
+  const sw = (...lines) => SW.parse(Buffer.from(["^Springwater", ...lines, "^Springwater/"].join("\n") + "\n"));
+  const kinds = (doc) => SW.validateIssues(schema, doc).map((i) => i.kind + ":" + i.element + (i.other ? ":" + i.other : "")).sort().join(" ");
+  const scene = (...inside) => ["^scene", "^slugline", "INT. HOUSE - DAY", "^slugline/", ...inside, "^scene/"];
+  const expect = (name, doc, want) => { const got = kinds(doc); if (got !== want) fail("screenplay: " + name + "\n      got  " + got + "\n      want " + want); };
+
+  expect("a scene needs no act", sw("^screenplay", ...scene(), "^screenplay/"), "");
+  expect("a working draft's elements", sw("^screenplay",
+    "^metadata", "^title", "T", "^title/", "^story_by", "A", "^story_by/", "^copyright", "C", "^copyright/", "^metadata/",
+    ...scene("^note", "fix this", "^note/", "^super", "PARIS, 1940", "^super/",
+      "^dialogue", "^character", "ANNA", "^character/", "^extension", "(V.O.)", "^extension/", "^lyrics", "la la", "^lyrics/", "^dialogue/",
+      "^montage", "^heading", "SERIES OF SHOTS", "^heading/", "^shot", "A door.", "^shot/", "^closing", "END SERIES OF SHOTS", "^closing/", "^montage/"),
+    "^omitted", "^number", "12", "^number/", "^omitted/",
+    "^intercut", "^heading", "INTERCUT - KITCHEN / CAR", "^heading/", ...scene(), "^intercut/",
+    "^title_card", "THE END", "^title_card/",
+    "^screenplay/"), "");
+  expect("two sluglines", sw("^screenplay", ...scene("^slugline", "EXT. YARD", "^slugline/"), "^screenplay/"), "too_many:scene:slugline");
+  expect("slugline not first", sw("^screenplay", "^scene", "^action", "x", "^action/", "^slugline", "INT. A", "^slugline/", "^scene/", "^screenplay/"),
+    "out_of_order:scene:slugline");
+  expect("lines before the cue", sw("^screenplay", ...scene("^dialogue", "^lines", "Hi.", "^lines/", "^character", "ANNA", "^character/", "^dialogue/"), "^screenplay/"),
+    "out_of_order:dialogue:character");
+  expect("a cue with nothing said", sw("^screenplay", ...scene("^dialogue", "^character", "ANNA", "^character/", "^dialogue/"), "^screenplay/"),
+    "missing_one_of:dialogue");
+  expect("a montage needs its heading", sw("^screenplay", ...scene("^montage", "^shot", "A door.", "^shot/", "^montage/"), "^screenplay/"),
+    "missing_child:montage:heading");
+  expect("the old end marker is gone", sw("^screenplay", ...scene("^montage", "^heading", "MONTAGE", "^heading/", "^shot", "x", "^shot/", "^end_montage", "^end_montage/", "^montage/"), "^screenplay/"),
+    "child_not_allowed:montage:end_montage unknown_tag:end_montage:montage");
+  expect("an empty screenplay", sw("^screenplay", "^screenplay/"), "missing_one_of:screenplay");
+  console.log("screenplay schema: checked");
+}
+
 console.log(failures === 0 ? "all checks passed" : `${failures} failure(s)`);
 process.exit(failures === 0 ? 0 : 1);

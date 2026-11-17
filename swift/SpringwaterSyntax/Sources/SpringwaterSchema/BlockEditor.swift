@@ -175,7 +175,7 @@ public struct BlockEditor: Sendable {
 
     /// Removes the block at `path`, with any element that held nothing else,
     /// and returns the block before it. Returns nil for the first block, and
-    /// for a block its parent requires and has only one of.
+    /// for a block its parent requires and has no other of.
     public func deletingBlock(at path: Path, in document: SpringwaterDocument) -> Change? {
         let all = blocks(of: document)
         guard let position = all.firstIndex(where: { $0.path == path }), position > 0 else { return nil }
@@ -185,9 +185,14 @@ public struct BlockEditor: Sendable {
               let parent = element(at: parentPath, in: document.root),
               let unitElement = element(at: unit, in: document.root) else { return nil }
 
-        if let rule = schema?.rules[parent.name], rule.mustContain.contains(unitElement.name),
-           elements(of: parent).filter({ $0.name == unitElement.name }).count == 1 {
-            return nil
+        if let rule = schema?.rules[parent.name] {
+            let names = elements(of: parent).map(\.name)
+            let onlyRequired = rule.mustContain.contains(unitElement.name)
+                && names.filter({ $0 == unitElement.name }).count == 1
+            // The last of a group the parent needs at least one of.
+            let onlyOneOf = rule.mustContainOneOf.contains(unitElement.name)
+                && names.filter({ rule.mustContainOneOf.contains($0) }).count == 1
+            if onlyRequired || onlyOneOf { return nil }
         }
         let root = replacing(document.root, at: parentPath) { children in
             var remaining = children
@@ -236,8 +241,12 @@ public struct BlockEditor: Sendable {
     }
 
     private func isRequiredAndAbsent(_ tag: String, in container: Element) -> Bool {
-        guard let rule = schema?.rules[container.name], rule.mustContain.contains(tag) else { return false }
-        return !elements(of: container).contains { $0.name == tag }
+        guard let rule = schema?.rules[container.name] else { return false }
+        let present = elements(of: container).map(\.name)
+        if rule.mustContain.contains(tag) { return !present.contains(tag) }
+        // One of a group the container needs at least one of, and has none of.
+        return rule.mustContainOneOf.contains(tag)
+            && !present.contains(where: { rule.mustContainOneOf.contains($0) })
     }
 
     // MARK: - Places

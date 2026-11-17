@@ -28,7 +28,7 @@ struct SchemaConformanceVectors {
         let json = try JSONSerialization.jsonObject(with: Data(contentsOf: vectorsURL))
         let file = try #require(json as? [String: Any])
         let vectors = try #require(file["vectors"] as? [[String: Any]])
-        #expect(vectors.count >= 72)
+        #expect(vectors.count >= 89)
 
         for vector in vectors {
             let name = try #require(vector["name"] as? String)

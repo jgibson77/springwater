@@ -1,7 +1,7 @@
 ^Springwater
 ^schema
 ^validated_by
-schema.schema v1.0
+schema.schema v1.1
 ^validated_by/
 
 ^metadata
@@ -9,10 +9,10 @@ schema.schema v1.0
 Screenplay
 ^name/
 ^version
-1.0
+2.0
 ^version/
 ^description
-Industry-standard screenplay format with Courier Prime font and professional features
+A screenplay: scenes, what is seen and said in them, and the facts a title page prints. Acts and sequences are optional ways of grouping scenes.
 ^description/
 ^strictness
 absolute
@@ -23,36 +23,41 @@ absolute
 screenplay
 ^required_root/
 
+^marks
+^mark
+^name
+emphasis
+^name/
+^open
+_
+^open/
+^close
+_
+^close/
+^meaning
+The words between the two marks are emphasized.
+^meaning/
+^mark/
+^marks/
+
 ^structure_rules
 
 ^rule
 ^tag
 screenplay
 ^tag/
-^must_contain
-act1
-^must_contain/
+^must_contain_one_of
+scene, sequence, act1
+^must_contain_one_of/
 ^may_contain
-metadata, act2, act3, validated_by, note
+validated_by, metadata, act1, act2, act3, sequence, scene, transition, title_card, montage, intercut, omitted, note
 ^may_contain/
-^cannot_contain
-chapter, paragraph, section, novel
-^cannot_contain/
-^rule/
-
-^rule
-^tag
-metadata
-^tag/
-^must_contain
-title
-^must_contain/
-^may_contain
-written_by, author, based_on, contact, revision, date
-^may_contain/
-^parent_must_be
-screenplay
-^parent_must_be/
+^at_most_one
+validated_by, metadata, act1, act2, act3
+^at_most_one/
+^starts_with
+validated_by, metadata
+^starts_with/
 ^rule/
 
 ^rule
@@ -65,6 +70,27 @@ true
 ^cannot_be_empty
 true
 ^cannot_be_empty/
+^parent_must_be
+screenplay
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+metadata
+^tag/
+^must_contain
+title
+^must_contain/
+^may_contain
+written_by, story_by, screenplay_by, author, based_on, contact, revision, date, copyright, registration
+^may_contain/
+^at_most_one
+title, written_by, story_by, screenplay_by, author, based_on, contact, revision, date, copyright, registration
+^at_most_one/
+^starts_with
+title
+^starts_with/
 ^parent_must_be
 screenplay
 ^parent_must_be/
@@ -88,6 +114,36 @@ metadata
 ^rule
 ^tag
 written_by
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+metadata
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+story_by
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+metadata
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+screenplay_by
 ^tag/
 ^text_only
 true
@@ -132,18 +188,6 @@ metadata
 
 ^rule
 ^tag
-contact
-^tag/
-^text_only
-true
-^text_only/
-^parent_must_be
-metadata
-^parent_must_be/
-^rule/
-
-^rule
-^tag
 revision
 ^tag/
 ^text_only
@@ -174,13 +218,55 @@ metadata
 
 ^rule
 ^tag
+copyright
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+metadata
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+registration
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+metadata
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+contact
+^tag/
+^text_only
+true
+^text_only/
+^parent_must_be
+metadata
+^parent_must_be/
+^rule/
+
+^rule
+^tag
 note
 ^tag/
 ^text_only
 true
 ^text_only/
 ^parent_must_be
-screenplay
+screenplay, act1, act2, act3, sequence, scene, dialogue, montage, intercut
 ^parent_must_be/
 ^rule/
 
@@ -192,7 +278,7 @@ act1
 scene, sequence
 ^must_contain_one_of/
 ^may_contain
-transition, sequence
+scene, sequence, transition, title_card, montage, intercut, omitted, note
 ^may_contain/
 ^parent_must_be
 screenplay
@@ -207,7 +293,7 @@ act2
 scene, sequence
 ^must_contain_one_of/
 ^may_contain
-transition, sequence
+scene, sequence, transition, title_card, montage, intercut, omitted, note
 ^may_contain/
 ^parent_must_be
 screenplay
@@ -222,40 +308,10 @@ act3
 scene, sequence
 ^must_contain_one_of/
 ^may_contain
-transition, sequence
+scene, sequence, transition, title_card, montage, intercut, omitted, note
 ^may_contain/
 ^parent_must_be
 screenplay
-^parent_must_be/
-^rule/
-
-^rule
-^tag
-scene
-^tag/
-^must_contain
-slugline
-^must_contain/
-^may_contain
-number, action, dialogue, transition, shot, dual_dialogue, montage, intercut
-^may_contain/
-^parent_must_be
-act1, act2, act3, sequence, montage, intercut
-^parent_must_be/
-^rule/
-
-^rule
-^tag
-number
-^tag/
-^text_only
-true
-^text_only/
-^cannot_be_empty
-true
-^cannot_be_empty/
-^parent_must_be
-scene
 ^parent_must_be/
 ^rule/
 
@@ -267,10 +323,16 @@ sequence
 scene, sequence
 ^must_contain_one_of/
 ^may_contain
-label, transition
+label, scene, sequence, transition, title_card, montage, intercut, omitted, note
 ^may_contain/
+^at_most_one
+label
+^at_most_one/
+^starts_with
+label
+^starts_with/
 ^parent_must_be
-act1, act2, act3, sequence
+screenplay, act1, act2, act3, sequence
 ^parent_must_be/
 ^rule/
 
@@ -286,6 +348,42 @@ true
 ^cannot_be_empty/
 ^parent_must_be
 sequence
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+scene
+^tag/
+^must_contain
+slugline
+^must_contain/
+^may_contain
+number, action, dialogue, dual_dialogue, shot, super, title_card, transition, montage, intercut, note
+^may_contain/
+^at_most_one
+number, slugline
+^at_most_one/
+^starts_with
+number, slugline
+^starts_with/
+^parent_must_be
+screenplay, act1, act2, act3, sequence, montage, intercut
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+number
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+scene, omitted
 ^parent_must_be/
 ^rule/
 
@@ -315,7 +413,67 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-scene
+scene, montage, intercut
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+shot
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+scene, montage, intercut
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+super
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+scene, montage, intercut
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+title_card
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+screenplay, act1, act2, act3, sequence, scene
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+transition
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+screenplay, act1, act2, act3, sequence, scene
 ^parent_must_be/
 ^rule/
 
@@ -324,13 +482,22 @@ scene
 dialogue
 ^tag/
 ^must_contain
-character, lines
+character
 ^must_contain/
+^must_contain_one_of
+lines, lyrics
+^must_contain_one_of/
 ^may_contain
-parenthetical, extension
+extension, parenthetical, lines, lyrics, note
 ^may_contain/
+^at_most_one
+character, extension
+^at_most_one/
+^starts_with
+character, extension
+^starts_with/
 ^parent_must_be
-scene, dual_dialogue
+scene, dual_dialogue, montage, intercut
 ^parent_must_be/
 ^rule/
 
@@ -396,7 +563,7 @@ dialogue
 
 ^rule
 ^tag
-transition
+lyrics
 ^tag/
 ^text_only
 true
@@ -405,22 +572,7 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-scene, sequence, act1, act2, act3
-^parent_must_be/
-^rule/
-
-^rule
-^tag
-shot
-^tag/
-^text_only
-true
-^text_only/
-^cannot_be_empty
-true
-^cannot_be_empty/
-^parent_must_be
-scene
+dialogue
 ^parent_must_be/
 ^rule/
 
@@ -441,19 +593,22 @@ scene
 montage
 ^tag/
 ^must_contain
-scene, end_montage
+heading
 ^must_contain/
+^must_contain_one_of
+action, shot, scene, dialogue
+^must_contain_one_of/
+^may_contain
+action, shot, scene, dialogue, super, closing, note
+^may_contain/
+^at_most_one
+heading, closing
+^at_most_one/
+^starts_with
+heading
+^starts_with/
 ^parent_must_be
-act1, act2, act3
-^parent_must_be/
-^rule/
-
-^rule
-^tag
-end_montage
-^tag/
-^parent_must_be
-montage
+screenplay, act1, act2, act3, sequence, scene
 ^parent_must_be/
 ^rule/
 
@@ -462,19 +617,67 @@ montage
 intercut
 ^tag/
 ^must_contain
-scene, end_intercut
+heading
 ^must_contain/
+^must_contain_one_of
+action, shot, scene, dialogue
+^must_contain_one_of/
+^may_contain
+action, shot, scene, dialogue, super, closing, note
+^may_contain/
+^at_most_one
+heading, closing
+^at_most_one/
+^starts_with
+heading
+^starts_with/
 ^parent_must_be
-act1, act2, act3
+screenplay, act1, act2, act3, sequence, scene
 ^parent_must_be/
 ^rule/
 
 ^rule
 ^tag
-end_intercut
+heading
 ^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
 ^parent_must_be
-intercut
+montage, intercut
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+closing
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+montage, intercut
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+omitted
+^tag/
+^must_contain
+number
+^must_contain/
+^at_most_one
+number
+^at_most_one/
+^parent_must_be
+screenplay, act1, act2, act3, sequence
 ^parent_must_be/
 ^rule/
 

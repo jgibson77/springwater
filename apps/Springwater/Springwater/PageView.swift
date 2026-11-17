@@ -82,9 +82,16 @@ private struct Block: Identifiable {
 
         if children.isEmpty {
             let shown = text.isEmpty ? (style?.content ?? "") : text
-            if !shown.isEmpty {
-                blocks.append(Block(id: blocks.count, text: shown, style: style ?? RenderStyle()))
+            if shown.isEmpty { return }
+            // Printed on the same line as the block before it, in that block's
+            // style: a cue's extension, as in ANNA (V.O.).
+            if style?.joinsPrevious == true, let previous = blocks.last {
+                blocks[blocks.count - 1] = Block(
+                    id: previous.id, text: previous.text + " " + shown, style: previous.style
+                )
+                return
             }
+            blocks.append(Block(id: blocks.count, text: shown, style: style ?? RenderStyle()))
             return
         }
         if let style, let label = style.content {
@@ -105,7 +112,7 @@ private struct BlockView: View {
         let style = block.style
         let lineHeight = sheet.fontSize * 1.2
 
-        Text(style.transform == "uppercase" ? block.text.uppercased() : block.text)
+        Text(attributed)
             .font(sheet.font)
             .bold(style.fontWeight == "bold")
             .italic(style.fontStyle == "italic")
@@ -116,6 +123,30 @@ private struct BlockView: View {
             .padding(.leading, (Measure.points(style.indent) ?? 0) * scale)
             .padding(.top, Measure.lines(style.spacingBefore) * lineHeight)
             .padding(.bottom, Measure.lines(style.spacingAfter) * lineHeight)
+    }
+
+    /// The block's text, with emphasis drawn when the presentation says how.
+    private var attributed: AttributedString {
+        let uppercase = block.style.transform == "uppercase"
+        guard let emphasis = sheet.styles.markStyles["emphasis"] else {
+            return AttributedString(uppercase ? block.text.uppercased() : block.text)
+        }
+        var result = AttributedString()
+        for (index, line) in block.text.components(separatedBy: "\n").enumerated() {
+            if index > 0 { result += AttributedString("\n") }
+            for run in InlineMarks.runs(in: line) {
+                var piece = AttributedString(uppercase ? run.text.uppercased() : run.text)
+                if run.isEmphasized {
+                    if emphasis == "underline" {
+                        piece.underlineStyle = .single
+                    } else {
+                        piece.inlinePresentationIntent = .emphasized
+                    }
+                }
+                result += piece
+            }
+        }
+        return result
     }
 
     private var textAlignment: TextAlignment {

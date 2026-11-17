@@ -193,6 +193,8 @@ data class Rule(
     val mustEqual: String? = null,
     val mustBeBoolean: Boolean = false,
     val allowsUnknownChildren: Boolean = false,
+    val atMostOne: List<String> = emptyList(),
+    val startsWith: List<String> = emptyList(),
 )
 
 /**
@@ -215,6 +217,8 @@ data class Issue(val kind: String, val element: String, val other: String? = nul
         "missing_child" -> "<$element> is missing required <$other>"
         "missing_one_of" -> "<$element> is missing one of its required alternatives"
         "wrong_count" -> "<$element> has the wrong number of <$other>"
+        "too_many" -> "<$element> has more than one <$other>"
+        "out_of_order" -> "<$other> is out of order in <$element>"
         else -> "$kind <$element>"
     }
 }
@@ -268,6 +272,19 @@ class Schema(val requiredRoot: String, val rules: Map<String, Rule>) {
         }
         rule.mustContainCount?.let { (tag, count) ->
             if (names.count { it == tag } != count) issues.add(Issue("wrong_count", el.name, tag))
+        }
+        for (n in rule.atMostOne.distinct()) {
+            if (names.count { it == n } > 1) issues.add(Issue("too_many", el.name, n))
+        }
+        if (rule.startsWith.isNotEmpty()) {
+            var last = -1
+            var passed = false
+            for (n in names) {
+                val i = rule.startsWith.indexOf(n)
+                if (i < 0) passed = true
+                else if (passed || i < last) issues.add(Issue("out_of_order", el.name, n))
+                else last = i
+            }
         }
         if (!rule.allowsUnknownChildren) for (k in kids) check(k, el.name, issues)
     }
@@ -338,6 +355,8 @@ class Schema(val requiredRoot: String, val rules: Map<String, Rule>) {
                                 if (parts.size == 2 && n != null) rule.copy(mustContainCount = parts[0] to n) else rule
                             }
                             "parent_must_be" -> rule.copy(parentMustBe = list(v))
+                            "at_most_one" -> rule.copy(atMostOne = list(v))
+                            "starts_with" -> rule.copy(startsWith = list(v))
                             "cannot_be_empty" -> rule.copy(cannotBeEmpty = v == "true")
                             "text_only" -> rule.copy(textOnly = v == "true")
                             "must_equal" -> rule.copy(mustEqual = v)

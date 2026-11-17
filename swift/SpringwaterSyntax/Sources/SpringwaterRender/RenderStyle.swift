@@ -21,6 +21,7 @@ public struct RenderStyle: Sendable, Equatable {
     public var pageBreakAfter: Bool
     public var content: String?          // literal label (montage/intercut/markers)
     public var hidden: Bool              // held in the document, not rendered
+    public var joinsPrevious: Bool       // printed on the same line as the block before it
 
     public init(
         transform: String? = nil, indent: String? = nil, textIndent: String? = nil,
@@ -28,7 +29,7 @@ public struct RenderStyle: Sendable, Equatable {
         fontWeight: String? = nil, fontStyle: String? = nil, align: String? = nil,
         spacingBefore: String? = nil, spacingAfter: String? = nil,
         pageBreakBefore: Bool = false, pageBreakAfter: Bool = false,
-        content: String? = nil, hidden: Bool = false
+        content: String? = nil, hidden: Bool = false, joinsPrevious: Bool = false
     ) {
         self.transform = transform; self.indent = indent; self.maxWidth = maxWidth
         self.textIndent = textIndent; self.lineHeight = lineHeight
@@ -36,6 +37,7 @@ public struct RenderStyle: Sendable, Equatable {
         self.spacingBefore = spacingBefore; self.spacingAfter = spacingAfter
         self.pageBreakBefore = pageBreakBefore; self.pageBreakAfter = pageBreakAfter
         self.content = content; self.hidden = hidden
+        self.joinsPrevious = joinsPrevious
     }
 
     /// True when no property is set (renders to an empty CSS rule body).
@@ -51,7 +53,15 @@ public struct RenderStyle: Sendable, Equatable {
 public struct RenderStyles: Sendable, Equatable {
     public let styles: [String: RenderStyle]
 
-    public init(styles: [String: RenderStyle]) { self.styles = styles }
+    /// How each mark inside a line is drawn: mark name → style, such as
+    /// "emphasis" → "underline". Read from the presentation's `^mark_rules`.
+    /// A mark with no entry is not interpreted and prints as written.
+    public let markStyles: [String: String]
+
+    public init(styles: [String: RenderStyle], markStyles: [String: String] = [:]) {
+        self.styles = styles
+        self.markStyles = markStyles
+    }
 
     /// Reads `^presentation` → `^rendering_rules` → `^render` blocks from a presentation
     /// document. Lenient: it takes the rules that are present.
@@ -80,12 +90,22 @@ public struct RenderStyles: Sendable, Equatable {
                 case "page_break_after": style.pageBreakAfter = (v == "true")
                 case "content": style.content = v
                 case "hidden": style.hidden = (v == "true")
+                case "joins_previous": style.joinsPrevious = (v == "true")
                 default: break
                 }
             }
             if let tag { out[tag] = style }
         }
         self.styles = out
+
+        var marks: [String: String] = [:]
+        let markRules = presentationEl?.renderChildElements.first { $0.name == "mark_rules" }
+        for markRule in markRules?.renderChildElements ?? [] where markRule.name == "mark_rule" {
+            let name = markRule.renderChildElements.first { $0.name == "name" }?.scalarValue
+            let style = markRule.renderChildElements.first { $0.name == "style" }?.scalarValue
+            if let name, let style, !name.isEmpty, !style.isEmpty { marks[name] = style }
+        }
+        self.markStyles = marks
     }
 
     public subscript(_ tag: String) -> RenderStyle? { styles[tag] }

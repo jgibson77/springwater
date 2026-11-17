@@ -42,6 +42,34 @@ result of no document.
   Kotlin validators accept carried `schema` and `presentation` elements at the
   top level and can read a carried schema. Added
   `examples/genesis_1_3.self_contained.springwater`.
+- Schema language 1.1: two new rule properties. `at_most_one` forbids a second
+  child of a name, and `starts_with` says which children come first and in
+  what order. `SCHEMA_SPEC.txt`, the schema for schemas, the conformance
+  vectors (now 89), and all four validators are updated. The clean-room
+  validator was brought to 1.1 from the revised specification alone and agrees
+  with every vector.
+- Screenplay schema 2.0:
+  - Acts are optional. Scenes and sequences may sit directly in the screenplay.
+  - A scene has at most one slugline and one number, and they come first. A
+    dialogue has at most one character and one extension, and they come first.
+  - A montage or intercut may appear inside a scene or between scenes. It
+    begins with a `heading` the writer supplies ("MONTAGE - TRAINING", "SERIES
+    OF SHOTS") and may end with a `closing`. The empty `end_montage` and
+    `end_intercut` markers are gone.
+  - New elements: `note` wherever a writer would leave one, `super` and
+    `title_card` for words on screen, `lyrics` for sung lines, `omitted` for a
+    scene removed from a numbered draft, and `story_by`, `screenplay_by`,
+    `copyright`, and `registration` on the title page.
+  - The redundant list of forbidden novel elements is removed.
+  - Documents valid under 1.0 remain valid unless they used a montage or
+    intercut, repeated a slugline or cue, or put one out of place.
+- Emphasis: text between two underscores. `CONVENTIONS.md` defines the rule,
+  the screenplay schema declares the mark, and the screenplay presentation
+  underlines it. The app's page and the HTML renderer draw it.
+- A presentation can now print one element on the same line as the one before
+  it (`joins_previous`), so a cue's extension reads `ANNA (V.O.)`.
+- Fountain export writes notes as notes, centers title cards, marks lyrics,
+  and no longer drops what is inside a montage.
 - Added `SCHEMA_SPEC.txt`: a normative description of how a schema is read and
   how a document is validated against it. Validation now produces defined
   kinds of issue, and `tools/schema_conformance_vectors.json` holds 72 cases

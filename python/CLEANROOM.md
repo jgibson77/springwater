@@ -14,11 +14,24 @@ complete.
 
 | Check | Agreement |
 |---|---|
-| Schema conformance vectors written before the test (65) | 65 of 65 |
+| Schema conformance vectors written before the first test (65) | 65 of 65 |
 | Vectors added afterwards from the implementer's notes (7), run without changing `swv.py` | 7 of 7 |
 | Every document in the repository, validated against its schema: no issues, as in the JavaScript validator | 21 of 21 |
 
 Run the vectors with `python3 python/test_vectors.py`.
+
+## Second round: version 1.1
+
+When the specification gained `at_most_one` and `starts_with`, the same
+implementer was given the revised `SCHEMA_SPEC.txt` and nothing else, and
+updated `swv.py` from it. Seventeen vectors for the new properties had been
+written beforehand and were not shown to it. All 89 vectors agree.
+
+It reported eight further points, of which five were written into the
+specification: an out-of-date sentence about order, the effect of a name
+listed twice in `starts_with`, that every child takes part in ordering, that
+the new properties still apply inside an open element, and that names taken
+from a schema need not be legal tag names.
 
 ## Limits of the test
 

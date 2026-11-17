@@ -843,6 +843,223 @@
    "expect": {
     "unusable_schema": true
    }
+  },
+  {
+   "name": "at most one: one is fine",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^must_contain\nslug\n^must_contain/\n^may_contain\nact, num\n^may_contain/\n^at_most_one\nslug, num\n^at_most_one/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^slug\n^slug/\n^act\n^act/\n^act\n^act/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "at most one: two is one issue",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^must_contain\nslug\n^must_contain/\n^may_contain\nact, num\n^may_contain/\n^at_most_one\nslug, num\n^at_most_one/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^slug\n^slug/\n^slug\n^slug/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "too_many",
+      "element": "scene",
+      "other": "slug"
+     }
+    ]
+   }
+  },
+  {
+   "name": "at most one: five is still one issue",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^must_contain\nslug\n^must_contain/\n^may_contain\nact, num\n^may_contain/\n^at_most_one\nslug, num\n^at_most_one/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^slug\n^slug/\n^slug\n^slug/\n^slug\n^slug/\n^slug\n^slug/\n^slug\n^slug/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "too_many",
+      "element": "scene",
+      "other": "slug"
+     }
+    ]
+   }
+  },
+  {
+   "name": "at most one: each listed name is judged separately",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^must_contain\nslug\n^must_contain/\n^may_contain\nact, num\n^may_contain/\n^at_most_one\nslug, num\n^at_most_one/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^slug\n^slug/\n^slug\n^slug/\n^num\n^num/\n^num\n^num/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "too_many",
+      "element": "scene",
+      "other": "slug"
+     },
+     {
+      "kind": "too_many",
+      "element": "scene",
+      "other": "num"
+     }
+    ]
+   }
+  },
+  {
+   "name": "at most one: a name listed twice is judged once",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nslug\n^may_contain/\n^at_most_one\nslug, slug\n^at_most_one/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^slug\n^slug/\n^slug\n^slug/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "too_many",
+      "element": "scene",
+      "other": "slug"
+     }
+    ]
+   }
+  },
+  {
+   "name": "at most one does not permit the child",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^at_most_one\nslug\n^at_most_one/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^slug\n^slug/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "child_not_allowed",
+      "element": "scene",
+      "other": "slug"
+     }
+    ]
+   }
+  },
+  {
+   "name": "starts with: listed children first and in order",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nnum, slug, act, talk\n^may_contain/\n^starts_with\nnum, slug\n^starts_with/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\ntalk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^num\n^num/\n^slug\n^slug/\n^act\n^act/\n^talk\n^talk/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "starts with: a listed child may be absent",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nnum, slug, act, talk\n^may_contain/\n^starts_with\nnum, slug\n^starts_with/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\ntalk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^slug\n^slug/\n^act\n^act/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "starts with: none of the listed children present",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nnum, slug, act, talk\n^may_contain/\n^starts_with\nnum, slug\n^starts_with/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\ntalk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^act\n^act/\n^talk\n^talk/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "starts with: a listed child after another child",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nnum, slug, act, talk\n^may_contain/\n^starts_with\nnum, slug\n^starts_with/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\ntalk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^act\n^act/\n^slug\n^slug/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "out_of_order",
+      "element": "scene",
+      "other": "slug"
+     }
+    ]
+   }
+  },
+  {
+   "name": "starts with: listed children in the wrong order",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nnum, slug, act, talk\n^may_contain/\n^starts_with\nnum, slug\n^starts_with/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\ntalk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^slug\n^slug/\n^num\n^num/\n^act\n^act/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "out_of_order",
+      "element": "scene",
+      "other": "num"
+     }
+    ]
+   }
+  },
+  {
+   "name": "starts with: a listed name may repeat in place",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nnum, slug, act, talk\n^may_contain/\n^starts_with\nnum, slug\n^starts_with/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\ntalk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^num\n^num/\n^num\n^num/\n^slug\n^slug/\n^slug\n^slug/\n^act\n^act/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "starts with: every misplaced child is its own issue",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nnum, slug, act, talk\n^may_contain/\n^starts_with\nnum, slug\n^starts_with/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\ntalk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^act\n^act/\n^num\n^num/\n^slug\n^slug/\n^talk\n^talk/\n^slug\n^slug/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "out_of_order",
+      "element": "scene",
+      "other": "num"
+     },
+     {
+      "kind": "out_of_order",
+      "element": "scene",
+      "other": "slug"
+     },
+     {
+      "kind": "out_of_order",
+      "element": "scene",
+      "other": "slug"
+     }
+    ]
+   }
+  },
+  {
+   "name": "starts with: a misplaced child does not move the mark",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nnum, slug, act, talk\n^may_contain/\n^starts_with\nnum, slug\n^starts_with/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\ntalk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^slug\n^slug/\n^num\n^num/\n^slug\n^slug/\n^act\n^act/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "out_of_order",
+      "element": "scene",
+      "other": "num"
+     }
+    ]
+   }
+  },
+  {
+   "name": "starts with: content lines may come anywhere",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nnum, slug, act, talk\n^may_contain/\n^starts_with\nnum, slug\n^starts_with/\n^rule/\n^rule\n^tag\nnum\n^tag/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^rule\n^tag\ntalk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\ntext\n^num\n^num/\nmore\n^slug\n^slug/\n^act\n^act/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "starts with does not permit the child",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\nact\n^may_contain/\n^starts_with\nslug\n^starts_with/\n^rule/\n^rule\n^tag\nslug\n^tag/\n^rule/\n^rule\n^tag\nact\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^slug\n^slug/\n^act\n^act/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "child_not_allowed",
+      "element": "scene",
+      "other": "slug"
+     }
+    ]
+   }
+  },
+  {
+   "name": "starts with: a name listed twice takes its first position",
+   "schema": "^Springwater\n^schema\n^required_root\nscene\n^required_root/\n^structure_rules\n^rule\n^tag\nscene\n^tag/\n^may_contain\na, b\n^may_contain/\n^starts_with\na, b, a\n^starts_with/\n^rule/\n^rule\n^tag\na\n^tag/\n^rule/\n^rule\n^tag\nb\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^scene\n^a\n^a/\n^b\n^b/\n^a\n^a/\n^scene/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "out_of_order",
+      "element": "scene",
+      "other": "a"
+     }
+    ]
+   }
   }
  ]
 }

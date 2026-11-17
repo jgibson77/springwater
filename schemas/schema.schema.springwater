@@ -1,7 +1,7 @@
 ^Springwater
 ^schema
 ^validated_by
-schema.schema v1.0
+schema.schema v1.1
 ^validated_by/
 
 ^metadata
@@ -9,7 +9,7 @@ schema.schema v1.0
 Schema Definition
 ^name/
 ^version
-1.0
+1.1
 ^version/
 ^description
 Meta-schema that defines the structure of all Springwater schemas
@@ -33,8 +33,11 @@ schema
 metadata, required_root, structure_rules, validation
 ^must_contain/
 ^may_contain
-validated_by
+validated_by, marks
 ^may_contain/
+^at_most_one
+validated_by, metadata, required_root, validation, marks
+^at_most_one/
 ^rule/
 
 ^rule
@@ -78,7 +81,7 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-metadata
+metadata, mark
 ^parent_must_be/
 ^rule/
 
@@ -180,8 +183,14 @@ rule
 tag
 ^must_contain/
 ^may_contain
-must_contain, may_contain, cannot_contain, must_contain_one_of, parent_must_be, cannot_be_empty, text_only, must_equal, must_be_boolean, must_contain_count, allows_unknown_children
+must_contain, may_contain, cannot_contain, must_contain_one_of, parent_must_be, cannot_be_empty, text_only, must_equal, must_be_boolean, must_contain_count, allows_unknown_children, at_most_one, starts_with
 ^may_contain/
+^at_most_one
+tag, must_contain, may_contain, cannot_contain, must_contain_one_of, parent_must_be, cannot_be_empty, text_only, must_equal, must_be_boolean, must_contain_count, allows_unknown_children, at_most_one, starts_with
+^at_most_one/
+^starts_with
+tag
+^starts_with/
 ^parent_must_be
 structure_rules
 ^parent_must_be/
@@ -373,6 +382,114 @@ true
 ^must_be_boolean/
 ^parent_must_be
 rule
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+at_most_one
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+rule
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+starts_with
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+rule
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+marks
+^tag/
+^must_contain
+mark
+^must_contain/
+^parent_must_be
+schema
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+mark
+^tag/
+^must_contain
+name, open, close
+^must_contain/
+^may_contain
+meaning
+^may_contain/
+^at_most_one
+name, open, close, meaning
+^at_most_one/
+^starts_with
+name
+^starts_with/
+^parent_must_be
+marks
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+open
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+mark
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+close
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+mark
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+meaning
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+mark
 ^parent_must_be/
 ^rule/
 

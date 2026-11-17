@@ -1,7 +1,7 @@
 ^Springwater
 ^schema
 ^validated_by
-schema.schema v1.0
+schema.schema v1.1
 ^validated_by/
 
 ^metadata
@@ -9,7 +9,7 @@ schema.schema v1.0
 Presentation
 ^name/
 ^version
-1.0
+1.1
 ^version/
 ^description
 How one rendering of a document type looks: fonts, page geometry, and per-element styling. A presentation names the schema it dresses and is never needed to read or validate a document
@@ -33,7 +33,7 @@ presentation
 metadata, rendering_rules
 ^must_contain/
 ^may_contain
-font, page, validated_by
+font, page, validated_by, mark_rules
 ^may_contain/
 ^rule/
 
@@ -78,7 +78,7 @@ true
 true
 ^cannot_be_empty/
 ^parent_must_be
-metadata
+metadata, mark_rule
 ^parent_must_be/
 ^rule/
 
@@ -387,7 +387,7 @@ render
 tag
 ^must_contain/
 ^may_contain
-transform, indent, text_indent, line_height, spacing_before, spacing_after, font_weight, font_style, align, max_width, page_break_before, page_break_after, content, hidden
+transform, indent, text_indent, line_height, spacing_before, spacing_after, font_weight, font_style, align, max_width, page_break_before, page_break_after, content, hidden, joins_previous
 ^may_contain/
 ^parent_must_be
 rendering_rules
@@ -622,6 +622,66 @@ true
 ^must_be_boolean/
 ^parent_must_be
 render
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+joins_previous
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^must_be_boolean
+true
+^must_be_boolean/
+^parent_must_be
+render
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+mark_rules
+^tag/
+^must_contain
+mark_rule
+^must_contain/
+^parent_must_be
+presentation
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+mark_rule
+^tag/
+^must_contain
+name, style
+^must_contain/
+^at_most_one
+name, style
+^at_most_one/
+^parent_must_be
+mark_rules
+^parent_must_be/
+^rule/
+
+^rule
+^tag
+style
+^tag/
+^text_only
+true
+^text_only/
+^cannot_be_empty
+true
+^cannot_be_empty/
+^parent_must_be
+mark_rule
 ^parent_must_be/
 ^rule/
 

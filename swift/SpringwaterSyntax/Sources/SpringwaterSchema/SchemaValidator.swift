@@ -154,7 +154,38 @@ public enum SchemaValidator {
             }
         }
 
-        // 2k. An open element's descendants are not checked at all.
+        // 2k
+        var judged: Set<String> = []
+        for limited in rule.atMostOne where judged.insert(limited).inserted {
+            if kidNames.filter({ $0 == limited }).count > 1 {
+                issues.append(.init(
+                    kind: .tooMany, element: name, other: limited,
+                    message: "<\(name)> may contain only one <\(limited)>"
+                ))
+            }
+        }
+
+        // 2l
+        if !rule.startsWith.isEmpty {
+            var last: Int?
+            var passed = false
+            for child in kidNames {
+                guard let position = rule.startsWith.firstIndex(of: child) else {
+                    passed = true
+                    continue
+                }
+                if passed || position < (last ?? position) {
+                    issues.append(.init(
+                        kind: .outOfOrder, element: name, other: child,
+                        message: "<\(child)> is out of order in <\(name)>"
+                    ))
+                } else {
+                    last = position
+                }
+            }
+        }
+
+        // 2m. An open element's descendants are not checked at all.
         if !rule.allowsUnknownChildren {
             for child in kids {
                 check(child, parent: name, schema: schema, into: &issues)
@@ -182,6 +213,8 @@ public struct ValidationIssue: Sendable, Equatable {
         case missingChild = "missing_child"
         case missingOneOf = "missing_one_of"
         case wrongCount = "wrong_count"
+        case tooMany = "too_many"
+        case outOfOrder = "out_of_order"
     }
 
     /// The four categories a schema names in its `validation` element, and
@@ -213,7 +246,7 @@ public struct ValidationIssue: Sendable, Equatable {
         switch kind {
         case .missingRoot, .missingChild, .missingOneOf, .wrongCount: .missingRequired
         case .unexpectedTop, .unknownTag, .childNotAllowed: .unknownTag
-        case .wrongParent, .notTextOnly, .forbiddenChild: .invalidNesting
+        case .wrongParent, .notTextOnly, .forbiddenChild, .tooMany, .outOfOrder: .invalidNesting
         case .empty: .emptyTag
         case .notEqual, .notBoolean: .mismatch
         }

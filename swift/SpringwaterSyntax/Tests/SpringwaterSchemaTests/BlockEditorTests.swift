@@ -32,7 +32,7 @@ private let starter = """
 ^Springwater
 ^screenplay
 ^validated_by
-screenplay.schema v1.0
+screenplay.schema v2.0
 ^validated_by/
 ^act1
 ^scene
@@ -151,6 +151,45 @@ struct ScreenplayBlockEditing {
         let split = try #require(editor.insertingBlock(
             after: editor.blocks(of: document)[1].path, carrying: "tail", in: document))
         #expect(Array(summary(editor, split.document)[1...2]) == ["action=She waits.", "action=tail"])
+    }
+
+    /// A screenplay needs no acts: scenes sit directly in it, and a new scene
+    /// or a montage is a Tab away.
+    @Test func writingWithoutActs() throws {
+        let editor = try screenplayEditor()
+        var document = try SpringwaterParser.parse("""
+        ^Springwater
+        ^screenplay
+        ^scene
+        ^slugline
+
+        ^slugline/
+        ^scene/
+        ^screenplay/
+        ^Springwater/
+
+        """)
+        var cursor = try #require(editor.blocks(of: document).first).path
+        document = editor.settingText("INT. HOUSE - DAY", at: cursor, in: document)
+        var change = try #require(editor.insertingBlock(after: cursor, in: document))
+        document = change.document; cursor = change.path
+        #expect(summary(editor, document) == ["slugline=INT. HOUSE - DAY", "action"])
+        #expect(editor.kinds(at: cursor, in: document)?.names == ["action", "dialogue", "scene", "montage", "transition"])
+
+        // Two Tabs: a new scene, directly in the screenplay.
+        change = try #require(editor.changingKind(at: cursor, in: document))
+        change = try #require(editor.changingKind(at: change.path, in: change.document))
+        #expect(summary(editor, change.document) == ["slugline=INT. HOUSE - DAY", "slugline"])
+        let twoScenes = editor.settingText("EXT. YARD - DAY", at: change.path, in: change.document)
+        let schema = try #require(editor.schema)
+        #expect(SchemaValidator.validate(twoScenes, against: schema).isEmpty)
+
+        // One more Tab: a montage, which begins with its heading; Return gives a shot.
+        change = try #require(editor.changingKind(at: change.path, in: change.document))
+        #expect(summary(editor, change.document) == ["slugline=INT. HOUSE - DAY", "heading"])
+        let headed = editor.settingText("MONTAGE - TRAINING", at: change.path, in: change.document)
+        change = try #require(editor.insertingBlock(after: change.path, in: headed))
+        #expect(summary(editor, change.document) == ["slugline=INT. HOUSE - DAY", "heading=MONTAGE - TRAINING", "shot"])
     }
 
     /// An action right after a cue with no lines can become that cue's lines.

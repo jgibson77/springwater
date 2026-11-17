@@ -83,6 +83,60 @@ And God saw the light, that [it was] good: and God divided the light from the da
 Springwater preserves the characters exactly and interprets none of them. The
 meaning of a mark belongs to the document and its schema, not to the core.
 
+### Emphasis
+
+One mark is defined for any schema that wants it: text between two underscores
+is emphasized.
+
+~~~
+She is _not_ coming back.
+~~~
+
+The rule, exactly:
+
+- An underscore **opens** emphasis when it is at the start of the line or
+  follows a character that is not a letter, a digit, or an underscore, and the
+  character after it is not a space, a tab, or an underscore.
+- An underscore **closes** emphasis when the character before it is not a
+  space or a tab, and it is at the end of the line or is followed by a
+  character that is not a letter, a digit, or an underscore.
+- An opening underscore pairs with the nearest closing underscore after it
+  that leaves at least one character between them.
+- Emphasis does not cross a line.
+- An underscore that pairs with nothing is ordinary text. `snake_case_name`
+  contains no emphasis.
+
+A schema that uses the mark says so in its own text, with a `marks` element:
+
+~~~
+^marks
+^mark
+^name
+emphasis
+^name/
+^open
+_
+^open/
+^close
+_
+^close/
+^meaning
+The words between the two marks are emphasized.
+^meaning/
+^mark/
+^marks/
+~~~
+
+The declaration changes nothing about validation. It is there so that a reader
+of the schema, now or much later, is told what the underscores mean.
+
+A presentation says how emphasis is drawn, with a `mark_rules` element: the
+screenplay presentation underlines it, as scripts do. A presentation with no
+rule for a mark leaves the text exactly as written, underscores included.
+
+The file always keeps the underscores. Drawing emphasis never changes the
+document.
+
 ## Self-contained documents
 
 A document names its schema in `validated_by`, for example

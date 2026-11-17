@@ -180,6 +180,49 @@ vec("only the first top-level schema is read, even when unusable",
     sw(*el("r")), unusable=True)
 vec("a document with no schema element gives no schema to read", sw(*el("note")), sw(*el("r")), unusable=True)
 
+# --- version 1.1: at_most_one and starts_with
+ONCE = schema("scene", rule("scene", must_contain="slug", may_contain="act, num", at_most_one="slug, num"),
+    rule("slug"), rule("act"), rule("num"))
+vec("at most one: one is fine", ONCE, sw(*el("scene", *el("slug"), *el("act"), *el("act"))), [])
+vec("at most one: two is one issue", ONCE, sw(*el("scene", *el("slug"), *el("slug"))), [I("too_many", "scene", "slug")])
+vec("at most one: five is still one issue", ONCE, sw(*el("scene", *[l for _ in range(5) for l in el("slug")])),
+    [I("too_many", "scene", "slug")])
+vec("at most one: each listed name is judged separately", ONCE,
+    sw(*el("scene", *el("slug"), *el("slug"), *el("num"), *el("num"))),
+    [I("too_many", "scene", "slug"), I("too_many", "scene", "num")])
+vec("at most one: a name listed twice is judged once",
+    schema("scene", rule("scene", may_contain="slug", at_most_one="slug, slug"), rule("slug")),
+    sw(*el("scene", *el("slug"), *el("slug"))), [I("too_many", "scene", "slug")])
+vec("at most one does not permit the child",
+    schema("scene", rule("scene", at_most_one="slug"), rule("slug")),
+    sw(*el("scene", *el("slug"))), [I("child_not_allowed", "scene", "slug")])
+
+FIRST = schema("scene", rule("scene", may_contain="num, slug, act, talk", starts_with="num, slug"),
+    rule("num"), rule("slug"), rule("act"), rule("talk"))
+vec("starts with: listed children first and in order", FIRST,
+    sw(*el("scene", *el("num"), *el("slug"), *el("act"), *el("talk"))), [])
+vec("starts with: a listed child may be absent", FIRST, sw(*el("scene", *el("slug"), *el("act"))), [])
+vec("starts with: none of the listed children present", FIRST, sw(*el("scene", *el("act"), *el("talk"))), [])
+vec("starts with: a listed child after another child", FIRST,
+    sw(*el("scene", *el("act"), *el("slug"))), [I("out_of_order", "scene", "slug")])
+vec("starts with: listed children in the wrong order", FIRST,
+    sw(*el("scene", *el("slug"), *el("num"), *el("act"))), [I("out_of_order", "scene", "num")])
+vec("starts with: a listed name may repeat in place", FIRST,
+    sw(*el("scene", *el("num"), *el("num"), *el("slug"), *el("slug"), *el("act"))), [])
+vec("starts with: every misplaced child is its own issue", FIRST,
+    sw(*el("scene", *el("act"), *el("num"), *el("slug"), *el("talk"), *el("slug"))),
+    [I("out_of_order", "scene", "num"), I("out_of_order", "scene", "slug"), I("out_of_order", "scene", "slug")])
+vec("starts with: a misplaced child does not move the mark", FIRST,
+    sw(*el("scene", *el("slug"), *el("num"), *el("slug"), *el("act"))), [I("out_of_order", "scene", "num")])
+vec("starts with: content lines may come anywhere", FIRST,
+    sw(*el("scene", "text", *el("num"), "more", *el("slug"), *el("act"))), [])
+vec("starts with does not permit the child",
+    schema("scene", rule("scene", may_contain="act", starts_with="slug"), rule("slug"), rule("act")),
+    sw(*el("scene", *el("slug"), *el("act"))), [I("child_not_allowed", "scene", "slug")])
+vec("starts with: a name listed twice takes its first position",
+    schema("scene", rule("scene", may_contain="a, b", starts_with="a, b, a"), rule("a"), rule("b")),
+    sw(*el("scene", *el("a"), *el("b"), *el("a"))), [I("out_of_order", "scene", "a")])
+
 out = {"description": "Schema validation conformance vectors for SCHEMA_SPEC.txt. Each vector gives a schema document and a document as Springwater text, and the expected result: either the multiset of issues, in no particular order, or that the schema is unusable. Expectations were written by hand from the specification.",
        "vectors": V}
 json.dump(out, open(sys.argv[1], "w", encoding="utf-8"), ensure_ascii=False, indent=1)
