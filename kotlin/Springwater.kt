@@ -16,7 +16,7 @@ data class Element(val name: String, val children: List<Node>) : Node {
     val childElements: List<Element> get() = children.filterIsInstance<Element>()
     val contentLines: List<String> get() = children.filterIsInstance<Content>().map { it.text }
     /** Content lines joined and trimmed: the value of a schema property. */
-    val scalar: String get() = contentLines.joinToString("\n").trim()
+    val scalar: String get() = schemaTrim(contentLines.joinToString("\n"))
 }
 
 /** [kind] is one of the error names used by the conformance vectors. */
@@ -174,6 +174,12 @@ object Springwater {
 
 // ---------------------------------------------------------------- schemas
 
+/**
+ * Removes leading and trailing schema whitespace: space, tab, and line feed,
+ * and nothing else (SCHEMA_SPEC.txt, TERMS). Kotlin's own trim() removes more.
+ */
+fun schemaTrim(text: String): String = text.trim { it == ' ' || it == '\t' || it == '\n' }
+
 data class Rule(
     val tag: String,
     val mustContain: List<String> = emptyList(),
@@ -189,63 +195,90 @@ data class Rule(
     val allowsUnknownChildren: Boolean = false,
 )
 
+/**
+ * One finding of schema validation, as SCHEMA_SPEC.txt defines it: a kind, the
+ * element it concerns, and for some kinds a second tag name.
+ */
+data class Issue(val kind: String, val element: String, val other: String? = null) {
+    /** The issue in words. The wording is not part of the specification. */
+    fun describe(): String = when (kind) {
+        "missing_root" -> "missing required root <$element>"
+        "unexpected_top" -> "unexpected top-level element <$element>"
+        "unknown_tag" -> "unknown tag <$element> under <$other>"
+        "wrong_parent" -> "<$element> is not allowed under <$other>"
+        "not_text_only" -> "<$element> is text only but contains elements"
+        "empty" -> "<$element> cannot be empty"
+        "not_equal" -> "<$element> does not have its required value"
+        "not_boolean" -> "<$element> must be true or false"
+        "forbidden_child" -> "<$element> cannot contain <$other>"
+        "child_not_allowed" -> "<$other> is not allowed in <$element>"
+        "missing_child" -> "<$element> is missing required <$other>"
+        "missing_one_of" -> "<$element> is missing one of its required alternatives"
+        "wrong_count" -> "<$element> has the wrong number of <$other>"
+        else -> "$kind <$element>"
+    }
+}
+
 class Schema(val requiredRoot: String, val rules: Map<String, Rule>) {
 
     /** Returns a list of messages; an empty list means the document is valid. */
-    fun validate(root: Element): List<String> {
-        val issues = ArrayList<String>()
+    fun validate(root: Element): List<String> = validateIssues(root).map { it.describe() }
+
+    /**
+     * Validates a parsed document as SCHEMA_SPEC.txt defines. An empty list
+     * means the document is valid against this schema. Order carries no meaning.
+     */
+    fun validateIssues(root: Element): List<Issue> {
+        val issues = ArrayList<Issue>()
         val top = root.childElements
         val required = top.filter { it.name == requiredRoot }
-        if (required.isEmpty()) issues.add("missing required root <$requiredRoot>")
+        if (required.isEmpty()) issues.add(Issue("missing_root", requiredRoot))
         // A document may carry its own schema and presentation beside the work
         // (see CONVENTIONS.md, "Self-contained documents"). They are not part of
         // the work and are not judged by the work's schema.
         for (e in top) {
-            if (e.name != requiredRoot && e.name !in CARRIED) issues.add("unexpected top-level element <${e.name}>")
+            if (e.name != requiredRoot && e.name !in CARRIED) issues.add(Issue("unexpected_top", e.name))
         }
         for (e in required) check(e, "Springwater", issues)
         return issues
     }
 
-    private fun check(el: Element, parent: String, issues: MutableList<String>) {
+    private fun check(el: Element, parent: String, issues: MutableList<Issue>) {
         val rule = rules[el.name]
-        if (rule == null) { issues.add("unknown tag <${el.name}> under <$parent>"); return }
-        if (rule.parentMustBe.isNotEmpty() && parent !in rule.parentMustBe) {
-            issues.add("<${el.name}> under <$parent>: parent must be one of ${rule.parentMustBe.joinToString(", ")}")
-        }
+        if (rule == null) { issues.add(Issue("unknown_tag", el.name, parent)); return }
+        if (rule.parentMustBe.isNotEmpty() && parent !in rule.parentMustBe) issues.add(Issue("wrong_parent", el.name, parent))
         val kids = el.childElements
         val names = kids.map { it.name }
         val hasText = el.contentLines.any { Springwater.trimmed(it).isNotEmpty() }
-        if (rule.textOnly && kids.isNotEmpty()) issues.add("<${el.name}> is text only but contains ${names.joinToString(", ")}")
-        if (rule.cannotBeEmpty && !hasText && kids.isEmpty()) issues.add("<${el.name}> cannot be empty")
-        if (rule.mustEqual != null && el.scalar != rule.mustEqual) issues.add("<${el.name}> must equal '${rule.mustEqual}'")
-        if (rule.mustBeBoolean && el.scalar != "true" && el.scalar != "false") issues.add("<${el.name}> must be true or false")
+        if (rule.textOnly && kids.isNotEmpty()) issues.add(Issue("not_text_only", el.name))
+        if (rule.cannotBeEmpty && !hasText && kids.isEmpty()) issues.add(Issue("empty", el.name))
+        if (rule.mustEqual != null && el.scalar != rule.mustEqual) issues.add(Issue("not_equal", el.name))
+        if (rule.mustBeBoolean && el.scalar != "true" && el.scalar != "false") issues.add(Issue("not_boolean", el.name))
 
         val allowed = HashSet<String>()
         allowed.addAll(rule.mustContain); allowed.addAll(rule.mayContain); allowed.addAll(rule.mustContainOneOf)
         rule.mustContainCount?.let { allowed.add(it.first) }
         for (k in kids) {
-            if (k.name in rule.cannotContain) issues.add("<${el.name}> cannot contain <${k.name}>")
-            else if (!rule.allowsUnknownChildren && k.name !in allowed) issues.add("<${k.name}> is not allowed in <${el.name}>")
+            if (k.name in rule.cannotContain) issues.add(Issue("forbidden_child", el.name, k.name))
+            else if (!rule.allowsUnknownChildren && k.name !in allowed) issues.add(Issue("child_not_allowed", el.name, k.name))
         }
-        for (t in rule.mustContain) if (t !in names) issues.add("<${el.name}> is missing required <$t>")
+        for (t in rule.mustContain) if (t !in names) issues.add(Issue("missing_child", el.name, t))
         if (rule.mustContainOneOf.isNotEmpty() && names.none { it in rule.mustContainOneOf }) {
-            issues.add("<${el.name}> must contain one of ${rule.mustContainOneOf.joinToString(", ")}")
+            issues.add(Issue("missing_one_of", el.name))
         }
         rule.mustContainCount?.let { (tag, count) ->
-            val found = names.count { it == tag }
-            if (found != count) issues.add("<${el.name}> must contain exactly $count <$tag>, found $found")
+            if (names.count { it == tag } != count) issues.add(Issue("wrong_count", el.name, tag))
         }
         if (!rule.allowsUnknownChildren) for (k in kids) check(k, el.name, issues)
     }
 
     companion object {
-        private fun list(text: String) = text.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+        private fun list(text: String) = text.split(",").map { schemaTrim(it) }.filter { it.isNotEmpty() }
 
         /** Build a schema model from a parsed schema document. */
         fun from(schemaRoot: Element): Schema {
             val schemaEl = schemaRoot.childElements.firstOrNull { it.name == "schema" }
-                ?: throw IllegalArgumentException("no schema element")
+                ?: throw IllegalArgumentException("unusable schema: no schema element")
             return fromElement(schemaEl)
         }
 
@@ -316,6 +349,8 @@ class Schema(val requiredRoot: String, val rules: Map<String, Rule>) {
                     if (rule.tag.isNotEmpty()) rules[rule.tag] = rule
                 }
             }
+            // A schema with no required root cannot be validated against.
+            if (requiredRoot.isEmpty()) throw IllegalArgumentException("unusable schema: no required_root")
             return Schema(requiredRoot, rules)
         }
     }

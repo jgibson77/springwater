@@ -130,13 +130,16 @@ function serialize(root) {
 
 const childElements = (el) => el.children.filter(isElement);
 const contentLines = (el) => el.children.filter((c) => !isElement(c)).map((c) => c.text);
-const scalar = (el) => contentLines(el).join("\n").trim();
-const list = (text) => text.split(",").map((p) => p.trim()).filter((p) => p.length > 0);
+// Schema whitespace is space, tab, and line feed, and nothing else
+// (SCHEMA_SPEC.txt, TERMS). JavaScript's own trim() removes many more.
+const schemaTrim = (text) => text.replace(/^[ \t\n]+/, "").replace(/[ \t\n]+$/, "");
+const scalar = (el) => schemaTrim(contentLines(el).join("\n"));
+const list = (text) => text.split(",").map(schemaTrim).filter((p) => p.length > 0);
 
 // Build a schema model from a parsed schema document.
 function buildSchema(schemaRoot) {
   const schemaEl = childElements(schemaRoot).find((e) => e.name === "schema");
-  if (!schemaEl) throw new Error("no schema element");
+  if (!schemaEl) throw new Error("unusable schema: no schema element");
   return buildSchemaFromElement(schemaEl);
 }
 
@@ -179,65 +182,90 @@ function buildSchemaFromElement(schemaEl) {
       if (rule.tag) schema.rules[rule.tag] = rule;
     }
   }
+  // A schema with no required root cannot be validated against.
+  if (!schema.requiredRoot) throw new Error("unusable schema: no required_root");
   return schema;
 }
 
-// Validate a parsed document against a schema. Returns a list of messages;
-// an empty list means the document is valid against that schema.
-function validate(schema, root) {
+// Validate a parsed document against a schema, as SCHEMA_SPEC.txt defines it.
+// Returns the issues found, each { kind, element, other? }; an empty list
+// means the document is valid against that schema. Order carries no meaning.
+function validateIssues(schema, root) {
   const issues = [];
+  const add = (kind, element, other) => issues.push(other === undefined ? { kind, element } : { kind, element, other });
   const top = childElements(root);
   const required = top.filter((e) => e.name === schema.requiredRoot);
-  if (required.length === 0) issues.push(`missing required root <${schema.requiredRoot}>`);
+  if (required.length === 0) add("missing_root", schema.requiredRoot);
   for (const e of top) {
     // A document may carry its own schema and presentation beside the work
     // (see CONVENTIONS.md, "Self-contained documents"). They are not part of
     // the work and are not judged by the work's schema.
-    if (e.name !== schema.requiredRoot && !CARRIED.includes(e.name)) {
-      issues.push(`unexpected top-level element <${e.name}>`);
-    }
+    if (e.name !== schema.requiredRoot && !CARRIED.includes(e.name)) add("unexpected_top", e.name);
   }
-  for (const e of required) check(e, "Springwater", schema, issues);
+  for (const e of required) check(e, "Springwater", schema, add);
   return issues;
 }
 
-function check(el, parent, schema, issues) {
+function check(el, parent, schema, add) {
   const rule = schema.rules[el.name];
-  if (!rule) { issues.push(`unknown tag <${el.name}> under <${parent}>`); return; }
-  if (rule.parentMustBe.length && !rule.parentMustBe.includes(parent)) {
-    issues.push(`<${el.name}> under <${parent}>: parent must be one of ${rule.parentMustBe.join(", ")}`);
-  }
+  if (!rule) { add("unknown_tag", el.name, parent); return; }
+  if (rule.parentMustBe.length && !rule.parentMustBe.includes(parent)) add("wrong_parent", el.name, parent);
   const kids = childElements(el);
   const names = kids.map((k) => k.name);
   const hasText = contentLines(el).some((t) => trimmed(t) !== "");
-  if (rule.textOnly && kids.length) issues.push(`<${el.name}> is text only but contains ${names.join(", ")}`);
-  if (rule.cannotBeEmpty && !hasText && !kids.length) issues.push(`<${el.name}> cannot be empty`);
-  if (rule.mustEqual !== null && scalar(el) !== rule.mustEqual) {
-    issues.push(`<${el.name}> must equal '${rule.mustEqual}'`);
-  }
-  if (rule.mustBeBoolean && scalar(el) !== "true" && scalar(el) !== "false") {
-    issues.push(`<${el.name}> must be true or false`);
-  }
+  if (rule.textOnly && kids.length) add("not_text_only", el.name);
+  if (rule.cannotBeEmpty && !hasText && !kids.length) add("empty", el.name);
+  if (rule.mustEqual !== null && scalar(el) !== rule.mustEqual) add("not_equal", el.name);
+  if (rule.mustBeBoolean && scalar(el) !== "true" && scalar(el) !== "false") add("not_boolean", el.name);
   const allowed = new Set([...rule.mustContain, ...rule.mayContain, ...rule.mustContainOneOf]);
   if (rule.mustContainCount) allowed.add(rule.mustContainCount.tag);
   for (const k of kids) {
-    if (rule.cannotContain.includes(k.name)) issues.push(`<${el.name}> cannot contain <${k.name}>`);
-    else if (!rule.allowsUnknownChildren && !allowed.has(k.name)) {
-      issues.push(`<${k.name}> is not allowed in <${el.name}>`);
-    }
+    if (rule.cannotContain.includes(k.name)) add("forbidden_child", el.name, k.name);
+    else if (!rule.allowsUnknownChildren && !allowed.has(k.name)) add("child_not_allowed", el.name, k.name);
   }
   for (const t of rule.mustContain) {
-    if (!names.includes(t)) issues.push(`<${el.name}> is missing required <${t}>`);
+    if (!names.includes(t)) add("missing_child", el.name, t);
   }
-  if (rule.mustContainOneOf.length && !names.some((n) => rule.mustContainOneOf.includes(n))) {
-    issues.push(`<${el.name}> must contain one of ${rule.mustContainOneOf.join(", ")}`);
-  }
+  if (rule.mustContainOneOf.length && !names.some((n) => rule.mustContainOneOf.includes(n))) add("missing_one_of", el.name);
   if (rule.mustContainCount) {
     const { tag, count } = rule.mustContainCount;
-    const found = names.filter((n) => n === tag).length;
-    if (found !== count) issues.push(`<${el.name}> must contain exactly ${count} <${tag}>, found ${found}`);
+    if (names.filter((n) => n === tag).length !== count) add("wrong_count", el.name, tag);
   }
-  if (!rule.allowsUnknownChildren) for (const k of kids) check(k, el.name, schema, issues);
+  if (!rule.allowsUnknownChildren) for (const k of kids) check(k, el.name, schema, add);
+}
+
+// The category each kind of issue belongs to (SCHEMA_SPEC.txt, ISSUES).
+const ISSUE_CATEGORY = {
+  missing_root: "missing_required", unexpected_top: "unknown_tags", unknown_tag: "unknown_tags",
+  wrong_parent: "invalid_nesting", not_text_only: "invalid_nesting", empty: "empty_tags",
+  not_equal: "mismatch", not_boolean: "mismatch", forbidden_child: "invalid_nesting",
+  child_not_allowed: "unknown_tags", missing_child: "missing_required", missing_one_of: "missing_required",
+  wrong_count: "missing_required",
+};
+
+// One issue in words. The wording is not part of the specification.
+function describeIssue(i) {
+  switch (i.kind) {
+    case "missing_root": return `missing required root <${i.element}>`;
+    case "unexpected_top": return `unexpected top-level element <${i.element}>`;
+    case "unknown_tag": return `unknown tag <${i.element}> under <${i.other}>`;
+    case "wrong_parent": return `<${i.element}> is not allowed under <${i.other}>`;
+    case "not_text_only": return `<${i.element}> is text only but contains elements`;
+    case "empty": return `<${i.element}> cannot be empty`;
+    case "not_equal": return `<${i.element}> does not have its required value`;
+    case "not_boolean": return `<${i.element}> must be true or false`;
+    case "forbidden_child": return `<${i.element}> cannot contain <${i.other}>`;
+    case "child_not_allowed": return `<${i.other}> is not allowed in <${i.element}>`;
+    case "missing_child": return `<${i.element}> is missing required <${i.other}>`;
+    case "missing_one_of": return `<${i.element}> is missing one of its required alternatives`;
+    case "wrong_count": return `<${i.element}> has the wrong number of <${i.other}>`;
+    default: return `${i.kind} <${i.element}>`;
+  }
+}
+
+// Validate and describe: a list of messages, empty when the document is valid.
+function validate(schema, root) {
+  return validateIssues(schema, root).map(describeIssue);
 }
 
 // ---------------------------------------------- self-contained documents
@@ -275,4 +303,5 @@ function carriedSchema(root) {
 module.exports = {
   SpringwaterError, parse, serialize, classify, trimmed, physicalLines, buildSchema, validate,
   buildSchemaFromElement, carriedSchema, carriedSchemaElement, carriedPresentationElement,
+  validateIssues, describeIssue, ISSUE_CATEGORY,
 };

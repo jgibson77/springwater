@@ -122,12 +122,15 @@ No collisions with code annotations, email addresses, comments, variables, or ot
 | Kotlin | `kotlin/Springwater.kt` | Parser, serializer, schema validator for Android and the JVM. `kotlin/Test.kt` runs the conformance vectors and checks every document in this repository; the commands are at the top of that file |
 | Go | `go/main.go` | Parser and canonical serializer written from `SYNTAX.txt` alone, as a test of the written rules. `go test ./...` in `go/` runs the conformance vectors and checks every document in this repository. See `go/CLEANROOM.md` |
 | Python | `tools/springwater-validate` | Syntax validator only |
+| Python | `python/swv.py` | Parser and schema validator written from `SYNTAX.txt` and `SCHEMA_SPEC.txt` alone, as a test of the schema specification. `python3 python/test_vectors.py` runs the schema conformance vectors. See `python/CLEANROOM.md` |
 
 Anyone writing another implementation can check it against `tools/conformance_vectors.json`.
 
 ---
 
 ## Schemas
+
+[`SCHEMA_SPEC.txt`](SCHEMA_SPEC.txt) defines exactly how a schema is read and how a document is validated against it. `tools/schema_conformance_vectors.json` holds the cases every validator must agree on.
 
 | Schema | Purpose |
 |--------|---------|

@@ -108,7 +108,10 @@ public struct Rule: Sendable, Equatable {
             case "must_contain_one_of": r.mustContainOneOf = Schema.csv(value)
             case "must_contain_count":
                 let parts = Schema.csv(value)
-                if parts.count == 2, let n = Int(parts[1]) {
+                // One or more of the digits 0 to 9, and nothing else: no sign.
+                if parts.count == 2, !parts[1].isEmpty,
+                   parts[1].unicodeScalars.allSatisfy({ ("0"..."9").contains($0) }),
+                   let n = Int(parts[1]) {
                     r.mustContainCount = CountConstraint(tag: parts[0], count: n)
                 }
             case "parent_must_be": r.parentMustBe = Schema.csv(value)
@@ -169,11 +172,11 @@ extension SpringwaterDocument.Element {
     }
 }
 
-/// Trims leading/trailing space, tab, CR and LF (value extraction, not content
-/// preservation — schema values are single tokens or short phrases).
+/// Removes leading and trailing schema whitespace: space, tab, and line feed,
+/// and nothing else (SCHEMA_SPEC.txt, TERMS). A no-break space is kept.
 func valueTrim(_ s: String) -> String {
     var scalars = Substring(s).unicodeScalars
-    let ws: Set<Unicode.Scalar> = [" ", "\t", "\r", "\n"]
+    let ws: Set<Unicode.Scalar> = [" ", "\t", "\n"]
     while let f = scalars.first, ws.contains(f) { scalars = scalars.dropFirst() }
     while let l = scalars.last, ws.contains(l) { scalars = scalars.dropLast() }
     return String(scalars)

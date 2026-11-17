@@ -1,0 +1,420 @@
+================================================================================
+SPRINGWATER SCHEMA
+Specification v1.0
+================================================================================
+
+This document defines how a Springwater schema is read and how a document is
+validated against it.
+
+================================================================================
+AUTHORITY
+================================================================================
+
+This document contains normative and informative content.
+
+NORMATIVE sections define schema validation. If two normative statements
+conflict, the one appearing earlier in this document governs.
+
+The normative sections are:
+- TERMS
+- READING A SCHEMA
+- ISSUES
+- VALIDATION ALGORITHM
+- CONFORMANCE
+
+All other sections are informative.
+
+This document depends on THE SPRINGWATER SYNTAX (SYNTAX.txt). A schema is a
+Springwater document, and validation is defined over the parsed
+representation that SYNTAX.txt defines: elements, each with a tag name and an
+ordered sequence of children, each child being either an element or a content
+line.
+
+Nothing here changes Springwater. A document that fails validation against a
+schema is still a Springwater document.
+
+================================================================================
+WHAT A SCHEMA IS
+================================================================================
+
+Informative.
+
+Springwater says how a document is written. A schema says what a document of
+some kind must contain: which elements may appear, where, and which are
+required.
+
+A schema is closed. An element the schema does not name, or names but does not
+allow in that place, is an issue. A schema says so itself: every schema
+declares its strictness as absolute.
+
+A schema is small on purpose. It cannot express order among elements, value
+types beyond true/false and one exact value, or references between elements.
+See LIMITS.
+
+================================================================================
+TERMS
+================================================================================
+
+Normative.
+
+ELEMENT, CONTENT LINE, CHILD:
+As defined by PARSED REPRESENTATION in SYNTAX.txt. A content line has text;
+its line ending plays no part in validation.
+
+CHILD ELEMENTS of an element:
+Its children that are elements, in document order.
+
+CHILD NAMES of an element:
+The tag names of its child elements, in document order, with repeats.
+
+SCHEMA WHITESPACE:
+The characters space (U+0020), tab (U+0009), and line feed (U+000A), and no
+others. In particular, no-break space and every other Unicode space are not
+schema whitespace.
+
+VALUE of an element:
+Take the text of each content line that is a direct child of the element, in
+document order. Join them with a single line feed between consecutive texts.
+Remove every leading and every trailing schema whitespace character from the
+result. What remains is the value. Child elements, and content lines inside
+them, contribute nothing. An element with no content lines has the empty
+value.
+
+LIST of an element:
+Split the element's value at every comma (U+002C). From each piece remove
+every leading and trailing schema whitespace character. Discard pieces that
+are then empty. The remaining pieces, in order, are the list. Repeats are
+kept.
+
+BLANK:
+A content line is blank when its text, with every leading and trailing space
+and tab removed, is empty.
+
+EMPTY:
+An element is empty when it has no child elements and every one of its
+content lines is blank. An element with no children at all is empty.
+
+DOCUMENT ROOT:
+The root element of a parsed document. Its tag name is always Springwater.
+
+TOP-LEVEL ELEMENTS:
+The child elements of the document root.
+
+================================================================================
+READING A SCHEMA
+================================================================================
+
+Normative.
+
+A schema is read from a SCHEMA ELEMENT: an element whose tag name is schema.
+
+When a schema is read from a whole schema document, the schema element is the
+first top-level element named schema, and only that one: later top-level
+elements named schema are not consulted, even when the first is unusable. If
+there is no top-level element named schema, there is no schema to read, and
+the outcome is the same as for an unusable schema.
+
+Which schema a document is validated against is outside this document. A
+schema may come from a separate file or be carried by the document itself
+(see CONVENTIONS.md); either way it is read as described here.
+
+Every tag name that reading and validation look for is matched exactly. Case
+is significant, as it is for all tag names in Springwater.
+
+Reading is lenient. It takes what it understands and ignores the rest. Whether
+a schema document is itself well formed is a separate question, answered by
+validating it against the schema for schemas.
+
+Reading a schema element produces a SCHEMA MODEL:
+- a required root, which is a tag name;
+- a set of rules, at most one per tag name.
+
+THE REQUIRED ROOT:
+Among the child elements of the schema element, take those named
+required_root. The required root is the value of the last one.
+
+The required root is not checked for being a legal tag name. A value that no
+tag name can equal makes a usable schema that no document can satisfy.
+
+If there is no required_root child element, or the value of the last one is
+empty, the schema is UNUSABLE. No document can be validated against an
+unusable schema, and a validator must say so rather than report issues.
+
+THE RULES:
+Take the child elements of the schema element named structure_rules, in
+order. Within each, take the child elements named rule, in order. Only these
+are read: an element named rule anywhere else, and an element named
+structure_rules that is not a child of the schema element, are ignored. Each
+element taken is a RULE ELEMENT and is read as described below. A rule element that
+yields no tag is ignored. When two rule elements yield the same tag, the later
+one replaces the earlier one entirely.
+
+READING A RULE ELEMENT:
+A rule starts with no tag, every list empty, every flag false, no exact value,
+and no count.
+
+Visit the child elements of the rule element in order. For each, by its tag
+name:
+
+  tag
+      The rule's tag is the element's value. If that value is empty, the rule
+      has no tag, even if an earlier tag element gave it one.
+
+  must_contain, may_contain, cannot_contain, must_contain_one_of,
+  parent_must_be
+      The rule's list of that name is the element's list.
+
+  cannot_be_empty, text_only, must_be_boolean, allows_unknown_children
+      The rule's flag of that name is true when the element's value is
+      exactly the four characters true, and false otherwise.
+
+  must_equal
+      The rule's exact value is the element's value. An empty value is a
+      value: the rule then requires the empty value.
+
+  must_contain_count
+      Take the element's list. If it has exactly two items and the second
+      consists only of one or more of the digits 0 to 9 (U+0030 to U+0039),
+      the rule's count is the pair (first item, the second item read as a
+      decimal number). Leading zeros are permitted and there is no upper
+      limit. Otherwise the rule's count is unchanged: an earlier count, if
+      any, stays in place.
+
+      The list is formed before its items are counted, so empty pieces do not
+      count: the value "item,,2" has two items.
+
+  any other tag name
+      Ignored.
+
+When the same tag name is visited more than once, the later visit replaces
+the result of the earlier one, except as stated for must_contain_count.
+
+Names in a rule's tag and lists are not checked for being legal tag names. A
+name that no tag name can equal simply never matches.
+
+Child elements of the schema element other than required_root and
+structure_rules play no part in validation. This includes metadata and
+validation.
+
+================================================================================
+ISSUES
+================================================================================
+
+Normative.
+
+Validation produces a collection of issues. A document is VALID AGAINST A
+SCHEMA when that collection is empty.
+
+An issue has three parts:
+- KIND: one of the names below.
+- ELEMENT: a tag name.
+- OTHER: a second tag name, present for some kinds.
+
+The kinds, what ELEMENT and OTHER hold, and the category each belongs to:
+
+  KIND                ELEMENT                 OTHER               CATEGORY
+  missing_root        the required root       (none)              missing_required
+  unexpected_top      the top-level element   (none)              unknown_tags
+  unknown_tag         the element             its parent          unknown_tags
+  wrong_parent        the element             its parent          invalid_nesting
+  not_text_only       the element             (none)              invalid_nesting
+  empty               the element             (none)              empty_tags
+  not_equal           the element             (none)              mismatch
+  not_boolean         the element             (none)              mismatch
+  forbidden_child     the containing element  the child           invalid_nesting
+  child_not_allowed   the containing element  the child           unknown_tags
+  missing_child       the containing element  the missing child   missing_required
+  missing_one_of      the containing element  (none)              missing_required
+  wrong_count         the containing element  the counted child   missing_required
+
+The four categories empty_tags, unknown_tags, invalid_nesting, and
+missing_required are the ones a schema names in its validation element. The
+category mismatch is defined here.
+
+The collection is a multiset: the same issue may occur more than once, and
+each occurrence counts. The order of issues is not defined. The wording of any
+message shown to a person is not defined.
+
+================================================================================
+VALIDATION ALGORITHM
+================================================================================
+
+Normative.
+
+Input: a parsed document and a usable schema model.
+Output: a multiset of issues.
+
+CARRIED NAMES:
+The tag names schema and presentation. A document may carry top-level elements
+with these names beside its work (see CONVENTIONS.md, "Self-contained
+documents").
+
+STEP 1: THE TOP LEVEL
+
+Let R be the required root.
+
+1a. If no top-level element is named R, add missing_root with ELEMENT R.
+
+1b. For each top-level element E whose name is not R and is not a carried
+    name, add unexpected_top with ELEMENT E's name.
+
+1c. For each top-level element E named R, in order, CHECK E with parent name
+    Springwater.
+
+A top-level element whose name is a carried name and is not R is not checked
+and produces no issue.
+
+STEP 2: CHECK AN ELEMENT
+
+To CHECK an element E with parent name P:
+
+2a. If the schema model has no rule whose tag is E's name, add unknown_tag
+    with ELEMENT E's name and OTHER P. Do nothing further for E; in
+    particular, do not check its child elements.
+
+    Otherwise let the rule be the one whose tag is E's name.
+
+2b. If the rule's parent_must_be list is not empty and does not contain P,
+    add wrong_parent with ELEMENT E's name and OTHER P.
+
+2c. If the rule's text_only flag is true and E has at least one child
+    element, add not_text_only with ELEMENT E's name.
+
+2d. If the rule's cannot_be_empty flag is true and E is empty, add empty with
+    ELEMENT E's name.
+
+2e. If the rule has an exact value and E's value is not identical to it, add
+    not_equal with ELEMENT E's name. Identical means the same sequence of
+    characters, with no folding of case and no normalization.
+
+2f. If the rule's must_be_boolean flag is true and E's value is neither
+    exactly true nor exactly false, add not_boolean with ELEMENT E's name.
+
+2g. Let ALLOWED be the set of names in the rule's must_contain, may_contain,
+    and must_contain_one_of lists, together with the first part of the rule's
+    count if it has one.
+
+    For each child element C of E, in order:
+    - If the rule's cannot_contain list contains C's name, add
+      forbidden_child with ELEMENT E's name and OTHER C's name.
+    - Otherwise, if the rule's allows_unknown_children flag is false and
+      ALLOWED does not contain C's name, add child_not_allowed with ELEMENT
+      E's name and OTHER C's name.
+
+2h. For each name N in the rule's must_contain list, in order, with repeats:
+    if E's child names do not contain N, add missing_child with ELEMENT E's
+    name and OTHER N.
+
+2i. If the rule's must_contain_one_of list is not empty and no child name of
+    E is in it, add missing_one_of with ELEMENT E's name.
+
+2j. If the rule has a count (N, K): let F be the number of child elements of
+    E named N. If F is not equal to K, add wrong_count with ELEMENT E's name
+    and OTHER N.
+
+2k. If the rule's allows_unknown_children flag is false, CHECK each child
+    element of E, in order, with parent name E's name.
+
+    If the flag is true, the child elements of E are not checked at all.
+
+CONSEQUENCES:
+
+These follow from the steps above and are stated so that no implementer has
+to work them out.
+
+- Content lines that are direct children of the document root produce no
+  issue.
+
+- When the required root is itself a carried name, top-level elements with
+  that name are works and are checked like any other. A schema whose required
+  root is schema checks every top-level schema element.
+
+- must_contain means at least one. Any number of child elements with a
+  required name satisfies it. Only a count requires an exact number.
+
+- A child that is not allowed, and a child that is forbidden, are still
+  checked in step 2k. One misplaced element can therefore produce several
+  issues: child_not_allowed or forbidden_child from its parent, then whatever
+  its own check finds.
+
+- The name a count applies to is allowed as a child whatever the count is. A
+  count of zero forbids the child by producing wrong_count, not
+  child_not_allowed.
+
+- An element that holds a child element is not empty, even with no text.
+
+- A list item can contain a line feed. Two content lines with no comma
+  between them are one item, not two.
+
+- An exact value can never require leading or trailing schema whitespace,
+  because both the rule's value and the element's value have it removed.
+
+- A name in cannot_contain is forbidden even if another list of the same rule
+  allows it.
+
+- allows_unknown_children switches off two things for that element: the
+  child_not_allowed test, and every check of its descendants. The rule's
+  must_contain, must_contain_one_of, count, and cannot_contain still apply to
+  its direct children.
+
+- text_only does not require text. An element with the flag and no children
+  at all satisfies it.
+
+- An element's value ignores its child elements. Content lines before,
+  between, and after child elements are all joined.
+
+================================================================================
+CONFORMANCE
+================================================================================
+
+Normative.
+
+A conforming validator, given a usable schema model and a parsed document,
+produces exactly the multiset of issues the VALIDATION ALGORITHM produces:
+the same kinds, the same ELEMENT and OTHER parts, the same number of times.
+
+A conforming validator refuses to validate against an unusable schema and
+reports that the schema is unusable.
+
+A conforming reader of schemas produces, from any schema element, the schema
+model READING A SCHEMA defines.
+
+The file tools/schema_conformance_vectors.json holds test cases. Each gives a
+schema, a document, and the expected result. Agreement with every vector is
+necessary for conformance and is not by itself sufficient.
+
+================================================================================
+LIMITS
+================================================================================
+
+Informative.
+
+A schema cannot say:
+
+- that one element must come before another;
+- that an element may appear at most once, other than by a count, of which a
+  rule has one;
+- that a value is a number, a date, or matches a pattern;
+- that one element refers to another.
+
+A document can therefore be valid against its schema and still be wrong in
+ways a reader would notice. That is a limit of this version, not an oversight
+in a particular schema.
+
+================================================================================
+STATUS
+================================================================================
+
+Informative.
+
+Springwater Schema v1.0
+
+This document describes validation as the published validators performed it,
+with three differences among them resolved in favor of the definitions given
+here: what counts as whitespace around a value, how a count is read, and what
+happens when a schema has no required root.
+
+Unlike SYNTAX.txt, this document is not frozen. Schemas are versioned and are
+expected to change.
+
+================================================================================

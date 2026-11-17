@@ -1,4 +1,5 @@
-// Rewrites kotlin/vectors.tsv from tools/conformance_vectors.json, so the
+// Rewrites kotlin/vectors.tsv from tools/conformance_vectors.json and
+// tools/schema_conformance_vectors.json, so the
 // Kotlin test needs no JSON library. Usage: node kotlin/make_vectors.js
 "use strict";
 const fs = require("fs");
@@ -27,6 +28,16 @@ for (const v of vectors.parse_vectors) {
 }
 for (const c of vectors.classify_vectors) {
   lines.push(["C", b64(c.line), c.kind + ":" + (c.name === null ? "-" : c.name)].join("\t"));
+}
+// Schema validation vectors: "S", name, schema, document, expected. The
+// expected result is "unusable" or the issues sorted and joined with ";",
+// each "kind|element|other" in base64 parts ("-" where there is no other).
+const schemaVectors = JSON.parse(fs.readFileSync(path.join(repo, "tools/schema_conformance_vectors.json"), "utf8")).vectors;
+for (const v of schemaVectors) {
+  const expected = v.expect.unusable_schema
+    ? "unusable"
+    : "issues:" + v.expect.issues.map((i) => [i.kind, b64(i.element), i.other === undefined ? "-" : b64(i.other)].join("|")).sort().join(";");
+  lines.push(["S", v.name, b64(v.schema), b64(v.document), expected].join("\t"));
 }
 fs.writeFileSync(path.join(__dirname, "vectors.tsv"), lines.join("\n") + "\n");
 console.log(`wrote ${lines.length} vectors`);

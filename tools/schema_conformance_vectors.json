@@ -1,0 +1,848 @@
+{
+ "description": "Schema validation conformance vectors for SCHEMA_SPEC.txt. Each vector gives a schema document and a document as Springwater text, and the expected result: either the multiset of issues, in no particular order, or that the schema is unusable. Expectations were written by hand from the specification.",
+ "vectors": [
+  {
+   "name": "valid minimal document",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\nHi\n^title/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "no top-level element at all",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_root",
+      "element": "memo"
+     }
+    ]
+   }
+  },
+  {
+   "name": "wrong top-level element",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^letter\n^letter/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_root",
+      "element": "memo"
+     },
+     {
+      "kind": "unexpected_top",
+      "element": "letter"
+     }
+    ]
+   }
+  },
+  {
+   "name": "extra top-level element beside the work",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\nHi\n^title/\n^memo/\n^extra\n^extra/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "unexpected_top",
+      "element": "extra"
+     }
+    ]
+   }
+  },
+  {
+   "name": "carried schema and presentation are not judged",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\nHi\n^title/\n^memo/\n^schema\n^anything\n^anything/\n^schema/\n^presentation\n^presentation/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "every top-level work is checked",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\nHi\n^title/\n^memo/\n^memo\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_child",
+      "element": "memo",
+      "other": "title"
+     }
+    ]
+   }
+  },
+  {
+   "name": "missing required child",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_child",
+      "element": "memo",
+      "other": "title"
+     }
+    ]
+   }
+  },
+  {
+   "name": "empty element with no lines",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\n^title/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "empty",
+      "element": "title"
+     }
+    ]
+   }
+  },
+  {
+   "name": "empty element with only blank lines",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\n \n\t\n\n^title/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "empty",
+      "element": "title"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a no-break space is not blank",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\n \n^title/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "text-only element holding an element",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\nx\n^note\n^note/\n^title/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "not_text_only",
+      "element": "title"
+     },
+     {
+      "kind": "child_not_allowed",
+      "element": "title",
+      "other": "note"
+     }
+    ]
+   }
+  },
+  {
+   "name": "unknown element: reported by its parent and by its own check",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\nHi\n^title/\n^zzz\n^zzz/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "child_not_allowed",
+      "element": "memo",
+      "other": "zzz"
+     },
+     {
+      "kind": "unknown_tag",
+      "element": "zzz",
+      "other": "memo"
+     }
+    ]
+   }
+  },
+  {
+   "name": "nothing inside an unknown element is checked",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\nHi\n^title/\n^zzz\n^title\n^title/\n^zzz/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "child_not_allowed",
+      "element": "memo",
+      "other": "zzz"
+     },
+     {
+      "kind": "unknown_tag",
+      "element": "zzz",
+      "other": "memo"
+     }
+    ]
+   }
+  },
+  {
+   "name": "known element under the wrong parent",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\nHi\n^title/\n^note\n^title\nb\n^title/\n^note/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "child_not_allowed",
+      "element": "note",
+      "other": "title"
+     },
+     {
+      "kind": "wrong_parent",
+      "element": "title",
+      "other": "note"
+     }
+    ]
+   }
+  },
+  {
+   "name": "must_contain means at least one",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^title\nHi\n^title/\n^title\nAgain\n^title/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "order of children does not matter",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^body\nb\n^body/\n^title\nHi\n^title/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "required root with no rule",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\ntitle\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "unknown_tag",
+      "element": "memo",
+      "other": "Springwater"
+     }
+    ]
+   }
+  },
+  {
+   "name": "parent of a top-level work is Springwater",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^parent_must_be\nSpringwater\n^parent_must_be/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "top-level work with another required parent",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^parent_must_be\nfolder\n^parent_must_be/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "wrong_parent",
+      "element": "memo",
+      "other": "Springwater"
+     }
+    ]
+   }
+  },
+  {
+   "name": "exact value, surrounded by spaces, tabs, and blank lines",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode, flag\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\nfast\n^must_equal/\n^rule/\n^rule\n^tag\nflag\n^tag/\n^must_be_boolean\ntrue\n^must_be_boolean/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\n\n \tfast\t \n\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "exact value is case-sensitive",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode, flag\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\nfast\n^must_equal/\n^rule/\n^rule\n^tag\nflag\n^tag/\n^must_be_boolean\ntrue\n^must_be_boolean/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\nFast\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "not_equal",
+      "element": "mode"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a no-break space is not trimmed from a value",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode, flag\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\nfast\n^must_equal/\n^rule/\n^rule\n^tag\nflag\n^tag/\n^must_be_boolean\ntrue\n^must_be_boolean/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\n fast\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "not_equal",
+      "element": "mode"
+     }
+    ]
+   }
+  },
+  {
+   "name": "lines of a value are joined with a line feed",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode, flag\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\nfast\n^must_equal/\n^rule/\n^rule\n^tag\nflag\n^tag/\n^must_be_boolean\ntrue\n^must_be_boolean/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\nfa\nst\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "not_equal",
+      "element": "mode"
+     }
+    ]
+   }
+  },
+  {
+   "name": "missing exact value",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode, flag\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\nfast\n^must_equal/\n^rule/\n^rule\n^tag\nflag\n^tag/\n^must_be_boolean\ntrue\n^must_be_boolean/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "not_equal",
+      "element": "mode"
+     }
+    ]
+   }
+  },
+  {
+   "name": "boolean true",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode, flag\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\nfast\n^must_equal/\n^rule/\n^rule\n^tag\nflag\n^tag/\n^must_be_boolean\ntrue\n^must_be_boolean/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^flag\ntrue\n^flag/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "boolean false with surrounding whitespace",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode, flag\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\nfast\n^must_equal/\n^rule/\n^rule\n^tag\nflag\n^tag/\n^must_be_boolean\ntrue\n^must_be_boolean/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^flag\n  false  \n^flag/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "boolean is case-sensitive",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode, flag\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\nfast\n^must_equal/\n^rule/\n^rule\n^tag\nflag\n^tag/\n^must_be_boolean\ntrue\n^must_be_boolean/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^flag\nTRUE\n^flag/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "not_boolean",
+      "element": "flag"
+     }
+    ]
+   }
+  },
+  {
+   "name": "empty boolean",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode, flag\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\nfast\n^must_equal/\n^rule/\n^rule\n^tag\nflag\n^tag/\n^must_be_boolean\ntrue\n^must_be_boolean/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^flag\n^flag/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "not_boolean",
+      "element": "flag"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a multi-line exact value",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\na\nb\n^must_equal/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\na\nb\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "a value ignores child elements and joins the lines around them",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\na\nb\n^must_equal/\n^may_contain\nk\n^may_contain/\n^rule/\n^rule\n^tag\nk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\na\n^k\nignored\n^k/\nb\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "an empty exact value requires the empty value",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^must_equal\n^must_equal/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\nx\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "not_equal",
+      "element": "mode"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a flag is true only when its value is exactly true",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nflag\n^may_contain/\n^rule/\n^rule\n^tag\nflag\n^tag/\n^must_be_boolean\nTrue\n^must_be_boolean/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^flag\nmaybe\n^flag/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "text_only written as yes is not set",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^text_only\nyes\n^text_only/\n^may_contain\nk\n^may_contain/\n^rule/\n^rule\n^tag\nk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\n^k\n^k/\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "text_only is satisfied by an element with nothing in it",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^text_only\ntrue\n^text_only/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "an element holding an element is not empty",
+   "schema": "^Springwater\n^schema\n^required_root\ncfg\n^required_root/\n^structure_rules\n^rule\n^tag\ncfg\n^tag/\n^may_contain\nmode\n^may_contain/\n^rule/\n^rule\n^tag\nmode\n^tag/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^may_contain\nk\n^may_contain/\n^rule/\n^rule\n^tag\nk\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^cfg\n^mode\n^k\n^k/\n^mode/\n^cfg/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "count met",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem, 2\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^item\n^item/\n^item\n^item/\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "count too few",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem, 2\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^item\n^item/\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "wrong_count",
+      "element": "pair",
+      "other": "item"
+     }
+    ]
+   }
+  },
+  {
+   "name": "count too many",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem, 2\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^item\n^item/\n^item\n^item/\n^item\n^item/\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "wrong_count",
+      "element": "pair",
+      "other": "item"
+     }
+    ]
+   }
+  },
+  {
+   "name": "count with none present",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem, 2\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "wrong_count",
+      "element": "pair",
+      "other": "item"
+     }
+    ]
+   }
+  },
+  {
+   "name": "count with leading zero",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem, 02\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^item\n^item/\n^item\n^item/\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "count of zero, met",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem, 0\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "count of zero, not met",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem, 0\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^item\n^item/\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "wrong_count",
+      "element": "pair",
+      "other": "item"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a signed count is not a count",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem, +2\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^item\n^item/\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "child_not_allowed",
+      "element": "pair",
+      "other": "item"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a count with three parts is not a count",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem, 2, 3\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^item\n^item/\n^item\n^item/\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "child_not_allowed",
+      "element": "pair",
+      "other": "item"
+     },
+     {
+      "kind": "child_not_allowed",
+      "element": "pair",
+      "other": "item"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a later malformed count leaves the earlier count in place",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem, 2\n^must_contain_count/\n^must_contain_count\nitem, many\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^item\n^item/\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "wrong_count",
+      "element": "pair",
+      "other": "item"
+     }
+    ]
+   }
+  },
+  {
+   "name": "one-of with neither",
+   "schema": "^Springwater\n^schema\n^required_root\ndoc\n^required_root/\n^structure_rules\n^rule\n^tag\ndoc\n^tag/\n^must_contain_one_of\na, b\n^must_contain_one_of/\n^rule/\n^rule\n^tag\na\n^tag/\n^rule/\n^rule\n^tag\nb\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^doc\n^doc/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_one_of",
+      "element": "doc"
+     }
+    ]
+   }
+  },
+  {
+   "name": "one-of with one",
+   "schema": "^Springwater\n^schema\n^required_root\ndoc\n^required_root/\n^structure_rules\n^rule\n^tag\ndoc\n^tag/\n^must_contain_one_of\na, b\n^must_contain_one_of/\n^rule/\n^rule\n^tag\na\n^tag/\n^rule/\n^rule\n^tag\nb\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^doc\n^b\n^b/\n^doc/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "one-of with both",
+   "schema": "^Springwater\n^schema\n^required_root\ndoc\n^required_root/\n^structure_rules\n^rule\n^tag\ndoc\n^tag/\n^must_contain_one_of\na, b\n^must_contain_one_of/\n^rule/\n^rule\n^tag\na\n^tag/\n^rule/\n^rule\n^tag\nb\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^doc\n^a\n^a/\n^b\n^b/\n^doc/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "cannot_contain wins over may_contain",
+   "schema": "^Springwater\n^schema\n^required_root\nbox\n^required_root/\n^structure_rules\n^rule\n^tag\nbox\n^tag/\n^may_contain\nx\n^may_contain/\n^cannot_contain\nx\n^cannot_contain/\n^rule/\n^rule\n^tag\nx\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^box\n^x\n^x/\n^box/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "forbidden_child",
+      "element": "box",
+      "other": "x"
+     }
+    ]
+   }
+  },
+  {
+   "name": "nothing inside an open element is checked",
+   "schema": "^Springwater\n^schema\n^required_root\nopen\n^required_root/\n^structure_rules\n^rule\n^tag\nopen\n^tag/\n^allows_unknown_children\ntrue\n^allows_unknown_children/\n^must_contain\nneed\n^must_contain/\n^cannot_contain\nbad\n^cannot_contain/\n^rule/\n^rule\n^tag\nneed\n^tag/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^open\n^need\n^need/\n^whatever\n^deep\n^deep/\n^whatever/\n^open/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "an open element still requires what it must contain",
+   "schema": "^Springwater\n^schema\n^required_root\nopen\n^required_root/\n^structure_rules\n^rule\n^tag\nopen\n^tag/\n^allows_unknown_children\ntrue\n^allows_unknown_children/\n^must_contain\nneed\n^must_contain/\n^cannot_contain\nbad\n^cannot_contain/\n^rule/\n^rule\n^tag\nneed\n^tag/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^open\n^whatever\n^whatever/\n^open/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_child",
+      "element": "open",
+      "other": "need"
+     }
+    ]
+   }
+  },
+  {
+   "name": "an open element still forbids what it cannot contain",
+   "schema": "^Springwater\n^schema\n^required_root\nopen\n^required_root/\n^structure_rules\n^rule\n^tag\nopen\n^tag/\n^allows_unknown_children\ntrue\n^allows_unknown_children/\n^must_contain\nneed\n^must_contain/\n^cannot_contain\nbad\n^cannot_contain/\n^rule/\n^rule\n^tag\nneed\n^tag/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^open\n^need\nx\n^need/\n^bad\n^bad/\n^open/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "forbidden_child",
+      "element": "open",
+      "other": "bad"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a later rule for the same tag replaces the earlier one",
+   "schema": "^Springwater\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^may_contain\nt\n^may_contain/\n^rule/\n^rule\n^tag\nt\n^tag/\n^must_contain\na\n^must_contain/\n^rule/\n^rule\n^tag\nt\n^tag/\n^may_contain\na\n^may_contain/\n^rule/\n^rule\n^tag\na\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^t\n^t/\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "a later property of the same name replaces the earlier one",
+   "schema": "^Springwater\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^must_contain\na\n^must_contain/\n^must_contain\nb\n^must_contain/\n^rule/\n^rule\n^tag\na\n^tag/\n^rule/\n^rule\n^tag\nb\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^b\n^b/\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "a rule with no tag, and a rule with an empty tag, are ignored",
+   "schema": "^Springwater\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^must_contain\na\n^must_contain/\n^rule/\n^rule\n^tag\n \n^tag/\n^must_contain\na\n^must_contain/\n^rule/\n^rule\n^tag\nr\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "an unknown property in a rule is ignored",
+   "schema": "^Springwater\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^must_be_long\ntrue\n^must_be_long/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "rules are read from every structure_rules element",
+   "schema": "^Springwater\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^must_contain\na\n^must_contain/\n^rule/\n^structure_rules/\n^structure_rules\n^rule\n^tag\na\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^a\n^a/\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "the last required_root is the one used",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^required_root\nletter\n^required_root/\n^structure_rules\n^rule\n^tag\nletter\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^letter\n^letter/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "a schema with no required_root is unusable",
+   "schema": "^Springwater\n^schema\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^memo/\n^Springwater/\n",
+   "expect": {
+    "unusable_schema": true
+   }
+  },
+  {
+   "name": "a schema with an empty required_root is unusable",
+   "schema": "^Springwater\n^schema\n^required_root\n \n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^memo\n^memo/\n^Springwater/\n",
+   "expect": {
+    "unusable_schema": true
+   }
+  },
+  {
+   "name": "a list drops empty pieces and trims the rest",
+   "schema": "^Springwater\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^must_contain\n a, ,b,, c \n^must_contain/\n^rule/\n^rule\n^tag\na\n^tag/\n^rule/\n^rule\n^tag\nb\n^tag/\n^rule/\n^rule\n^tag\nc\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^a\n^a/\n^c\n^c/\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_child",
+      "element": "r",
+      "other": "b"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a no-break space is not trimmed from a list item",
+   "schema": "^Springwater\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^must_contain\na, b\n^must_contain/\n^rule/\n^rule\n^tag\na\n^tag/\n^rule/\n^rule\n^tag\nb\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^a\n^a/\n^b\n^b/\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_child",
+      "element": "r",
+      "other": " b"
+     },
+     {
+      "kind": "child_not_allowed",
+      "element": "r",
+      "other": "b"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a required name listed twice is reported twice when missing",
+   "schema": "^Springwater\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^must_contain\na, a\n^must_contain/\n^rule/\n^rule\n^tag\na\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_child",
+      "element": "r",
+      "other": "a"
+     },
+     {
+      "kind": "missing_child",
+      "element": "r",
+      "other": "a"
+     }
+    ]
+   }
+  },
+  {
+   "name": "when the required root is schema, every top-level schema is a work",
+   "schema": "^Springwater\n^schema\n^required_root\nschema\n^required_root/\n^structure_rules\n^rule\n^tag\nschema\n^tag/\n^must_contain\nmetadata\n^must_contain/\n^rule/\n^rule\n^tag\nmetadata\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^schema\n^schema/\n^schema\n^metadata\n^metadata/\n^schema/\n^presentation\n^presentation/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_child",
+      "element": "schema",
+      "other": "metadata"
+     }
+    ]
+   }
+  },
+  {
+   "name": "the schema element is the first top-level schema",
+   "schema": "^Springwater\n^note\n^note/\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^schema\n^required_root\nx\n^required_root/\n^structure_rules\n^rule\n^tag\nx\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "a forbidden child is still checked",
+   "schema": "^Springwater\n^schema\n^required_root\nbox\n^required_root/\n^structure_rules\n^rule\n^tag\nbox\n^tag/\n^cannot_contain\nx\n^cannot_contain/\n^rule/\n^rule\n^tag\nx\n^tag/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^box\n^x\n^x/\n^box/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "forbidden_child",
+      "element": "box",
+      "other": "x"
+     },
+     {
+      "kind": "empty",
+      "element": "x"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a later empty tag leaves the rule with no tag",
+   "schema": "^Springwater\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^rule/\n^rule\n^tag\nr\n^tag/\n^must_contain\na\n^must_contain/\n^tag\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "empty pieces do not count toward a count's two items",
+   "schema": "^Springwater\n^schema\n^required_root\npair\n^required_root/\n^structure_rules\n^rule\n^tag\npair\n^tag/\n^must_contain_count\nitem,,2\n^must_contain_count/\n^rule/\n^rule\n^tag\nitem\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^pair\n^item\n^item/\n^pair/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "wrong_count",
+      "element": "pair",
+      "other": "item"
+     }
+    ]
+   }
+  },
+  {
+   "name": "two lines with no comma are one list item",
+   "schema": "^Springwater\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^must_contain\na\nb\n^must_contain/\n^rule/\n^rule\n^tag\na\n^tag/\n^rule/\n^rule\n^tag\nb\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^a\n^a/\n^b\n^b/\n^r/\n^Springwater/\n",
+   "expect": {
+    "issues": [
+     {
+      "kind": "missing_child",
+      "element": "r",
+      "other": "a\nb"
+     },
+     {
+      "kind": "child_not_allowed",
+      "element": "r",
+      "other": "a"
+     },
+     {
+      "kind": "child_not_allowed",
+      "element": "r",
+      "other": "b"
+     }
+    ]
+   }
+  },
+  {
+   "name": "content lines at the document root are not an issue",
+   "schema": "^Springwater\n^schema\n^required_root\nmemo\n^required_root/\n^structure_rules\n^rule\n^tag\nmemo\n^tag/\n^must_contain\ntitle\n^must_contain/\n^may_contain\nbody, note\n^may_contain/\n^rule/\n^rule\n^tag\ntitle\n^tag/\n^text_only\ntrue\n^text_only/\n^cannot_be_empty\ntrue\n^cannot_be_empty/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nbody\n^tag/\n^text_only\ntrue\n^text_only/\n^parent_must_be\nmemo\n^parent_must_be/\n^rule/\n^rule\n^tag\nnote\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\nloose text\n^memo\n^title\nHi\n^title/\n^memo/\n^Springwater/\n",
+   "expect": {
+    "issues": []
+   }
+  },
+  {
+   "name": "only the first top-level schema is read, even when unusable",
+   "schema": "^Springwater\n^schema\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^schema\n^required_root\nr\n^required_root/\n^structure_rules\n^rule\n^tag\nr\n^tag/\n^rule/\n^structure_rules/\n^schema/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^r/\n^Springwater/\n",
+   "expect": {
+    "unusable_schema": true
+   }
+  },
+  {
+   "name": "a document with no schema element gives no schema to read",
+   "schema": "^Springwater\n^note\n^note/\n^Springwater/\n",
+   "document": "^Springwater\n^r\n^r/\n^Springwater/\n",
+   "expect": {
+    "unusable_schema": true
+   }
+  }
+ ]
+}

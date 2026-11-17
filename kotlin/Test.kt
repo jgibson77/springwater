@@ -36,6 +36,7 @@ fun main(args: Array<String>) {
     val decoder = Base64.getDecoder()
     var failures = 0
     var passed = 0
+    var schemaPassed = 0
 
     // 1. Conformance vectors.
     for (line in File(repo, "kotlin/vectors.tsv").readLines()) {
@@ -56,9 +57,21 @@ fun main(args: Array<String>) {
             val c = Springwater.classify(Springwater.trimmed(text))
             val got = c.kind.name.lowercase() + ":" + (c.name ?: "-")
             if (got == f[2]) passed += 1 else { failures += 1; println("FAIL classify vector: " + text + " (got " + got + ")") }
+        } else if (f[0] == "S") {
+            val enc = Base64.getEncoder()
+            fun b64(s: String) = enc.encodeToString(s.toByteArray(Charsets.UTF_8))
+            val got = try {
+                val schema = Schema.from(Springwater.parse(decoder.decode(f[2])))
+                val issues = schema.validateIssues(Springwater.parse(decoder.decode(f[3])))
+                "issues:" + issues.map { it.kind + "|" + b64(it.element) + "|" + (it.other?.let(::b64) ?: "-") }.sorted().joinToString(";")
+            } catch (e: IllegalArgumentException) {
+                if (e.message?.startsWith("unusable schema") == true) "unusable" else "error:" + e.message
+            }
+            if (got == f[4]) schemaPassed += 1 else { failures += 1; println("FAIL schema vector: " + f[1] + " (got " + got.take(120) + ")") }
         }
     }
     println("conformance vectors: $passed passed")
+    println("schema conformance vectors: $schemaPassed passed")
 
     // 2. Repository documents: parse, canonical round trip, schema validity.
     val schemaFiles = springwaterFiles(repo, "schemas")

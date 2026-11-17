@@ -113,5 +113,28 @@ console.log(`repository documents: ${documents.length} checked`);
   console.log("primer: checked");
 }
 
+// 5. Schema validation conformance vectors (SCHEMA_SPEC.txt).
+{
+  const { vectors } = JSON.parse(read("tools/schema_conformance_vectors.json").toString("utf8"));
+  const key = (i) => JSON.stringify([i.kind, i.element, i.other === undefined ? null : i.other]);
+  let agreed = 0;
+  for (const v of vectors) {
+    let got;
+    try {
+      const schema = SW.buildSchema(SW.parse(Buffer.from(v.schema, "utf8")));
+      got = { issues: SW.validateIssues(schema, SW.parse(Buffer.from(v.document, "utf8"))) };
+    } catch (e) {
+      got = /unusable schema/.test(e.message) ? { unusable_schema: true } : { error: e.message };
+    }
+    const want = v.expect;
+    const same = want.unusable_schema
+      ? got.unusable_schema === true
+      : !!got.issues && JSON.stringify(got.issues.map(key).sort()) === JSON.stringify(want.issues.map(key).sort());
+    if (same) agreed++;
+    else fail("schema vector: " + v.name + "\n      got  " + JSON.stringify(got) + "\n      want " + JSON.stringify(want));
+  }
+  console.log("schema conformance vectors: " + agreed + " of " + vectors.length + " agree");
+}
+
 console.log(failures === 0 ? "all checks passed" : `${failures} failure(s)`);
 process.exit(failures === 0 ? 0 : 1);

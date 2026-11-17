@@ -42,6 +42,17 @@ result of no document.
   Kotlin validators accept carried `schema` and `presentation` elements at the
   top level and can read a carried schema. Added
   `examples/genesis_1_3.self_contained.springwater`.
+- Added `SCHEMA_SPEC.txt`: a normative description of how a schema is read and
+  how a document is validated against it. Validation now produces defined
+  kinds of issue, and `tools/schema_conformance_vectors.json` holds 72 cases
+  every validator must agree on.
+- Writing the specification showed that the Swift, JavaScript, and Kotlin
+  validators disagreed in three places no repository document reaches: what is
+  trimmed from a value (now space, tab, and line feed only), whether a signed
+  number is a count (it is not), and what happens with a schema that has no
+  required root (it is unusable). All three now follow the specification.
+- Added a clean-room schema validator in Python (`python/`), written from the
+  two specifications alone. It agrees with every vector.
 - Added `PRIMER.springwater`: a document that teaches the notation from
   nothing, by counting, using no words until its last step. `CONVENTIONS.md`
   explains it.
